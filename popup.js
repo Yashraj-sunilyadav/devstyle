@@ -1,27 +1,40 @@
-const inspectButton = document.getElementById("inspectBtn");
+const inspectButton =
+    document.getElementById("inspectBtn");
 
-inspectButton.addEventListener("click", async () => {
 
-    const [tab] = await chrome.tabs.query({
-        active: true,
-        currentWindow: true
-    });
+inspectButton.addEventListener(
+    "click",
+    async () => {
 
-    try {
+        const [tab] =
+            await chrome.tabs.query({
+                active: true,
+                currentWindow: true
+            });
 
-        await chrome.tabs.sendMessage(tab.id, {
-            type: "START_INSPECT"
-        });
+        if (!tab || !tab.id) {
+            return;
+        }
 
-        window.close();
+        try {
 
-    } catch (error) {
+            await chrome.tabs.sendMessage(
+                tab.id,
+                {
+                    type: "START_INSPECT"
+                }
+            );
 
-        console.error(
-            "Could not start inspector:",
-            error
-        );
+            window.close();
+
+        } catch (error) {
+
+            console.error(
+                "Could not start inspector:",
+                error
+            );
+
+        }
 
     }
-
-});
+);

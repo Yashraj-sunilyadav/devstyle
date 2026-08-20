@@ -1,5 +1,5 @@
 /* =====================================================
-   DEVSTYLE HIGHLIGHT
+   HIGHLIGHT
 ===================================================== */
 
 #devstyle-highlight {
@@ -10,18 +10,19 @@
 
     z-index: 2147483646;
 
-    border: 2px solid #3b82f6;
+    box-sizing: border-box;
+
+    border:
+        2px solid #3b82f6;
 
     background:
         rgba(59, 130, 246, 0.08);
-
-    box-sizing: border-box;
 
 }
 
 
 /* =====================================================
-   MAIN PANEL
+   PANEL
 ===================================================== */
 
 #devstyle-panel {
@@ -29,17 +30,32 @@
     position: fixed;
 
     top: 20px;
+
     right: 20px;
-
-    width: 340px;
-
-    max-height: 90vh;
-
-    overflow-y: auto;
 
     z-index: 2147483647;
 
-    padding: 16px;
+    display: flex;
+
+    flex-direction: column;
+
+    width: 360px;
+
+    height: 650px;
+
+    min-width: 300px;
+
+    min-height: 220px;
+
+    max-width: 80vw;
+
+    max-height: 90vh;
+
+    overflow: hidden;
+
+    box-sizing: border-box;
+
+    resize: both;
 
     background: #18181b;
 
@@ -58,37 +74,6 @@
         Arial,
         sans-serif;
 
-    font-size: 13px;
-
-    box-sizing: border-box;
-
-}
-
-
-/* =====================================================
-   PANEL SCROLLBAR
-===================================================== */
-
-#devstyle-panel::-webkit-scrollbar {
-
-    width: 6px;
-
-}
-
-
-#devstyle-panel::-webkit-scrollbar-track {
-
-    background: transparent;
-
-}
-
-
-#devstyle-panel::-webkit-scrollbar-thumb {
-
-    background: #3f3f46;
-
-    border-radius: 10px;
-
 }
 
 
@@ -98,29 +83,53 @@
 
 .devstyle-header {
 
+    position: sticky;
+
+    top: 0;
+
+    z-index: 20;
+
     display: flex;
 
     align-items: center;
 
     justify-content: space-between;
 
-    margin-bottom: 14px;
+    flex-shrink: 0;
+
+    padding: 14px 14px 10px;
+
+    border-bottom:
+        1px solid #27272a;
+
+    background: #18181b;
+
+    cursor: move;
+
+    user-select: none;
 
 }
 
 
-.devstyle-title {
+.devstyle-header-main {
 
-    font-size: 18px;
+    min-width: 0;
+
+}
+
+
+.devstyle-brand {
+
+    font-size: 20px;
 
     font-weight: 700;
 
 }
 
 
-.devstyle-element {
+.devstyle-selected-element {
 
-    max-width: 245px;
+    max-width: 235px;
 
     margin-top: 3px;
 
@@ -137,11 +146,32 @@
 }
 
 
-.devstyle-close {
+.devstyle-header-actions {
 
-    width: 30px;
+    display: flex;
 
-    height: 30px;
+    align-items: center;
+
+    gap: 6px;
+
+    flex-shrink: 0;
+
+}
+
+
+.devstyle-header-button {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 34px;
+
+    height: 34px;
+
+    padding: 0;
 
     border: none;
 
@@ -155,12 +185,10 @@
 
     font-size: 18px;
 
-    line-height: 30px;
-
 }
 
 
-.devstyle-close:hover {
+.devstyle-header-button:hover {
 
     background: #3f3f46;
 
@@ -168,10 +196,16 @@
 
 
 /* =====================================================
-   SEARCH
+   STICKY SEARCH
 ===================================================== */
 
-.devstyle-search {
+.devstyle-search-wrap {
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 19;
 
     display: flex;
 
@@ -179,21 +213,25 @@
 
     gap: 8px;
 
-    margin-bottom: 12px;
+    flex-shrink: 0;
 
-    padding: 8px 10px;
+    margin: 10px 12px;
+
+    padding: 0 10px;
+
+    height: 44px;
 
     border:
         1px solid #3f3f46;
 
-    border-radius: 8px;
+    border-radius: 9px;
 
     background: #27272a;
 
 }
 
 
-.devstyle-search span {
+.devstyle-search-icon {
 
     color: #a1a1aa;
 
@@ -202,7 +240,7 @@
 }
 
 
-.devstyle-search input {
+.devstyle-search-wrap input {
 
     width: 100%;
 
@@ -219,9 +257,63 @@
 }
 
 
-.devstyle-search input::placeholder {
+.devstyle-search-wrap input::placeholder {
 
     color: #71717a;
+
+}
+
+
+/* =====================================================
+   CONTENT
+===================================================== */
+
+.devstyle-content {
+
+    flex: 1;
+
+    min-height: 0;
+
+    overflow-y: auto;
+
+    padding:
+        0 12px 12px;
+
+    scroll-behavior: smooth;
+
+}
+
+
+/* =====================================================
+   SCROLLBAR
+===================================================== */
+
+.devstyle-content::-webkit-scrollbar {
+
+    width: 7px;
+
+}
+
+
+.devstyle-content::-webkit-scrollbar-track {
+
+    background: transparent;
+
+}
+
+
+.devstyle-content::-webkit-scrollbar-thumb {
+
+    background: #3f3f46;
+
+    border-radius: 10px;
+
+}
+
+
+.devstyle-content::-webkit-scrollbar-thumb:hover {
+
+    background: #52525b;
 
 }
 
@@ -232,14 +324,14 @@
 
 .devstyle-category {
 
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 
     overflow: hidden;
 
     border:
         1px solid #27272a;
 
-    border-radius: 9px;
+    border-radius: 10px;
 
     background: #18181b;
 
@@ -247,7 +339,7 @@
 
 
 /* =====================================================
-   CATEGORY HEADER
+   NORMAL CATEGORY HEADER
 ===================================================== */
 
 .devstyle-category-header {
@@ -260,9 +352,13 @@
 
     width: 100%;
 
-    padding: 11px;
+    height: 48px;
+
+    padding: 0 12px;
 
     border: none;
+
+    border-radius: 9px;
 
     background: #202023;
 
@@ -276,6 +372,12 @@
 
     font-weight: 600;
 
+    transition:
+        height 0.15s ease,
+        padding 0.15s ease,
+        font-size 0.15s ease,
+        border-radius 0.15s ease;
+
 }
 
 
@@ -286,29 +388,74 @@
 }
 
 
-.devstyle-category-header > span:first-child {
+/* =====================================================
+   OPEN CATEGORY
+===================================================== */
 
-    display: flex;
+.devstyle-category.is-open
+.devstyle-category-header {
 
-    align-items: center;
+    position: sticky;
 
-    gap: 8px;
+    top: 0;
+
+    z-index: 15;
+
+    background: #202023;
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.25);
 
 }
 
 
+/* =====================================================
+   COMPACT STICKY LOOK
+===================================================== */
+
+.devstyle-category.is-open
+.devstyle-category-header {
+
+    height: 36px;
+
+    padding:
+        0 9px;
+
+    border-radius: 6px;
+
+    font-size: 11px;
+
+}
+
+
+/* Smaller icon */
+
+.devstyle-category.is-open
 .devstyle-category-icon {
 
-    font-size: 14px;
+    width: 18px;
+
+    font-size: 11px;
 
 }
 
 
+/* Smaller gap */
+
+.devstyle-category.is-open
+.devstyle-category-left {
+
+    gap: 6px;
+
+}
+
+
+/* Smaller arrow */
+
+.devstyle-category.is-open
 .devstyle-arrow {
 
-    color: #a1a1aa;
-
-    font-size: 12px;
+    font-size: 10px;
 
 }
 
@@ -319,7 +466,27 @@
 
 .devstyle-category-content {
 
-    padding: 11px;
+    display: none;
+
+    padding: 12px;
+
+}
+
+
+.devstyle-category.is-open
+.devstyle-category-content {
+
+    display: block;
+
+}
+.devstyle-category-content {
+
+    display: none;
+
+    padding: 12px;
+
+    border-top:
+        1px solid #27272a;
 
 }
 
@@ -348,7 +515,7 @@
 
     margin-bottom: 5px;
 
-    color: #d4d4d8;
+    color: #e4e4e7;
 
     font-size: 11px;
 
@@ -365,28 +532,32 @@
 
     align-items: center;
 
-    gap: 6px;
+    gap: 7px;
 
 }
 
 
 /* =====================================================
-   TEXT / NUMBER INPUT
+   TEXT / NUMBER
 ===================================================== */
 
-.devstyle-field input[type="text"],
-.devstyle-field input[type="number"] {
+.devstyle-field
+input[type="number"],
+.devstyle-field
+input[type="text"] {
 
     width: 100%;
 
     min-width: 0;
 
-    padding: 8px;
+    height: 38px;
+
+    padding: 0 10px;
 
     border:
         1px solid #3f3f46;
 
-    border-radius: 6px;
+    border-radius: 7px;
 
     outline: none;
 
@@ -399,8 +570,10 @@
 }
 
 
-.devstyle-field input[type="text"]:focus,
-.devstyle-field input[type="number"]:focus {
+.devstyle-field
+input[type="number"]:focus,
+.devstyle-field
+input[type="text"]:focus {
 
     border-color: #3b82f6;
 
@@ -415,12 +588,14 @@
 
     width: 100%;
 
-    padding: 8px;
+    height: 40px;
+
+    padding: 0 10px;
 
     border:
         1px solid #3f3f46;
 
-    border-radius: 6px;
+    border-radius: 7px;
 
     outline: none;
 
@@ -443,23 +618,24 @@
 
 
 /* =====================================================
-   COLOR INPUT
+   COLOR
 ===================================================== */
 
-.devstyle-field input[type="color"] {
+.devstyle-field
+input[type="color"] {
 
-    width: 42px;
+    width: 52px;
 
-    height: 34px;
+    height: 38px;
 
     flex-shrink: 0;
 
-    padding: 2px;
+    padding: 3px;
 
     border:
         1px solid #3f3f46;
 
-    border-radius: 6px;
+    border-radius: 7px;
 
     background: #27272a;
 
@@ -480,13 +656,11 @@
 
     justify-content: center;
 
-    min-width: 40px;
+    min-width: 44px;
 
-    height: 34px;
+    height: 38px;
 
-    padding: 0 7px;
-
-    border-radius: 6px;
+    border-radius: 7px;
 
     background: #27272a;
 
@@ -498,22 +672,38 @@
 
 
 /* =====================================================
-   COPY BUTTON
+   FOOTER
+===================================================== */
+
+.devstyle-footer {
+
+    flex-shrink: 0;
+
+    padding: 10px 12px 12px;
+
+    border-top:
+        1px solid #27272a;
+
+    background: #18181b;
+
+}
+
+
+/* =====================================================
+   COPY
 ===================================================== */
 
 .devstyle-copy {
 
     width: 100%;
 
-    margin-top: 10px;
-
-    padding: 10px;
+    height: 40px;
 
     border: none;
 
     border-radius: 8px;
 
-    background: #ffffff;
+    background: white;
 
     color: #18181b;
 
@@ -533,13 +723,9 @@
 }
 
 
-/* =====================================================
-   STATUS
-===================================================== */
-
 .devstyle-status {
 
-    margin-top: 8px;
+    margin-top: 7px;
 
     color: #71717a;
 
@@ -551,7 +737,227 @@
 
 
 /* =====================================================
-   REMOVE NUMBER ARROWS
+   COMPACT / MINIMIZED MODE
+===================================================== */
+
+#devstyle-panel.devstyle-compact {
+
+    width: 300px;
+
+    height: 420px;
+
+    min-width: 280px;
+
+    min-height: 240px;
+
+}
+
+
+/*
+   In compact mode:
+   - Header remains
+   - Search remains
+   - Every category remains visible
+   - Properties are hidden until user opens one
+   - User can scroll through categories
+*/
+
+#devstyle-panel.devstyle-compact
+.devstyle-category-content {
+
+    display: none;
+
+}
+
+
+/* =====================================================
+   COMPACT SEARCH
+===================================================== */
+
+#devstyle-panel.devstyle-compact
+.devstyle-search-wrap {
+
+    margin: 8px 10px;
+
+    height: 40px;
+
+}
+
+
+/* =====================================================
+   COMPACT CONTENT
+===================================================== */
+
+#devstyle-panel.devstyle-compact
+.devstyle-content {
+
+    padding:
+        0 10px 10px;
+
+}
+
+
+/* =====================================================
+   COMPACT FOOTER
+===================================================== */
+
+#devstyle-panel.devstyle-compact
+.devstyle-footer {
+
+    padding:
+        8px 10px 10px;
+
+}
+
+/* =====================================================
+   CATEGORY
+===================================================== */
+
+.devstyle-category {
+
+    position: relative;
+
+    margin-bottom: 8px;
+
+    overflow: visible;
+
+    border:
+        1px solid #27272a;
+
+    border-radius: 10px;
+
+    background: #18181b;
+
+}
+
+
+/* =====================================================
+   CATEGORY HEADER
+===================================================== */
+
+.devstyle-category-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    width: 100%;
+
+    height: 48px;
+
+    padding: 0 12px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #202023;
+
+    color: white;
+
+    cursor: pointer;
+
+    text-align: left;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+}
+
+
+.devstyle-category-header:hover {
+
+    background: #27272a;
+
+}
+
+
+.devstyle-category-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+}
+
+
+.devstyle-category-icon {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 22px;
+
+    font-size: 14px;
+
+}
+
+
+.devstyle-arrow {
+
+    color: #a1a1aa;
+
+    font-size: 12px;
+
+}
+
+
+/* =====================================================
+   OPEN CATEGORY
+===================================================== */
+
+.devstyle-category.is-open
+.devstyle-category-header {
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 15;
+
+    background: #202023;
+
+    box-shadow:
+        0 4px 12px
+        rgba(0, 0, 0, 0.25);
+
+}
+
+
+/* =====================================================
+   CATEGORY CONTENT
+===================================================== */
+
+.devstyle-category-content {
+
+    display: none;
+
+    padding: 12px;
+
+}
+
+
+/* =====================================================
+   OPEN CONTENT
+===================================================== */
+
+.devstyle-category.is-open
+.devstyle-category-content {
+
+    display: block;
+
+}
+
+/* =====================================================
+   NUMBER SPINNERS
 ===================================================== */
 
 #devstyle-panel
@@ -561,129 +967,20 @@ input[type="number"]::-webkit-outer-spin-button {
 
     margin: 0;
 
+    appearance: none;
+
     -webkit-appearance: none;
 
 }
+
+
 /* =====================================================
-   HEADER DRAGGING
+   BETTER COMPACT BUTTON
 ===================================================== */
 
-.devstyle-header {
-
-    cursor: move;
-
-    user-select: none;
-
-}
-
-
-.devstyle-header-actions {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 5px;
-
-}
-
-
-.devstyle-minimize,
-.devstyle-close {
-
-    width: 28px;
-
-    height: 28px;
-
-    border: none;
-
-    border-radius: 6px;
-
-    background: #27272a;
-
-    color: white;
-
-    cursor: pointer;
+#devstyle-panel.devstyle-compact
+#devstyle-minimize {
 
     font-size: 16px;
-
-    line-height: 28px;
-
-}
-
-
-.devstyle-minimize:hover,
-.devstyle-close:hover {
-
-    background: #3f3f46;
-
-}
-
-
-/* =====================================================
-   RESIZABLE PANEL
-===================================================== */
-
-#devstyle-panel {
-
-    resize: both;
-
-    min-width: 280px;
-
-    min-height: 180px;
-
-}
-
-
-/* =====================================================
-   MINIMIZED PANEL
-===================================================== */
-
-#devstyle-panel.devstyle-minimized {
-
-    width: 190px !important;
-
-    min-width: 190px;
-
-    height: auto !important;
-
-    min-height: 0;
-
-    resize: none;
-
-    overflow: hidden;
-
-}
-
-
-#devstyle-panel.devstyle-minimized
-.devstyle-search,
-
-#devstyle-panel.devstyle-minimized
-.devstyle-categories,
-
-#devstyle-panel.devstyle-minimized
-.devstyle-copy,
-
-#devstyle-panel.devstyle-minimized
-.devstyle-status {
-
-    display: none;
-
-}
-
-
-#devstyle-panel.devstyle-minimized
-.devstyle-header {
-
-    margin-bottom: 0;
-
-}
-
-
-#devstyle-panel.devstyle-minimized
-.devstyle-element {
-
-    display: none;
 
 }

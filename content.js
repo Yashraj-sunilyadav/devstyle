@@ -1,7 +1,20 @@
 let inspecting = false;
+
 let selectedElement = null;
+
 let highlight = null;
+
 let panel = null;
+
+let panelDragging = false;
+
+let dragStartX = 0;
+
+let dragStartY = 0;
+
+let panelStartLeft = 0;
+
+let panelStartTop = 0;
 
 
 // =====================================================
@@ -9,25 +22,33 @@ let panel = null;
 // =====================================================
 
 const categories = [
+
     {
         id: "layout",
         name: "Layout",
         icon: "📐",
+
         properties: [
+
             {
                 label: "Width",
                 property: "width",
-                type: "number"
+                type: "number",
+                unit: "px"
             },
+
             {
                 label: "Height",
                 property: "height",
-                type: "number"
+                type: "number",
+                unit: "px"
             },
+
             {
                 label: "Position",
                 property: "position",
                 type: "select",
+
                 options: [
                     "static",
                     "relative",
@@ -36,54 +57,71 @@ const categories = [
                     "sticky"
                 ]
             },
+
             {
                 label: "Top",
                 property: "top",
-                type: "number"
+                type: "number",
+                unit: "px"
             },
+
             {
                 label: "Right",
                 property: "right",
-                type: "number"
+                type: "number",
+                unit: "px"
             },
+
             {
                 label: "Bottom",
                 property: "bottom",
-                type: "number"
+                type: "number",
+                unit: "px"
             },
+
             {
                 label: "Left",
                 property: "left",
-                type: "number"
+                type: "number",
+                unit: "px"
             },
+
             {
                 label: "Z Index",
                 property: "zIndex",
                 type: "number",
                 unit: ""
             }
+
         ]
     },
+
 
     {
         id: "typography",
         name: "Typography",
         icon: "🔤",
+
         properties: [
+
             {
                 label: "Font Family",
                 property: "fontFamily",
                 type: "font"
             },
+
             {
                 label: "Font Size",
                 property: "fontSize",
-                type: "number"
+                type: "number",
+                unit: "px"
             },
+
             {
                 label: "Font Weight",
                 property: "fontWeight",
                 type: "select",
+
                 options: [
                     "100",
                     "200",
@@ -95,6 +133,7 @@ const categories = [
                     "800",
                     "900"
                 ],
+
                 optionLabels: [
                     "100 - Thin",
                     "200 - Extra Light",
@@ -107,25 +146,31 @@ const categories = [
                     "900 - Black"
                 ]
             },
+
             {
                 label: "Font Color",
                 property: "color",
                 type: "color"
             },
+
             {
                 label: "Line Height",
                 property: "lineHeight",
-                type: "number"
+                type: "text"
             },
+
             {
                 label: "Letter Spacing",
                 property: "letterSpacing",
-                type: "number"
+                type: "number",
+                unit: "px"
             },
+
             {
                 label: "Text Align",
                 property: "textAlign",
                 type: "select",
+
                 options: [
                     "left",
                     "center",
@@ -133,52 +178,67 @@ const categories = [
                     "justify"
                 ]
             }
+
         ]
     },
+
 
     {
         id: "appearance",
         name: "Appearance",
         icon: "🎨",
+
         properties: [
+
             {
                 label: "Background Color",
                 property: "backgroundColor",
                 type: "color"
             },
+
             {
                 label: "Opacity",
                 property: "opacity",
                 type: "number",
                 unit: ""
             }
+
         ]
     },
+
 
     {
         id: "border",
         name: "Border",
         icon: "🧱",
+
         properties: [
+
             {
                 label: "Border Width",
                 property: "borderWidth",
-                type: "number"
+                type: "number",
+                unit: "px"
             },
+
             {
                 label: "Border Radius",
                 property: "borderRadius",
-                type: "number"
+                type: "number",
+                unit: "px"
             },
+
             {
                 label: "Border Color",
                 property: "borderColor",
                 type: "color"
             },
+
             {
                 label: "Border Style",
                 property: "borderStyle",
                 type: "select",
+
                 options: [
                     "none",
                     "solid",
@@ -187,42 +247,54 @@ const categories = [
                     "double"
                 ]
             }
+
         ]
     },
+
 
     {
         id: "spacing",
         name: "Spacing",
         icon: "📦",
+
         properties: [
+
             {
                 label: "Margin",
                 property: "margin",
-                type: "number"
+                type: "text"
             },
+
             {
                 label: "Padding",
                 property: "padding",
-                type: "number"
+                type: "text"
             },
+
             {
                 label: "Gap",
                 property: "gap",
-                type: "number"
+                type: "number",
+                unit: "px"
             }
+
         ]
     }
+
 ];
 
 
 // =====================================================
-// MESSAGE FROM POPUP
+// MESSAGE LISTENER
+// IMPORTANT: ONLY ONE LISTENER
 // =====================================================
 
 chrome.runtime.onMessage.addListener((message) => {
 
     if (message.type === "START_INSPECT") {
+
         startInspector();
+
     }
 
 });
@@ -235,18 +307,25 @@ chrome.runtime.onMessage.addListener((message) => {
 function startInspector() {
 
     if (inspecting) {
+
+        stopInspector();
+
         return;
+
     }
+
 
     inspecting = true;
 
     createHighlight();
+
 
     document.addEventListener(
         "mousemove",
         handleMouseMove,
         true
     );
+
 
     document.addEventListener(
         "click",
@@ -258,7 +337,7 @@ function startInspector() {
 
 
 // =====================================================
-// CREATE HIGHLIGHT
+// HIGHLIGHT
 // =====================================================
 
 function createHighlight() {
@@ -267,11 +346,17 @@ function createHighlight() {
         return;
     }
 
-    highlight = document.createElement("div");
 
-    highlight.id = "devstyle-highlight";
+    highlight =
+        document.createElement("div");
 
-    document.documentElement.appendChild(highlight);
+
+    highlight.id =
+        "devstyle-highlight";
+
+
+    document.documentElement
+        .appendChild(highlight);
 
 }
 
@@ -286,30 +371,41 @@ function handleMouseMove(event) {
         return;
     }
 
-    const element = event.target;
 
-    if (
-        element === highlight ||
-        panel?.contains(element)
-    ) {
-        return;
-    }
+    const element =
+        event.target;
+
 
     if (!(element instanceof Element)) {
         return;
     }
 
+
+    if (
+        element === highlight ||
+        panel?.contains(element)
+    ) {
+
+        return;
+
+    }
+
+
     const rect =
         element.getBoundingClientRect();
+
 
     highlight.style.left =
         `${rect.left}px`;
 
+
     highlight.style.top =
         `${rect.top}px`;
 
+
     highlight.style.width =
         `${rect.width}px`;
+
 
     highlight.style.height =
         `${rect.height}px`;
@@ -318,7 +414,7 @@ function handleMouseMove(event) {
 
 
 // =====================================================
-// CLICK ELEMENT
+// SELECT ELEMENT
 // =====================================================
 
 function handleElementClick(event) {
@@ -327,26 +423,39 @@ function handleElementClick(event) {
         return;
     }
 
-    const element = event.target;
 
-    if (
-        element === highlight ||
-        panel?.contains(element)
-    ) {
-        return;
-    }
+    const element =
+        event.target;
+
 
     if (!(element instanceof Element)) {
         return;
     }
 
+
+    if (
+        element === highlight ||
+        panel?.contains(element)
+    ) {
+
+        return;
+
+    }
+
+
     event.preventDefault();
+
     event.stopPropagation();
+
     event.stopImmediatePropagation();
 
-    selectedElement = element;
+
+    selectedElement =
+        element;
+
 
     stopInspector();
+
 
     showEditor(element);
 
@@ -361,17 +470,20 @@ function stopInspector() {
 
     inspecting = false;
 
+
     document.removeEventListener(
         "mousemove",
         handleMouseMove,
         true
     );
 
+
     document.removeEventListener(
         "click",
         handleElementClick,
         true
     );
+
 
     if (highlight) {
 
@@ -392,11 +504,10 @@ function showEditor(element) {
 
     removePanel();
 
-    const styles =
-        getComputedStyle(element);
 
     panel =
         document.createElement("div");
+
 
     panel.id =
         "devstyle-panel";
@@ -404,107 +515,105 @@ function showEditor(element) {
 
     panel.innerHTML = `
 
-        <div
-    class="devstyle-header"
-    id="devstyle-drag-handle"
->
-
-    <div>
-
-        <div class="devstyle-title">
-            DevStyle
-        </div>
-
-        <div class="devstyle-element">
-            ${getElementName(element)}
-        </div>
-
-    </div>
-
-    <div class="devstyle-header-actions">
-
-        <button
-            class="devstyle-minimize"
-            id="devstyle-minimize"
-            title="Minimize"
+        <header
+            class="devstyle-header"
+            id="devstyle-drag-handle"
         >
-            −
-        </button>
 
-        <button
-            class="devstyle-close"
-            id="devstyle-close"
-            title="Close"
-        >
-            ×
-        </button>
+            <div class="devstyle-header-main">
 
-    </div>
-
-</div>
-
-                <div class="devstyle-title">
+                <div class="devstyle-brand">
                     DevStyle
                 </div>
 
-                <div class="devstyle-element">
+                <div
+                    class="devstyle-selected-element"
+                    id="devstyle-selected-element"
+                >
                     ${getElementName(element)}
                 </div>
 
             </div>
 
-            <button
-                class="devstyle-close"
-                id="devstyle-close"
-            >
-                ×
-            </button>
 
-        </div>
+            <div class="devstyle-header-actions">
+
+                <button
+                    id="devstyle-minimize"
+                    class="devstyle-header-button"
+                    title="Compact mode"
+                >
+                    −
+                </button>
 
 
-        <div class="devstyle-search">
+                <button
+                    id="devstyle-close"
+                    class="devstyle-header-button"
+                    title="Close"
+                >
+                    ×
+                </button>
 
-            <span>⌕</span>
+            </div>
 
-            <input
-                type="text"
-                id="devstyle-search-input"
-                placeholder="Search CSS property..."
-            >
-
-        </div>
+        </header>
 
 
         <div
-            id="devstyle-categories"
-            class="devstyle-categories"
+            class="devstyle-search-wrap"
+            id="devstyle-search-wrap"
+        >
+
+            <span class="devstyle-search-icon">
+                ⌕
+            </span>
+
+            <input
+                id="devstyle-search-input"
+                type="text"
+                placeholder="Search CSS property..."
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <main
+            id="devstyle-content"
+            class="devstyle-content"
         >
 
             ${renderCategories(element)}
 
-        </div>
+        </main>
 
 
-        <button
-            class="devstyle-copy"
-            id="devstyle-copy"
-        >
-            Copy CSS
-        </button>
+        <footer class="devstyle-footer">
+
+            <button
+                id="devstyle-copy"
+                class="devstyle-copy"
+            >
+                Copy CSS
+            </button>
 
 
-        <div
-            class="devstyle-status"
-            id="devstyle-status"
-        >
-            Changes are applied instantly
-        </div>
+            <div
+                id="devstyle-status"
+                class="devstyle-status"
+            >
+                Changes are applied instantly
+            </div>
+
+        </footer>
 
     `;
 
 
-    document.documentElement.appendChild(panel);
+    document.documentElement
+        .appendChild(panel);
+
 
     setupPanel(element);
 
@@ -520,6 +629,7 @@ function getElementName(element) {
     let name =
         `<${element.tagName.toLowerCase()}>`;
 
+
     if (element.id) {
 
         name +=
@@ -527,25 +637,24 @@ function getElementName(element) {
 
     }
 
+
     if (
-        element.className &&
-        typeof element.className === "string"
+        typeof element.className === "string" &&
+        element.className.trim()
     ) {
 
         const classes =
             element.className
                 .trim()
                 .split(/\s+/)
-                .slice(0, 2);
+                .slice(0, 3);
 
-        if (classes.length) {
 
-            name +=
-                ` .${classes.join(".")}`;
-
-        }
+        name +=
+            ` .${classes.join(".")}`;
 
     }
+
 
     return escapeHTML(name);
 
@@ -554,16 +663,17 @@ function getElementName(element) {
 
 // =====================================================
 // RENDER CATEGORIES
+// ALL CLOSED INITIALLY
 // =====================================================
 
 function renderCategories(element) {
 
     return categories
-        .map((category, index) => {
+        .map(category => {
 
             return `
 
-                <div
+                <section
                     class="devstyle-category"
                     data-category="${category.id}"
                 >
@@ -571,20 +681,24 @@ function renderCategories(element) {
                     <button
                         class="devstyle-category-header"
                         data-category-toggle="${category.id}"
+                        type="button"
                     >
 
-                        <span>
+                        <span class="devstyle-category-left">
 
                             <span class="devstyle-category-icon">
                                 ${category.icon}
                             </span>
 
-                            ${category.name}
+                            <span>
+                                ${category.name}
+                            </span>
 
                         </span>
 
+
                         <span class="devstyle-arrow">
-                            ${index === 0 ? "⌃" : "⌄"}
+                            ⌄
                         </span>
 
                     </button>
@@ -593,12 +707,6 @@ function renderCategories(element) {
                     <div
                         class="devstyle-category-content"
                         data-category-content="${category.id}"
-                        style="
-                            display:
-                            ${index === 0
-                                ? "block"
-                                : "none"};
-                        "
                     >
 
                         ${category.properties
@@ -612,7 +720,7 @@ function renderCategories(element) {
 
                     </div>
 
-                </div>
+                </section>
 
             `;
 
@@ -634,45 +742,54 @@ function renderProperty(
     const styles =
         getComputedStyle(element);
 
+
     const value =
         styles[property.property];
 
 
+    const searchText =
+        property.label.toLowerCase();
+
+
+    // -----------------------------------------
+    // NUMBER
+    // -----------------------------------------
+
     if (property.type === "number") {
 
-        let numericValue =
+        const numericValue =
             parseFloat(value);
 
-        if (isNaN(numericValue)) {
-            numericValue = 0;
-        }
-
-        const unit =
-            property.unit === ""
-                ? ""
-                : "px";
 
         return `
 
             <div
                 class="devstyle-field"
-                data-property-search="${property.label.toLowerCase()}"
+                data-property-name="${searchText}"
             >
 
                 <label>
                     ${property.label}
                 </label>
 
+
                 <div class="devstyle-input-row">
 
                     <input
                         type="number"
-                        value="${numericValue}"
+                        value="${
+                            Number.isNaN(
+                                numericValue
+                            )
+                                ? 0
+                                : numericValue
+                        }"
                         data-property="${property.property}"
                     >
 
+
                     <span class="devstyle-unit">
-                        ${unit}
+                        ${property.unit}
                     </span>
 
                 </div>
@@ -684,6 +801,41 @@ function renderProperty(
     }
 
 
+    // -----------------------------------------
+    // TEXT
+    // -----------------------------------------
+
+    if (property.type === "text") {
+
+        return `
+
+            <div
+                class="devstyle-field"
+                data-property-name="${searchText}"
+            >
+
+                <label>
+                    ${property.label}
+                </label>
+
+
+                <input
+                    type="text"
+                    value="${escapeAttribute(value)}"
+                    data-property="${property.property}"
+                >
+
+            </div>
+
+        `;
+
+    }
+
+
+    // -----------------------------------------
+    // COLOR
+    // -----------------------------------------
+
     if (property.type === "color") {
 
         const hex =
@@ -694,12 +846,13 @@ function renderProperty(
 
             <div
                 class="devstyle-field"
-                data-property-search="${property.label.toLowerCase()}"
+                data-property-name="${searchText}"
             >
 
                 <label>
                     ${property.label}
                 </label>
+
 
                 <div class="devstyle-input-row">
 
@@ -708,6 +861,7 @@ function renderProperty(
                         value="${hex}"
                         data-color-property="${property.property}"
                     >
+
 
                     <input
                         type="text"
@@ -724,6 +878,10 @@ function renderProperty(
     }
 
 
+    // -----------------------------------------
+    // FONT
+    // -----------------------------------------
+
     if (property.type === "font") {
 
         const fonts = [
@@ -731,11 +889,11 @@ function renderProperty(
             "Inter",
             "Roboto",
             "Poppins",
+            "Verdana",
             "Helvetica",
             "Georgia",
             "Times New Roman",
             "Courier New",
-            "Verdana",
             "sans-serif",
             "serif",
             "monospace"
@@ -753,36 +911,35 @@ function renderProperty(
 
             <div
                 class="devstyle-field"
-                data-property-search="${property.label.toLowerCase()}"
+                data-property-name="${searchText}"
             >
 
                 <label>
                     ${property.label}
                 </label>
 
+
                 <select
                     data-property="${property.property}"
                 >
 
                     ${fonts
-                        .map(font => {
+                        .map(font => `
 
-                            return `
-                                <option
-                                    value="${font}"
-                                    ${
-                                        currentFont
+                            <option
+                                value="${font}"
+                                ${
+                                    currentFont
                                         .toLowerCase() ===
-                                        font.toLowerCase()
-                                            ? "selected"
-                                            : ""
-                                    }
-                                >
-                                    ${font}
-                                </option>
-                            `;
+                                    font.toLowerCase()
+                                        ? "selected"
+                                        : ""
+                                }
+                            >
+                                ${font}
+                            </option>
 
-                        })
+                        `)
                         .join("")}
 
                 </select>
@@ -794,22 +951,23 @@ function renderProperty(
     }
 
 
+    // -----------------------------------------
+    // SELECT
+    // -----------------------------------------
+
     if (property.type === "select") {
-
-        const currentValue =
-            value;
-
 
         return `
 
             <div
                 class="devstyle-field"
-                data-property-search="${property.label.toLowerCase()}"
+                data-property-name="${searchText}"
             >
 
                 <label>
                     ${property.label}
                 </label>
+
 
                 <select
                     data-property="${property.property}"
@@ -823,12 +981,13 @@ function renderProperty(
                                     ? property.optionLabels[index]
                                     : option;
 
+
                             return `
 
                                 <option
                                     value="${option}"
                                     ${
-                                        currentValue === option
+                                        value === option
                                             ? "selected"
                                             : ""
                                     }
@@ -869,8 +1028,6 @@ function setupPanel(element) {
 
     setupDragging();
 
-    setupResizing();
-
     setupMinimize();
 
 
@@ -886,15 +1043,20 @@ function setupPanel(element) {
         .getElementById("devstyle-copy")
         .addEventListener(
             "click",
-            () => copyChangedCSS(element)
+            () => {
+
+                copyChangedCSS(element);
+
+            }
         );
 
 }
 
+
 // =====================================================
 // CATEGORY TOGGLES
+// MULTIPLE CAN REMAIN OPEN
 // =====================================================
-
 function setupCategoryToggles() {
 
     const headers =
@@ -909,62 +1071,79 @@ function setupCategoryToggles() {
             "click",
             () => {
 
-                const category =
+                const categoryId =
                     header.dataset.categoryToggle;
 
 
-                const contents =
-                    panel.querySelectorAll(
+                const category =
+                    panel.querySelector(
+                        `[data-category="${categoryId}"]`
+                    );
+
+
+                if (!category) {
+                    return;
+                }
+
+
+                const content =
+                    category.querySelector(
                         "[data-category-content]"
                     );
 
 
-                const arrows =
-                    panel.querySelectorAll(
+                const arrow =
+                    category.querySelector(
                         ".devstyle-arrow"
                     );
 
 
-                contents.forEach(content => {
+                const isOpen =
+                    category.classList.contains(
+                        "is-open"
+                    );
+
+
+                if (isOpen) {
+
+                    category.classList.remove(
+                        "is-open"
+                    );
 
                     content.style.display =
                         "none";
 
-                });
-
-
-                arrows.forEach(arrow => {
-
                     arrow.textContent =
                         "⌄";
 
-                });
-
-
-                const selectedContent =
-                    panel.querySelector(
-                        `[data-category-content="${category}"]`
-                    );
-
-
-                const selectedArrow =
-                    header.querySelector(
-                        ".devstyle-arrow"
-                    );
-
-
-                if (selectedContent) {
-
-                    selectedContent.style.display =
-                        "block";
-
                 }
 
+                else {
 
-                if (selectedArrow) {
+                    category.classList.add(
+                        "is-open"
+                    );
 
-                    selectedArrow.textContent =
+                    content.style.display =
+                        "block";
+
+                    arrow.textContent =
                         "⌃";
+
+
+                    /*
+                     * Put the newly opened category
+                     * at the top of the scroll area.
+                     */
+
+                    setTimeout(() => {
+
+                        category.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start"
+                        });
+
+                    }, 50);
 
                 }
 
@@ -975,183 +1154,205 @@ function setupCategoryToggles() {
 
 }
 
-
 // =====================================================
 // PROPERTY INPUTS
 // =====================================================
 
 function setupPropertyInputs(element) {
 
-
-    // ==========================================
+    // -----------------------------------------
     // NUMBER INPUTS
-    // ==========================================
+    // -----------------------------------------
 
-    const numberInputs =
-        panel.querySelectorAll(
+    panel
+        .querySelectorAll(
             'input[type="number"]'
-        );
+        )
+        .forEach(input => {
+
+            input.addEventListener(
+                "input",
+                () => {
+
+                    const property =
+                        input.dataset.property;
 
 
-    numberInputs.forEach(input => {
-
-        input.addEventListener(
-            "input",
-            () => {
-
-                const property =
-                    input.dataset.property;
-
-                const value =
-                    input.value;
-
-
-                // Position needs non-static position
-
-                if (
-                    [
-                        "top",
-                        "right",
-                        "bottom",
-                        "left"
-                    ].includes(property)
-                ) {
-
-                    const currentPosition =
-                        getComputedStyle(
-                            element
-                        ).position;
+                    const value =
+                        input.value;
 
 
                     if (
-                        currentPosition ===
-                        "static"
+                        [
+                            "top",
+                            "right",
+                            "bottom",
+                            "left"
+                        ].includes(property)
                     ) {
 
-                        element.style.position =
-                            "relative";
+                        const position =
+                            getComputedStyle(
+                                element
+                            ).position;
+
+
+                        if (
+                            position ===
+                            "static"
+                        ) {
+
+                            element.style.position =
+                                "relative";
+
+                        }
+
+                    }
+
+
+                    if (
+                        property === "zIndex" ||
+                        property === "opacity"
+                    ) {
+
+                        element.style[property] =
+                            value;
+
+                    }
+
+                    else {
+
+                        element.style[property] =
+                            `${value}px`;
 
                     }
 
                 }
+            );
+
+        });
 
 
-                // Unitless properties
+    // -----------------------------------------
+    // TEXT INPUTS
+    // -----------------------------------------
 
-                if (
-                    property === "zIndex" ||
-                    property === "opacity"
-                ) {
+    panel
+        .querySelectorAll(
+            'input[type="text"][data-property]'
+        )
+        .forEach(input => {
+
+            input.addEventListener(
+                "input",
+                () => {
+
+                    const property =
+                        input.dataset.property;
+
+
+                    element.style[property] =
+                        input.value;
+
+                }
+            );
+
+        });
+
+
+    // -----------------------------------------
+    // SELECT
+    // -----------------------------------------
+
+    panel
+        .querySelectorAll(
+            "select[data-property]"
+        )
+        .forEach(select => {
+
+            select.addEventListener(
+                "change",
+                () => {
+
+                    const property =
+                        select.dataset.property;
+
+
+                    element.style[property] =
+                        select.value;
+
+                }
+            );
+
+        });
+
+
+    // -----------------------------------------
+    // COLORS
+    // -----------------------------------------
+
+    panel
+        .querySelectorAll(
+            'input[type="color"]'
+        )
+        .forEach(colorInput => {
+
+            const property =
+                colorInput.dataset.colorProperty;
+
+
+            const textInput =
+                panel.querySelector(
+                    `[data-color-text="${property}"]`
+                );
+
+
+            colorInput.addEventListener(
+                "input",
+                () => {
+
+                    const value =
+                        colorInput.value;
+
 
                     element.style[property] =
                         value;
 
-                }
 
-                else {
-
-                    element.style[property] =
-                        `${value}px`;
+                    textInput.value =
+                        value;
 
                 }
-
-            }
-        );
-
-    });
-
-
-    // ==========================================
-    // SELECT INPUTS
-    // ==========================================
-
-    const selectInputs =
-        panel.querySelectorAll(
-            "select[data-property]"
-        );
-
-
-    selectInputs.forEach(select => {
-
-        select.addEventListener(
-            "change",
-            () => {
-
-                const property =
-                    select.dataset.property;
-
-                element.style[property] =
-                    select.value;
-
-            }
-        );
-
-    });
-
-
-    // ==========================================
-    // COLOR INPUTS
-    // ==========================================
-
-    const colorInputs =
-        panel.querySelectorAll(
-            'input[type="color"]'
-        );
-
-
-    colorInputs.forEach(colorInput => {
-
-        const property =
-            colorInput.dataset.colorProperty;
-
-
-        const textInput =
-            panel.querySelector(
-                `[data-color-text="${property}"]`
             );
 
 
-        colorInput.addEventListener(
-            "input",
-            () => {
+            textInput.addEventListener(
+                "input",
+                () => {
 
-                const value =
-                    colorInput.value;
-
-                element.style[property] =
-                    value;
-
-                textInput.value =
-                    value;
-
-            }
-        );
+                    const value =
+                        textInput.value;
 
 
-        textInput.addEventListener(
-            "input",
-            () => {
+                    if (
+                        /^#[0-9A-F]{6}$/i.test(
+                            value
+                        )
+                    ) {
 
-                const value =
-                    textInput.value;
+                        element.style[property] =
+                            value;
 
 
-                if (
-                    /^#[0-9A-F]{6}$/i.test(value)
-                ) {
+                        colorInput.value =
+                            value;
 
-                    element.style[property] =
-                        value;
-
-                    colorInput.value =
-                        value;
+                    }
 
                 }
+            );
 
-            }
-        );
-
-    });
+        });
 
 }
 
@@ -1162,97 +1363,365 @@ function setupPropertyInputs(element) {
 
 function setupSearch() {
 
-    const searchInput =
+    const input =
         document.getElementById(
             "devstyle-search-input"
         );
 
 
-    searchInput.addEventListener(
+    input.addEventListener(
         "input",
         () => {
 
-            const search =
-                searchInput.value
+            const query =
+                input.value
                     .trim()
                     .toLowerCase();
 
 
-            const fields =
-                panel.querySelectorAll(
-                    "[data-property-search]"
-                );
-
-
-            const categoriesElements =
+            const categoryElements =
                 panel.querySelectorAll(
                     ".devstyle-category"
                 );
 
 
-            if (!search) {
+            categoryElements.forEach(
+                category => {
 
-                fields.forEach(field => {
+                    const categoryName =
+                        category
+                            .querySelector(
+                                ".devstyle-category-left"
+                            )
+                            ?.textContent
+                            .toLowerCase() || "";
 
-                    field.style.display =
-                        "block";
 
-                });
+                    const fields =
+                        category.querySelectorAll(
+                            "[data-property-name]"
+                        );
 
-                return;
+
+                    let visibleCount = 0;
+
+
+                    fields.forEach(field => {
+
+                        const propertyName =
+                            field.dataset.propertyName;
+
+
+                        const matches =
+                            !query ||
+                            categoryName.includes(query) ||
+                            propertyName.includes(query);
+
+
+                        field.style.display =
+                            matches
+                                ? "block"
+                                : "none";
+
+
+                        if (matches) {
+                            visibleCount++;
+                        }
+
+                    });
+
+
+                    const categoryMatches =
+                        !query ||
+                        categoryName.includes(query);
+
+
+                    if (
+                        categoryMatches ||
+                        visibleCount > 0
+                    ) {
+
+                        category.style.display =
+                            "block";
+
+                    }
+
+                    else {
+
+                        category.style.display =
+                            "none";
+
+                    }
+
+
+                    // Open a matching category
+                    // when searching a property.
+
+                    if (
+                        query &&
+                        visibleCount > 0 &&
+                        !category.classList.contains(
+                            "is-open"
+                        )
+                    ) {
+
+                        category.classList.add(
+                            "is-open"
+                        );
+
+
+                        const content =
+                            category.querySelector(
+                                ".devstyle-category-content"
+                            );
+
+
+                        const arrow =
+                            category.querySelector(
+                                ".devstyle-arrow"
+                            );
+
+
+                        content.style.display =
+                            "block";
+
+
+                        arrow.textContent =
+                            "⌃";
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// DRAG PANEL
+// =====================================================
+
+function setupDragging() {
+
+    const handle =
+        document.getElementById(
+            "devstyle-drag-handle"
+        );
+
+
+    if (!handle) {
+        return;
+    }
+
+
+    handle.addEventListener(
+        "mousedown",
+        startDragging
+    );
+
+}
+
+
+function startDragging(event) {
+
+    if (
+        event.target.closest(
+            "button,input,select"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    panelDragging = true;
+
+
+    const rect =
+        panel.getBoundingClientRect();
+
+
+    dragStartX =
+        event.clientX;
+
+
+    dragStartY =
+        event.clientY;
+
+
+    panelStartLeft =
+        rect.left;
+
+
+    panelStartTop =
+        rect.top;
+
+
+    panel.style.left =
+        `${rect.left}px`;
+
+
+    panel.style.top =
+        `${rect.top}px`;
+
+
+    panel.style.right =
+        "auto";
+
+
+    document.body.style.userSelect =
+        "none";
+
+
+    document.addEventListener(
+        "mousemove",
+        dragPanel
+    );
+
+
+    document.addEventListener(
+        "mouseup",
+        stopDragging
+    );
+
+}
+
+
+function dragPanel(event) {
+
+    if (!panelDragging) {
+        return;
+    }
+
+
+    const deltaX =
+        event.clientX -
+        dragStartX;
+
+
+    const deltaY =
+        event.clientY -
+        dragStartY;
+
+
+    let newLeft =
+        panelStartLeft +
+        deltaX;
+
+
+    let newTop =
+        panelStartTop +
+        deltaY;
+
+
+    const maxLeft =
+        window.innerWidth -
+        panel.offsetWidth;
+
+
+    const maxTop =
+        window.innerHeight -
+        panel.offsetHeight;
+
+
+    newLeft =
+        Math.max(
+            0,
+            Math.min(
+                newLeft,
+                maxLeft
+            )
+        );
+
+
+    newTop =
+        Math.max(
+            0,
+            Math.min(
+                newTop,
+                maxTop
+            )
+        );
+
+
+    panel.style.left =
+        `${newLeft}px`;
+
+
+    panel.style.top =
+        `${newTop}px`;
+
+}
+
+
+function stopDragging() {
+
+    panelDragging = false;
+
+
+    document.body.style.userSelect =
+        "";
+
+
+    document.removeEventListener(
+        "mousemove",
+        dragPanel
+    );
+
+
+    document.removeEventListener(
+        "mouseup",
+        stopDragging
+    );
+
+}
+
+
+// =====================================================
+// MINIMIZE / COMPACT MODE
+// =====================================================
+
+function setupMinimize() {
+
+    const button =
+        document.getElementById(
+            "devstyle-minimize"
+        );
+
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            const minimized =
+                panel.classList.toggle(
+                    "devstyle-compact"
+                );
+
+
+            if (minimized) {
+
+                button.textContent =
+                    "+";
+
+                button.title =
+                    "Expand editor";
 
             }
 
+            else {
 
-            fields.forEach(field => {
+                button.textContent =
+                    "−";
 
-                const propertyName =
-                    field.dataset
-                        .propertySearch;
+                button.title =
+                    "Compact editor";
 
-
-                field.style.display =
-                    propertyName.includes(search)
-                        ? "block"
-                        : "none";
-
-            });
-
-
-            categoriesElements.forEach(category => {
-
-                const visibleFields =
-                    category.querySelectorAll(
-                        '[data-property-search]:not([style*="display: none"])'
-                    );
-
-
-                const content =
-                    category.querySelector(
-                        ".devstyle-category-content"
-                    );
-
-
-                if (
-                    visibleFields.length > 0
-                ) {
-
-                    category.style.display =
-                        "block";
-
-                    content.style.display =
-                        "block";
-
-                }
-
-                else {
-
-                    category.style.display =
-                        "none";
-
-                }
-
-            });
+            }
 
         }
     );
@@ -1264,9 +1733,9 @@ function setupSearch() {
 // COPY CSS
 // =====================================================
 
-function copyChangedCSS(element) {
+async function copyChangedCSS(element) {
 
-    const styles =
+    const inlineStyles =
         element.style;
 
 
@@ -1275,16 +1744,16 @@ function copyChangedCSS(element) {
 
     for (
         let i = 0;
-        i < styles.length;
+        i < inlineStyles.length;
         i++
     ) {
 
         const property =
-            styles[i];
+            inlineStyles[i];
 
 
         const value =
-            styles.getPropertyValue(
+            inlineStyles.getPropertyValue(
                 property
             );
 
@@ -1295,31 +1764,45 @@ function copyChangedCSS(element) {
     }
 
 
-    navigator.clipboard
-        .writeText(css)
-        .then(() => {
+    try {
 
-            const status =
-                document.getElementById(
-                    "devstyle-status"
-                );
+        await navigator.clipboard.writeText(
+            css
+        );
 
+
+        const status =
+            document.getElementById(
+                "devstyle-status"
+            );
+
+
+        status.textContent =
+            "CSS copied!";
+
+
+        setTimeout(() => {
 
             if (status) {
 
                 status.textContent =
-                    "CSS copied!";
-
-                setTimeout(() => {
-
-                    status.textContent =
-                        "Changes are applied instantly";
-
-                }, 1500);
+                    "Changes are applied instantly";
 
             }
 
-        });
+        }, 1500);
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Failed to copy CSS:",
+            error
+        );
+
+    }
 
 }
 
@@ -1330,19 +1813,27 @@ function copyChangedCSS(element) {
 
 function removePanel() {
 
-    if (panel) {
-
-        panel.remove();
-
-        panel = null;
-
+    if (!panel) {
+        return;
     }
+
+
+    stopDragging();
+
+
+    panel.remove();
+
+
+    panel = null;
+
+
+    selectedElement = null;
 
 }
 
 
 // =====================================================
-// RGB → HEX
+// RGB TO HEX
 // =====================================================
 
 function rgbToHex(rgb) {
@@ -1374,13 +1865,11 @@ function rgbToHex(rgb) {
     return "#" +
         values
             .slice(0, 3)
-            .map(value => {
-
-                return Number(value)
+            .map(value =>
+                Number(value)
                     .toString(16)
-                    .padStart(2, "0");
-
-            })
+                    .padStart(2, "0")
+            )
             .join("");
 
 }
@@ -1395,253 +1884,119 @@ function escapeHTML(value) {
     const div =
         document.createElement("div");
 
+
     div.textContent =
         value;
+
 
     return div.innerHTML;
 
 }
+
+
 // =====================================================
-// KEYBOARD SHORTCUT
+// ESCAPE ATTRIBUTE
 // =====================================================
 
-chrome.runtime.onMessage.addListener((message) => {
+function escapeAttribute(value) {
 
-    if (message.type === "START_INSPECT") {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
 
-        startInspector();
+}
+function setupActiveCategoryTracking() {
 
-    }
-
-});
-function setupDragging() {
-
-    const handle =
+    const content =
         document.getElementById(
-            "devstyle-drag-handle"
+            "devstyle-content"
         );
 
 
-    if (!handle) {
+    if (!content) {
         return;
     }
 
 
-    let dragging = false;
-
-    let startX = 0;
-    let startY = 0;
-
-    let startLeft = 0;
-    let startTop = 0;
+    const openCategories =
+        content.querySelectorAll(
+            ".devstyle-category.is-open"
+        );
 
 
-    handle.addEventListener(
-        "mousedown",
-        (event) => {
+    function updateActiveCategory() {
 
-            if (
-                event.target.closest(
-                    "button"
-                )
-            ) {
-                return;
-            }
+        let activeCategory = null;
+
+        let closestDistance =
+            Infinity;
 
 
-            dragging = true;
-
+        openCategories.forEach(category => {
 
             const rect =
-                panel.getBoundingClientRect();
+                category.getBoundingClientRect();
 
 
-            startX =
-                event.clientX;
-
-            startY =
-                event.clientY;
-
-            startLeft =
-                rect.left;
-
-            startTop =
-                rect.top;
+            const contentRect =
+                content.getBoundingClientRect();
 
 
-            panel.style.right =
-                "auto";
-
-            panel.style.bottom =
-                "auto";
-
-            panel.style.left =
-                `${startLeft}px`;
-
-            panel.style.top =
-                `${startTop}px`;
+            const distance =
+                Math.abs(
+                    rect.top -
+                    contentRect.top
+                );
 
 
-            document.body.style.userSelect =
-                "none";
+            if (
+                rect.bottom >
+                contentRect.top &&
+                distance <
+                closestDistance
+            ) {
 
-        }
-    );
+                closestDistance =
+                    distance;
 
+                activeCategory =
+                    category;
 
-    document.addEventListener(
-        "mousemove",
-        (event) => {
-
-            if (!dragging) {
-                return;
             }
 
-
-            const deltaX =
-                event.clientX -
-                startX;
+        });
 
 
-            const deltaY =
-                event.clientY -
-                startY;
+        openCategories.forEach(
+            category => {
 
-
-            let newLeft =
-                startLeft + deltaX;
-
-
-            let newTop =
-                startTop + deltaY;
-
-
-            const maxLeft =
-                window.innerWidth -
-                panel.offsetWidth;
-
-
-            const maxTop =
-                window.innerHeight -
-                panel.offsetHeight;
-
-
-            newLeft =
-                Math.max(
-                    0,
-                    Math.min(
-                        newLeft,
-                        maxLeft
-                    )
+                category.classList.remove(
+                    "active-sticky"
                 );
 
-
-            newTop =
-                Math.max(
-                    0,
-                    Math.min(
-                        newTop,
-                        maxTop
-                    )
-                );
-
-
-            panel.style.left =
-                `${newLeft}px`;
-
-            panel.style.top =
-                `${newTop}px`;
-
-        }
-    );
-
-
-    document.addEventListener(
-        "mouseup",
-        () => {
-
-            dragging = false;
-
-            document.body.style.userSelect =
-                "";
-
-        }
-    );
-
-}
-function setupResizing() {
-
-    if (!panel) {
-        return;
-    }
-
-
-    panel.style.resize =
-        "both";
-
-    panel.style.overflow =
-        "auto";
-
-    panel.style.minWidth =
-        "280px";
-
-    panel.style.minHeight =
-        "180px";
-
-}
-function setupMinimize() {
-
-    const button =
-        document.getElementById(
-            "devstyle-minimize"
+            }
         );
 
 
-    if (!button) {
-        return;
+        if (activeCategory) {
+
+            activeCategory.classList.add(
+                "active-sticky"
+            );
+
+        }
+
     }
 
 
-    let minimized = false;
-
-
-    button.addEventListener(
-        "click",
-        () => {
-
-            minimized =
-                !minimized;
-
-
-            if (minimized) {
-
-                panel.classList.add(
-                    "devstyle-minimized"
-                );
-
-                button.textContent =
-                    "+";
-
-                button.title =
-                    "Expand";
-
-            }
-
-            else {
-
-                panel.classList.remove(
-                    "devstyle-minimized"
-                );
-
-                button.textContent =
-                    "−";
-
-                button.title =
-                    "Minimize";
-
-            }
-
-        }
+    content.addEventListener(
+        "scroll",
+        updateActiveCategory
     );
+
+
+    updateActiveCategory();
 
 }

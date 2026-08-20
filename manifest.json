@@ -3,9 +3,9 @@
 
   "name": "DevStyle",
 
-  "version": "1.3.0",
+  "version": "1.4.0",
 
-  "description": "Visually edit CSS properties of any webpage element.",
+  "description": "Visually edit CSS properties of webpage elements in real time.",
 
   "permissions": [
     "activeTab"
