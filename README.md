@@ -11,7 +11,7 @@
 
 **DevStyle** is a Chrome extension designed to make experimenting with CSS faster and more intuitive.
 
-Instead of repeatedly opening DevTools and manually changing CSS values, DevStyle lets you select an element directly on a webpage and modify its styles through a simple visual editor.
+Instead of repeatedly opening DevTools and manually changing CSS values, DevStyle lets you visually select an element and modify its CSS directly on the webpage.
 
 ### The idea
 
@@ -27,64 +27,125 @@ Copy CSS
 
 ---
 
-## ✨ Current Features — V1.1
+# ✨ Current Features — V1.2
 
-### 🔍 Element Inspector
+## 🔍 Visual Element Inspector
 
-* Visual element selector
+* Select elements directly from a webpage
 * Hover highlighting
-* Select elements directly from the webpage
-* Display selected element information
+* Inspect regular HTML elements
+* Select `body` and other root-level elements
+* Display the selected element's tag, ID and classes
 
-### 📐 Size & Position
+## 📐 Layout
 
-* Change width
-* Change height
-* Change left position
-* Change top position
+* Width
+* Height
+* Position
+* Top
+* Right
+* Bottom
+* Left
+* Z-index
 
-### 🔤 Typography
+## 🔤 Typography
 
-* Change font family
-* Change font size
-* Change font weight / boldness
-* Change font color
-* Change line height
-* Change letter spacing
+* Font family
+* Font size
+* Font weight
+* Font color
+* Line height
+* Letter spacing
+* Text alignment
 
-### 🎨 Background
+## 🎨 Appearance
 
-* Change background color
+* Background color
+* Opacity
 
-### 🧱 Border
+## 🧱 Border
 
-* Change border width
-* Change border radius
-* Change border color
-* Change border style
-* Supports solid, dashed, dotted and double borders
+* Border width
+* Border radius
+* Border color
+* Border style
+* Solid
+* Dashed
+* Dotted
+* Double
 
-### 📦 Spacing
+## 📦 Spacing
 
-* Change padding
-* Change margin
+* Margin
+* Padding
+* Gap
 
-### ⚡ Developer Workflow
+## ⚡ Developer Workflow
 
 * Live CSS changes
 * No page refresh required
+* Color picker
+* CSS property search
+* Collapsible categories
+* Cleaner inspector interface
 * Copy modified inline CSS
-* Simple visual editing interface
+
+---
+
+# 🆕 What's New in V1.2?
+
+V1.2 focuses heavily on **UX and extensibility**.
+
+### Categorized CSS properties
+
+Instead of displaying every property at once, CSS controls are organized into categories:
+
+```text
+📐 Layout
+🔤 Typography
+🎨 Appearance
+🧱 Border
+📦 Spacing
+```
+
+Only one category is expanded at a time, keeping the inspector compact.
+
+### CSS Property Search
+
+Use the search field to quickly find a property:
+
+```text
+Search CSS property...
+```
+
+For example:
+
+```text
+border
+```
+
+will quickly show the available border controls.
+
+### Root Element Editing
+
+DevStyle can now select and modify root-level elements such as:
+
+```html
+<body>
+<html>
+```
+
+This makes it possible to experiment with things such as the **overall webpage background**.
 
 ---
 
 # 🌐 Website & Localhost Access
 
-The current development version can be tested on **localhost**, local HTML files, and live websites.
+The current development version can be tested on localhost, local HTML files, and live websites.
 
 ## 🏠 Local Development
 
-You can test DevStyle on development servers such as:
+DevStyle can be tested on development servers such as:
 
 ```text
 http://localhost:3000
@@ -98,7 +159,7 @@ You can also test local HTML files:
 file:///C:/your-project/index.html
 ```
 
-If you are testing local HTML files, enable:
+If you're testing local HTML files, enable:
 
 **Allow access to file URLs**
 
@@ -108,7 +169,7 @@ from the DevStyle extension settings.
 
 ## 🌍 Live Websites
 
-If DevStyle doesn't work on a live website, check the extension's site-access permission.
+If DevStyle doesn't work on a live website:
 
 1. Open:
 
@@ -136,27 +197,26 @@ This allows DevStyle to run on websites across the internet.
 
 # ⚠️ Current Version
 
-**Version: V1.1.0**
+**Version: `1.2.0`**
 
 **Status: 🚧 Active Development**
 
 DevStyle is currently an early-stage development project.
 
-The current version focuses on basic visual CSS editing and experimentation.
+The current version focuses on visual CSS experimentation and a scalable inspector interface.
 
-### Current limitations
+### Known limitations
 
-* Limited CSS property support
-* No Flexbox editor
-* No CSS Grid editor
-* No visual box-model editor
+* CSS property support is still limited
+* No Flexbox editor yet
+* No CSS Grid editor yet
+* No visual box-model editor yet
 * No undo/redo
 * No CSS history
 * No saved presets
-* Position editing may behave differently depending on the element's existing layout
-* Advanced websites and complex DOM structures may require additional compatibility work
-
-These limitations will be addressed in future releases.
+* Position behavior can vary depending on the element's existing layout
+* Complex websites may require additional compatibility work
+* Advanced iframe and Shadow DOM support is not yet implemented
 
 ---
 
@@ -177,7 +237,9 @@ Hover over Element
      ↓
 Select Element
      ↓
-Edit CSS
+Choose Category
+     ↓
+Change CSS
      ↓
 Preview Changes
      ↓
@@ -188,7 +250,7 @@ Copy CSS
 
 # 🛠️ Tech Stack
 
-DevStyle V1.1 is built with:
+DevStyle V1.2 is built with:
 
 * **JavaScript**
 * **HTML**
@@ -220,14 +282,14 @@ devstyle/
 
 ### File responsibilities
 
-| File            | Purpose                                |
-| --------------- | -------------------------------------- |
-| `manifest.json` | Chrome extension configuration         |
-| `popup.html`    | Extension popup structure              |
-| `popup.css`     | Popup styling                          |
-| `popup.js`      | Popup interaction                      |
-| `content.js`    | Element selection and CSS manipulation |
-| `content.css`   | Inspector and editor UI                |
+| File            | Purpose                                          |
+| --------------- | ------------------------------------------------ |
+| `manifest.json` | Chrome extension configuration                   |
+| `popup.html`    | Extension popup structure                        |
+| `popup.css`     | Popup styling                                    |
+| `popup.js`      | Popup interaction                                |
+| `content.js`    | Element selection, CSS controls and live editing |
+| `content.css`   | Inspector and editor UI                          |
 
 ---
 
@@ -255,32 +317,34 @@ Chrome Extension
  Read Current CSS
        │
        ▼
+ CSS Property Editor
+       │
+       ▼
  Modify Element Styles
        │
        ▼
  Live Preview
 ```
 
-For example, DevStyle reads the current CSS:
+The inspector uses `getComputedStyle()` to determine the currently rendered styles.
+
+Example:
 
 ```javascript
 const styles = getComputedStyle(element);
 
 console.log(styles.fontSize);
 console.log(styles.fontFamily);
-console.log(styles.fontWeight);
 console.log(styles.color);
 console.log(styles.backgroundColor);
 console.log(styles.borderRadius);
 ```
 
-Then changes can be applied immediately:
+DevStyle then applies changes directly to the selected element:
 
 ```javascript
 element.style.fontSize = "32px";
-element.style.fontWeight = "700";
 element.style.color = "#ff0000";
-element.style.backgroundColor = "#111827";
 element.style.borderRadius = "16px";
 ```
 
@@ -348,8 +412,6 @@ Hover over an element and click it.
 
 The DevStyle editor will appear.
 
-You can then experiment with the available CSS properties.
-
 ---
 
 # 🔧 Development Workflow
@@ -370,11 +432,12 @@ Refresh Webpage
 Test
 ```
 
-After making sure everything works, commit the changes:
+After testing:
 
 ```bash
 git add .
-git commit -m "feat: add typography, background, border, and spacing controls"
+git commit -m "feat: improve inspector UX and add categorized CSS controls"
+git pull origin main --rebase
 git push origin main
 ```
 
@@ -409,11 +472,26 @@ git push origin main
 * [x] Border style
 * [x] Padding
 * [x] Margin
-* [x] Improved editor UI
 
 ---
 
-## 🔜 V1.2 — Box Model
+## ✅ V1.2 — Inspector UX
+
+* [x] Categorized properties
+* [x] Collapsible categories
+* [x] Property search
+* [x] Root element selection
+* [x] Body background editing
+* [x] Layout category
+* [x] Typography category
+* [x] Appearance category
+* [x] Border category
+* [x] Spacing category
+* [x] Data-driven property configuration
+
+---
+
+## 🔜 V1.3 — Box Model
 
 * [ ] Individual top/right/bottom/left padding
 * [ ] Individual top/right/bottom/left margin
@@ -497,7 +575,7 @@ Pull Request
 
 # 💡 Why DevStyle?
 
-Finding the right CSS value often involves repeatedly changing values and checking the result.
+Finding the right CSS value often means repeatedly changing values and checking the result.
 
 For example:
 
@@ -513,7 +591,7 @@ For example:
 470px
 ```
 
-DevStyle aims to make that process visual.
+DevStyle aims to make this process visual.
 
 > **Don't guess the CSS value. See it.**
 
@@ -535,7 +613,7 @@ Open an issue and help improve DevStyle.
 
 | Item             | Status                |
 | ---------------- | --------------------- |
-| Current Version  | `1.1.0`               |
+| Current Version  | `1.2.0`               |
 | Status           | 🚧 Active Development |
 | Chrome Extension | Manifest V3           |
 | Backend          | Not required          |
