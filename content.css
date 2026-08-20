@@ -1,4 +1,9 @@
+/* =====================================================
+   DEVSTYLE HIGHLIGHT
+===================================================== */
+
 #devstyle-highlight {
+
     position: fixed;
 
     pointer-events: none;
@@ -7,250 +12,477 @@
 
     border: 2px solid #3b82f6;
 
-    background: rgba(59, 130, 246, 0.08);
+    background:
+        rgba(59, 130, 246, 0.08);
 
     box-sizing: border-box;
+
 }
 
 
+/* =====================================================
+   MAIN PANEL
+===================================================== */
+
 #devstyle-panel {
+
     position: fixed;
 
     top: 20px;
     right: 20px;
 
-    width: 320px;
+    width: 340px;
+
     max-height: 90vh;
 
     overflow-y: auto;
 
     z-index: 2147483647;
 
-    padding: 18px;
+    padding: 16px;
 
     background: #18181b;
+
     color: #ffffff;
 
-    border-radius: 12px;
+    border:
+        1px solid #3f3f46;
+
+    border-radius: 14px;
 
     box-shadow:
-        0 20px 50px rgba(0, 0, 0, 0.45);
+        0 20px 60px
+        rgba(0, 0, 0, 0.5);
 
     font-family:
         Arial,
         sans-serif;
 
+    font-size: 13px;
+
     box-sizing: border-box;
+
 }
 
 
-#devstyle-panel * {
-    box-sizing: border-box;
+/* =====================================================
+   PANEL SCROLLBAR
+===================================================== */
+
+#devstyle-panel::-webkit-scrollbar {
+
+    width: 6px;
+
 }
 
+
+#devstyle-panel::-webkit-scrollbar-track {
+
+    background: transparent;
+
+}
+
+
+#devstyle-panel::-webkit-scrollbar-thumb {
+
+    background: #3f3f46;
+
+    border-radius: 10px;
+
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
 
 .devstyle-header {
+
     display: flex;
 
-    justify-content: space-between;
     align-items: center;
 
-    margin-bottom: 6px;
+    justify-content: space-between;
+
+    margin-bottom: 14px;
+
 }
 
 
 .devstyle-title {
+
     font-size: 18px;
+
     font-weight: 700;
-}
 
-
-.devstyle-close {
-    width: 28px;
-    height: 28px;
-
-    border: none;
-    border-radius: 6px;
-
-    background: #27272a;
-    color: white;
-
-    cursor: pointer;
-
-    font-size: 16px;
-}
-
-
-.devstyle-close:hover {
-    background: #3f3f46;
 }
 
 
 .devstyle-element {
-    margin-bottom: 18px;
+
+    max-width: 245px;
+
+    margin-top: 3px;
+
+    overflow: hidden;
+
+    color: #71717a;
+
+    font-size: 11px;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+}
+
+
+.devstyle-close {
+
+    width: 30px;
+
+    height: 30px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: #27272a;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    line-height: 30px;
+
+}
+
+
+.devstyle-close:hover {
+
+    background: #3f3f46;
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+.devstyle-search {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 12px;
+
+    padding: 8px 10px;
+
+    border:
+        1px solid #3f3f46;
+
+    border-radius: 8px;
+
+    background: #27272a;
+
+}
+
+
+.devstyle-search span {
+
+    color: #a1a1aa;
+
+    font-size: 16px;
+
+}
+
+
+.devstyle-search input {
+
+    width: 100%;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: white;
+
+    font-size: 12px;
+
+}
+
+
+.devstyle-search input::placeholder {
+
+    color: #71717a;
+
+}
+
+
+/* =====================================================
+   CATEGORY
+===================================================== */
+
+.devstyle-category {
+
+    margin-bottom: 6px;
+
+    overflow: hidden;
+
+    border:
+        1px solid #27272a;
+
+    border-radius: 9px;
+
+    background: #18181b;
+
+}
+
+
+/* =====================================================
+   CATEGORY HEADER
+===================================================== */
+
+.devstyle-category-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    width: 100%;
+
+    padding: 11px;
+
+    border: none;
+
+    background: #202023;
+
+    color: white;
+
+    cursor: pointer;
+
+    text-align: left;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+}
+
+
+.devstyle-category-header:hover {
+
+    background: #27272a;
+
+}
+
+
+.devstyle-category-header > span:first-child {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+}
+
+
+.devstyle-category-icon {
+
+    font-size: 14px;
+
+}
+
+
+.devstyle-arrow {
 
     color: #a1a1aa;
 
     font-size: 12px;
+
 }
 
 
-.devstyle-group {
-    margin-top: 18px;
+/* =====================================================
+   CATEGORY CONTENT
+===================================================== */
+
+.devstyle-category-content {
+
+    padding: 11px;
+
 }
 
 
-.devstyle-group-title {
-    margin-bottom: 10px;
-
-    color: #a1a1aa;
-
-    font-size: 11px;
-    font-weight: 700;
-
-    text-transform: uppercase;
-}
-
+/* =====================================================
+   FIELD
+===================================================== */
 
 .devstyle-field {
-    margin-bottom: 10px;
+
+    margin-bottom: 12px;
+
+}
+
+
+.devstyle-field:last-child {
+
+    margin-bottom: 0;
+
 }
 
 
 .devstyle-field label {
+
     display: block;
 
     margin-bottom: 5px;
 
-    font-size: 12px;
+    color: #d4d4d8;
+
+    font-size: 11px;
+
 }
 
+
+/* =====================================================
+   INPUT ROW
+===================================================== */
 
 .devstyle-input-row {
+
     display: flex;
 
+    align-items: center;
+
     gap: 6px;
+
 }
 
+
+/* =====================================================
+   TEXT / NUMBER INPUT
+===================================================== */
 
 .devstyle-field input[type="text"],
 .devstyle-field input[type="number"] {
 
     width: 100%;
 
+    min-width: 0;
+
     padding: 8px;
 
-    border: 1px solid #3f3f46;
+    border:
+        1px solid #3f3f46;
+
     border-radius: 6px;
 
+    outline: none;
+
     background: #27272a;
+
     color: white;
 
-    outline: none;
+    font-size: 12px;
+
 }
 
 
-.devstyle-field input:focus {
+.devstyle-field input[type="text"]:focus,
+.devstyle-field input[type="number"]:focus {
+
     border-color: #3b82f6;
+
 }
 
+
+/* =====================================================
+   SELECT
+===================================================== */
+
+.devstyle-field select {
+
+    width: 100%;
+
+    padding: 8px;
+
+    border:
+        1px solid #3f3f46;
+
+    border-radius: 6px;
+
+    outline: none;
+
+    background: #27272a;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 12px;
+
+}
+
+
+.devstyle-field select:focus {
+
+    border-color: #3b82f6;
+
+}
+
+
+/* =====================================================
+   COLOR INPUT
+===================================================== */
 
 .devstyle-field input[type="color"] {
 
-    width: 45px;
+    width: 42px;
+
     height: 34px;
+
+    flex-shrink: 0;
 
     padding: 2px;
 
-    border: 1px solid #3f3f46;
+    border:
+        1px solid #3f3f46;
 
     border-radius: 6px;
 
     background: #27272a;
 
     cursor: pointer;
-}
-
-
-.devstyle-copy {
-
-    width: 100%;
-
-    margin-top: 12px;
-
-    padding: 10px;
-
-    border: none;
-
-    border-radius: 7px;
-
-    background: #ffffff;
-    color: #18181b;
-
-    font-weight: 700;
-
-    cursor: pointer;
-}
-
-
-.devstyle-copy:hover {
-    background: #e4e4e7;
-}
-
-
-.devstyle-status {
-
-    margin-top: 8px;
-
-    text-align: center;
-
-    color: #a1a1aa;
-
-    font-size: 11px;
-}
-/* =========================================
-   SELECT ELEMENT
-========================================= */
-
-#devstyle-panel select {
-
-    width: 100%;
-
-    padding: 8px;
-
-    border: 1px solid #3f3f46;
-
-    border-radius: 6px;
-
-    background: #27272a;
-
-    color: white;
-
-    outline: none;
-
-    cursor: pointer;
-}
-
-
-#devstyle-panel select:focus {
-
-    border-color: #3b82f6;
 
 }
 
 
-/* =========================================
+/* =====================================================
    UNIT
-========================================= */
+===================================================== */
 
 .devstyle-unit {
 
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
-    min-width: 42px;
+    min-width: 40px;
+
+    height: 34px;
 
     padding: 0 7px;
 
@@ -258,31 +490,77 @@
 
     background: #27272a;
 
-    color: #a1a1aa;
+    color: #71717a;
 
-    font-size: 12px;
+    font-size: 11px;
 
 }
 
 
-/* =========================================
-   COLOR INPUT
-========================================= */
+/* =====================================================
+   COPY BUTTON
+===================================================== */
 
-.devstyle-field input[type="color"] {
+.devstyle-copy {
 
-    width: 45px;
+    width: 100%;
 
-    height: 34px;
+    margin-top: 10px;
 
-    padding: 2px;
+    padding: 10px;
 
-    border: 1px solid #3f3f46;
+    border: none;
 
-    border-radius: 6px;
+    border-radius: 8px;
 
-    background: #27272a;
+    background: #ffffff;
+
+    color: #18181b;
 
     cursor: pointer;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+}
+
+
+.devstyle-copy:hover {
+
+    background: #e4e4e7;
+
+}
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+.devstyle-status {
+
+    margin-top: 8px;
+
+    color: #71717a;
+
+    text-align: center;
+
+    font-size: 10px;
+
+}
+
+
+/* =====================================================
+   REMOVE NUMBER ARROWS
+===================================================== */
+
+#devstyle-panel
+input[type="number"]::-webkit-inner-spin-button,
+#devstyle-panel
+input[type="number"]::-webkit-outer-spin-button {
+
+    margin: 0;
+
+    -webkit-appearance: none;
 
 }

@@ -5,7 +5,218 @@ let panel = null;
 
 
 // =====================================================
-// RECEIVE MESSAGE FROM POPUP
+// CSS PROPERTY CONFIGURATION
+// =====================================================
+
+const categories = [
+    {
+        id: "layout",
+        name: "Layout",
+        icon: "📐",
+        properties: [
+            {
+                label: "Width",
+                property: "width",
+                type: "number"
+            },
+            {
+                label: "Height",
+                property: "height",
+                type: "number"
+            },
+            {
+                label: "Position",
+                property: "position",
+                type: "select",
+                options: [
+                    "static",
+                    "relative",
+                    "absolute",
+                    "fixed",
+                    "sticky"
+                ]
+            },
+            {
+                label: "Top",
+                property: "top",
+                type: "number"
+            },
+            {
+                label: "Right",
+                property: "right",
+                type: "number"
+            },
+            {
+                label: "Bottom",
+                property: "bottom",
+                type: "number"
+            },
+            {
+                label: "Left",
+                property: "left",
+                type: "number"
+            },
+            {
+                label: "Z Index",
+                property: "zIndex",
+                type: "number",
+                unit: ""
+            }
+        ]
+    },
+
+    {
+        id: "typography",
+        name: "Typography",
+        icon: "🔤",
+        properties: [
+            {
+                label: "Font Family",
+                property: "fontFamily",
+                type: "font"
+            },
+            {
+                label: "Font Size",
+                property: "fontSize",
+                type: "number"
+            },
+            {
+                label: "Font Weight",
+                property: "fontWeight",
+                type: "select",
+                options: [
+                    "100",
+                    "200",
+                    "300",
+                    "400",
+                    "500",
+                    "600",
+                    "700",
+                    "800",
+                    "900"
+                ],
+                optionLabels: [
+                    "100 - Thin",
+                    "200 - Extra Light",
+                    "300 - Light",
+                    "400 - Normal",
+                    "500 - Medium",
+                    "600 - Semi Bold",
+                    "700 - Bold",
+                    "800 - Extra Bold",
+                    "900 - Black"
+                ]
+            },
+            {
+                label: "Font Color",
+                property: "color",
+                type: "color"
+            },
+            {
+                label: "Line Height",
+                property: "lineHeight",
+                type: "number"
+            },
+            {
+                label: "Letter Spacing",
+                property: "letterSpacing",
+                type: "number"
+            },
+            {
+                label: "Text Align",
+                property: "textAlign",
+                type: "select",
+                options: [
+                    "left",
+                    "center",
+                    "right",
+                    "justify"
+                ]
+            }
+        ]
+    },
+
+    {
+        id: "appearance",
+        name: "Appearance",
+        icon: "🎨",
+        properties: [
+            {
+                label: "Background Color",
+                property: "backgroundColor",
+                type: "color"
+            },
+            {
+                label: "Opacity",
+                property: "opacity",
+                type: "number",
+                unit: ""
+            }
+        ]
+    },
+
+    {
+        id: "border",
+        name: "Border",
+        icon: "🧱",
+        properties: [
+            {
+                label: "Border Width",
+                property: "borderWidth",
+                type: "number"
+            },
+            {
+                label: "Border Radius",
+                property: "borderRadius",
+                type: "number"
+            },
+            {
+                label: "Border Color",
+                property: "borderColor",
+                type: "color"
+            },
+            {
+                label: "Border Style",
+                property: "borderStyle",
+                type: "select",
+                options: [
+                    "none",
+                    "solid",
+                    "dashed",
+                    "dotted",
+                    "double"
+                ]
+            }
+        ]
+    },
+
+    {
+        id: "spacing",
+        name: "Spacing",
+        icon: "📦",
+        properties: [
+            {
+                label: "Margin",
+                property: "margin",
+                type: "number"
+            },
+            {
+                label: "Padding",
+                property: "padding",
+                type: "number"
+            },
+            {
+                label: "Gap",
+                property: "gap",
+                type: "number"
+            }
+        ]
+    }
+];
+
+
+// =====================================================
+// MESSAGE FROM POPUP
 // =====================================================
 
 chrome.runtime.onMessage.addListener((message) => {
@@ -60,7 +271,7 @@ function createHighlight() {
 
     highlight.id = "devstyle-highlight";
 
-    document.body.appendChild(highlight);
+    document.documentElement.appendChild(highlight);
 
 }
 
@@ -84,14 +295,12 @@ function handleMouseMove(event) {
         return;
     }
 
-    if (
-        element === document.body ||
-        element === document.documentElement
-    ) {
+    if (!(element instanceof Element)) {
         return;
     }
 
-    const rect = element.getBoundingClientRect();
+    const rect =
+        element.getBoundingClientRect();
 
     highlight.style.left =
         `${rect.left}px`;
@@ -127,10 +336,7 @@ function handleElementClick(event) {
         return;
     }
 
-    if (
-        element === document.body ||
-        element === document.documentElement
-    ) {
+    if (!(element instanceof Element)) {
         return;
     }
 
@@ -186,18 +392,30 @@ function showEditor(element) {
 
     removePanel();
 
-    const styles = getComputedStyle(element);
+    const styles =
+        getComputedStyle(element);
 
-    panel = document.createElement("div");
+    panel =
+        document.createElement("div");
 
-    panel.id = "devstyle-panel";
+    panel.id =
+        "devstyle-panel";
+
 
     panel.innerHTML = `
 
         <div class="devstyle-header">
 
-            <div class="devstyle-title">
-                DevStyle
+            <div>
+
+                <div class="devstyle-title">
+                    DevStyle
+                </div>
+
+                <div class="devstyle-element">
+                    ${getElementName(element)}
+                </div>
+
             </div>
 
             <button
@@ -210,320 +428,28 @@ function showEditor(element) {
         </div>
 
 
-        <div class="devstyle-element">
+        <div class="devstyle-search">
 
-            &lt;${element.tagName.toLowerCase()}&gt;
+            <span>⌕</span>
 
-            ${
-                element.id
-                    ? "#" + element.id
-                    : ""
-            }
-
-        </div>
-
-
-        <!-- ================= SIZE ================= -->
-
-        <div class="devstyle-group">
-
-            <div class="devstyle-group-title">
-                Size
-            </div>
-
-            ${createNumberField(
-                "Width",
-                "width",
-                parseFloat(styles.width)
-            )}
-
-            ${createNumberField(
-                "Height",
-                "height",
-                parseFloat(styles.height)
-            )}
+            <input
+                type="text"
+                id="devstyle-search-input"
+                placeholder="Search CSS property..."
+            >
 
         </div>
 
 
-        <!-- ================= POSITION ================= -->
+        <div
+            id="devstyle-categories"
+            class="devstyle-categories"
+        >
 
-        <div class="devstyle-group">
-
-            <div class="devstyle-group-title">
-                Position
-            </div>
-
-            ${createNumberField(
-                "Left",
-                "left",
-                parseFloat(styles.left)
-            )}
-
-            ${createNumberField(
-                "Top",
-                "top",
-                parseFloat(styles.top)
-            )}
+            ${renderCategories(element)}
 
         </div>
 
-
-        <!-- ================= TYPOGRAPHY ================= -->
-
-        <div class="devstyle-group">
-
-            <div class="devstyle-group-title">
-                Typography
-            </div>
-
-
-            <!-- Font Family -->
-
-            <div class="devstyle-field">
-
-                <label>
-                    Font Family
-                </label>
-
-                <select
-                    id="devstyle-font-family"
-                >
-
-                    <option value="Arial">
-                        Arial
-                    </option>
-
-                    <option value="Inter">
-                        Inter
-                    </option>
-
-                    <option value="Roboto">
-                        Roboto
-                    </option>
-
-                    <option value="Poppins">
-                        Poppins
-                    </option>
-
-                    <option value="sans-serif">
-                        Sans Serif
-                    </option>
-
-                    <option value="serif">
-                        Serif
-                    </option>
-
-                    <option value="monospace">
-                        Monospace
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <!-- Font Size -->
-
-            ${createNumberField(
-                "Font Size",
-                "fontSize",
-                parseFloat(styles.fontSize)
-            )}
-
-
-            <!-- Font Weight -->
-
-            <div class="devstyle-field">
-
-                <label>
-                    Font Weight
-                </label>
-
-                <select
-                    id="devstyle-font-weight"
-                >
-
-                    <option value="100">
-                        100 - Thin
-                    </option>
-
-                    <option value="200">
-                        200 - Extra Light
-                    </option>
-
-                    <option value="300">
-                        300 - Light
-                    </option>
-
-                    <option value="400">
-                        400 - Normal
-                    </option>
-
-                    <option value="500">
-                        500 - Medium
-                    </option>
-
-                    <option value="600">
-                        600 - Semi Bold
-                    </option>
-
-                    <option value="700">
-                        700 - Bold
-                    </option>
-
-                    <option value="800">
-                        800 - Extra Bold
-                    </option>
-
-                    <option value="900">
-                        900 - Black
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <!-- Font Color -->
-
-            ${createColorField(
-                "Font Color",
-                "color",
-                rgbToHex(styles.color)
-            )}
-
-
-            <!-- Line Height -->
-
-            ${createNumberField(
-                "Line Height",
-                "lineHeight",
-                parseFloat(styles.lineHeight)
-            )}
-
-
-            <!-- Letter Spacing -->
-
-            ${createNumberField(
-                "Letter Spacing",
-                "letterSpacing",
-                parseFloat(styles.letterSpacing)
-            )}
-
-        </div>
-
-
-        <!-- ================= BACKGROUND ================= -->
-
-        <div class="devstyle-group">
-
-            <div class="devstyle-group-title">
-                Background
-            </div>
-
-            ${createColorField(
-                "Background Color",
-                "backgroundColor",
-                rgbToHex(styles.backgroundColor)
-            )}
-
-        </div>
-
-
-        <!-- ================= BORDER ================= -->
-
-        <div class="devstyle-group">
-
-            <div class="devstyle-group-title">
-                Border
-            </div>
-
-
-            ${createNumberField(
-                "Border Width",
-                "borderWidth",
-                parseFloat(styles.borderWidth)
-            )}
-
-
-            ${createNumberField(
-                "Border Radius",
-                "borderRadius",
-                parseFloat(styles.borderRadius)
-            )}
-
-
-            ${createColorField(
-                "Border Color",
-                "borderColor",
-                rgbToHex(styles.borderColor)
-            )}
-
-
-            <div class="devstyle-field">
-
-                <label>
-                    Border Style
-                </label>
-
-                <select
-                    id="devstyle-border-style"
-                >
-
-                    <option value="none">
-                        None
-                    </option>
-
-                    <option value="solid">
-                        Solid
-                    </option>
-
-                    <option value="dashed">
-                        Dashed
-                    </option>
-
-                    <option value="dotted">
-                        Dotted
-                    </option>
-
-                    <option value="double">
-                        Double
-                    </option>
-
-                </select>
-
-            </div>
-
-        </div>
-
-
-        <!-- ================= SPACING ================= -->
-
-        <div class="devstyle-group">
-
-            <div class="devstyle-group-title">
-                Spacing
-            </div>
-
-
-            ${createNumberField(
-                "Padding",
-                "padding",
-                parseFloat(styles.padding)
-            )}
-
-
-            ${createNumberField(
-                "Margin",
-                "margin",
-                parseFloat(styles.margin)
-            )}
-
-        </div>
-
-
-        <!-- ================= COPY ================= -->
 
         <button
             class="devstyle-copy"
@@ -543,106 +469,477 @@ function showEditor(element) {
     `;
 
 
-    document.body.appendChild(panel);
+    document.documentElement.appendChild(panel);
 
-    setupControls(element);
+    setupPanel(element);
 
 }
 
 
 // =====================================================
-// NUMBER FIELD
+// ELEMENT NAME
 // =====================================================
 
-function createNumberField(
-    label,
-    property,
-    value
-) {
+function getElementName(element) {
 
-    return `
+    let name =
+        `<${element.tagName.toLowerCase()}>`;
 
-        <div class="devstyle-field">
+    if (element.id) {
 
-            <label>
-                ${label}
-            </label>
+        name +=
+            ` #${element.id}`;
 
-            <div class="devstyle-input-row">
+    }
 
-                <input
-                    type="number"
-                    value="${
-                        isNaN(value)
-                            ? 0
-                            : value
-                    }"
-                    data-property="${property}"
+    if (
+        element.className &&
+        typeof element.className === "string"
+    ) {
+
+        const classes =
+            element.className
+                .trim()
+                .split(/\s+/)
+                .slice(0, 2);
+
+        if (classes.length) {
+
+            name +=
+                ` .${classes.join(".")}`;
+
+        }
+
+    }
+
+    return escapeHTML(name);
+
+}
+
+
+// =====================================================
+// RENDER CATEGORIES
+// =====================================================
+
+function renderCategories(element) {
+
+    return categories
+        .map((category, index) => {
+
+            return `
+
+                <div
+                    class="devstyle-category"
+                    data-category="${category.id}"
                 >
 
-                <span class="devstyle-unit">
-                    px
-                </span>
+                    <button
+                        class="devstyle-category-header"
+                        data-category-toggle="${category.id}"
+                    >
+
+                        <span>
+
+                            <span class="devstyle-category-icon">
+                                ${category.icon}
+                            </span>
+
+                            ${category.name}
+
+                        </span>
+
+                        <span class="devstyle-arrow">
+                            ${index === 0 ? "⌃" : "⌄"}
+                        </span>
+
+                    </button>
+
+
+                    <div
+                        class="devstyle-category-content"
+                        data-category-content="${category.id}"
+                        style="
+                            display:
+                            ${index === 0
+                                ? "block"
+                                : "none"};
+                        "
+                    >
+
+                        ${category.properties
+                            .map(property =>
+                                renderProperty(
+                                    element,
+                                    property
+                                )
+                            )
+                            .join("")}
+
+                    </div>
+
+                </div>
+
+            `;
+
+        })
+        .join("");
+
+}
+
+
+// =====================================================
+// RENDER PROPERTY
+// =====================================================
+
+function renderProperty(
+    element,
+    property
+) {
+
+    const styles =
+        getComputedStyle(element);
+
+    const value =
+        styles[property.property];
+
+
+    if (property.type === "number") {
+
+        let numericValue =
+            parseFloat(value);
+
+        if (isNaN(numericValue)) {
+            numericValue = 0;
+        }
+
+        const unit =
+            property.unit === ""
+                ? ""
+                : "px";
+
+        return `
+
+            <div
+                class="devstyle-field"
+                data-property-search="${property.label.toLowerCase()}"
+            >
+
+                <label>
+                    ${property.label}
+                </label>
+
+                <div class="devstyle-input-row">
+
+                    <input
+                        type="number"
+                        value="${numericValue}"
+                        data-property="${property.property}"
+                    >
+
+                    <span class="devstyle-unit">
+                        ${unit}
+                    </span>
+
+                </div>
 
             </div>
 
-        </div>
+        `;
 
-    `;
-
-}
+    }
 
 
-// =====================================================
-// COLOR FIELD
-// =====================================================
+    if (property.type === "color") {
 
-function createColorField(
-    label,
-    property,
-    value
-) {
+        const hex =
+            rgbToHex(value);
 
-    return `
 
-        <div class="devstyle-field">
+        return `
 
-            <label>
-                ${label}
-            </label>
+            <div
+                class="devstyle-field"
+                data-property-search="${property.label.toLowerCase()}"
+            >
 
-            <div class="devstyle-input-row">
+                <label>
+                    ${property.label}
+                </label>
 
-                <input
-                    type="color"
-                    data-color-property="${property}"
-                    value="${
-                        value || "#000000"
-                    }"
-                >
+                <div class="devstyle-input-row">
 
-                <input
-                    type="text"
-                    data-color-text="${property}"
-                    value="${
-                        value || "#000000"
-                    }"
-                >
+                    <input
+                        type="color"
+                        value="${hex}"
+                        data-color-property="${property.property}"
+                    >
+
+                    <input
+                        type="text"
+                        value="${hex}"
+                        data-color-text="${property.property}"
+                    >
+
+                </div>
 
             </div>
 
-        </div>
+        `;
 
-    `;
+    }
+
+
+    if (property.type === "font") {
+
+        const fonts = [
+            "Arial",
+            "Inter",
+            "Roboto",
+            "Poppins",
+            "Helvetica",
+            "Georgia",
+            "Times New Roman",
+            "Courier New",
+            "Verdana",
+            "sans-serif",
+            "serif",
+            "monospace"
+        ];
+
+
+        const currentFont =
+            value
+                .split(",")[0]
+                .replace(/"/g, "")
+                .trim();
+
+
+        return `
+
+            <div
+                class="devstyle-field"
+                data-property-search="${property.label.toLowerCase()}"
+            >
+
+                <label>
+                    ${property.label}
+                </label>
+
+                <select
+                    data-property="${property.property}"
+                >
+
+                    ${fonts
+                        .map(font => {
+
+                            return `
+                                <option
+                                    value="${font}"
+                                    ${
+                                        currentFont
+                                        .toLowerCase() ===
+                                        font.toLowerCase()
+                                            ? "selected"
+                                            : ""
+                                    }
+                                >
+                                    ${font}
+                                </option>
+                            `;
+
+                        })
+                        .join("")}
+
+                </select>
+
+            </div>
+
+        `;
+
+    }
+
+
+    if (property.type === "select") {
+
+        const currentValue =
+            value;
+
+
+        return `
+
+            <div
+                class="devstyle-field"
+                data-property-search="${property.label.toLowerCase()}"
+            >
+
+                <label>
+                    ${property.label}
+                </label>
+
+                <select
+                    data-property="${property.property}"
+                >
+
+                    ${property.options
+                        .map((option, index) => {
+
+                            const label =
+                                property.optionLabels
+                                    ? property.optionLabels[index]
+                                    : option;
+
+                            return `
+
+                                <option
+                                    value="${option}"
+                                    ${
+                                        currentValue === option
+                                            ? "selected"
+                                            : ""
+                                    }
+                                >
+                                    ${label}
+                                </option>
+
+                            `;
+
+                        })
+                        .join("")}
+
+                </select>
+
+            </div>
+
+        `;
+
+    }
+
+
+    return "";
 
 }
 
 
 // =====================================================
-// SETUP CONTROLS
+// SETUP PANEL
 // =====================================================
 
-function setupControls(element) {
+function setupPanel(element) {
+
+    setupCategoryToggles();
+
+    setupPropertyInputs(element);
+
+    setupSearch();
+
+    document
+        .getElementById("devstyle-close")
+        .addEventListener(
+            "click",
+            removePanel
+        );
+
+
+    document
+        .getElementById("devstyle-copy")
+        .addEventListener(
+            "click",
+            () => copyChangedCSS(element)
+        );
+
+}
+
+
+// =====================================================
+// CATEGORY TOGGLES
+// =====================================================
+
+function setupCategoryToggles() {
+
+    const headers =
+        panel.querySelectorAll(
+            "[data-category-toggle]"
+        );
+
+
+    headers.forEach(header => {
+
+        header.addEventListener(
+            "click",
+            () => {
+
+                const category =
+                    header.dataset.categoryToggle;
+
+
+                const contents =
+                    panel.querySelectorAll(
+                        "[data-category-content]"
+                    );
+
+
+                const arrows =
+                    panel.querySelectorAll(
+                        ".devstyle-arrow"
+                    );
+
+
+                contents.forEach(content => {
+
+                    content.style.display =
+                        "none";
+
+                });
+
+
+                arrows.forEach(arrow => {
+
+                    arrow.textContent =
+                        "⌄";
+
+                });
+
+
+                const selectedContent =
+                    panel.querySelector(
+                        `[data-category-content="${category}"]`
+                    );
+
+
+                const selectedArrow =
+                    header.querySelector(
+                        ".devstyle-arrow"
+                    );
+
+
+                if (selectedContent) {
+
+                    selectedContent.style.display =
+                        "block";
+
+                }
+
+
+                if (selectedArrow) {
+
+                    selectedArrow.textContent =
+                        "⌃";
+
+                }
+
+            }
+        );
+
+    });
+
+}
+
+
+// =====================================================
+// PROPERTY INPUTS
+// =====================================================
+
+function setupPropertyInputs(element) {
 
 
     // ==========================================
@@ -668,11 +965,15 @@ function setupControls(element) {
                     input.value;
 
 
-                // Position
+                // Position needs non-static position
 
                 if (
-                    property === "left" ||
-                    property === "top"
+                    [
+                        "top",
+                        "right",
+                        "bottom",
+                        "left"
+                    ].includes(property)
                 ) {
 
                     const currentPosition =
@@ -697,21 +998,19 @@ function setupControls(element) {
                 // Unitless properties
 
                 if (
-                    property ===
-                    "fontWeight"
+                    property === "zIndex" ||
+                    property === "opacity"
                 ) {
 
-                    element.style[
-                        property
-                    ] = value;
+                    element.style[property] =
+                        value;
 
                 }
 
                 else {
 
-                    element.style[
-                        property
-                    ] = `${value}px`;
+                    element.style[property] =
+                        `${value}px`;
 
                 }
 
@@ -722,87 +1021,31 @@ function setupControls(element) {
 
 
     // ==========================================
-    // FONT FAMILY
+    // SELECT INPUTS
     // ==========================================
 
-    const fontFamily =
-        document.getElementById(
-            "devstyle-font-family"
+    const selectInputs =
+        panel.querySelectorAll(
+            "select[data-property]"
         );
 
 
-    fontFamily.value =
-        getComputedStyle(
-            element
-        ).fontFamily
-        .split(",")[0]
-        .replace(/"/g, "")
-        .trim();
+    selectInputs.forEach(select => {
 
+        select.addEventListener(
+            "change",
+            () => {
 
-    fontFamily.addEventListener(
-        "change",
-        () => {
+                const property =
+                    select.dataset.property;
 
-            element.style.fontFamily =
-                fontFamily.value;
+                element.style[property] =
+                    select.value;
 
-        }
-    );
-
-
-    // ==========================================
-    // FONT WEIGHT
-    // ==========================================
-
-    const fontWeight =
-        document.getElementById(
-            "devstyle-font-weight"
+            }
         );
 
-
-    fontWeight.value =
-        getComputedStyle(
-            element
-        ).fontWeight;
-
-
-    fontWeight.addEventListener(
-        "change",
-        () => {
-
-            element.style.fontWeight =
-                fontWeight.value;
-
-        }
-    );
-
-
-    // ==========================================
-    // BORDER STYLE
-    // ==========================================
-
-    const borderStyle =
-        document.getElementById(
-            "devstyle-border-style"
-        );
-
-
-    borderStyle.value =
-        getComputedStyle(
-            element
-        ).borderStyle;
-
-
-    borderStyle.addEventListener(
-        "change",
-        () => {
-
-            element.style.borderStyle =
-                borderStyle.value;
-
-        }
-    );
+    });
 
 
     // ==========================================
@@ -831,11 +1074,14 @@ function setupControls(element) {
             "input",
             () => {
 
-                element.style[property] =
+                const value =
                     colorInput.value;
 
+                element.style[property] =
+                    value;
+
                 textInput.value =
-                    colorInput.value;
+                    value;
 
             }
         );
@@ -866,33 +1112,109 @@ function setupControls(element) {
 
     });
 
+}
 
-    // ==========================================
-    // CLOSE
-    // ==========================================
 
-    document
-        .getElementById("devstyle-close")
-        .addEventListener(
-            "click",
-            removePanel
+// =====================================================
+// SEARCH
+// =====================================================
+
+function setupSearch() {
+
+    const searchInput =
+        document.getElementById(
+            "devstyle-search-input"
         );
 
 
-    // ==========================================
-    // COPY CSS
-    // ==========================================
+    searchInput.addEventListener(
+        "input",
+        () => {
 
-    document
-        .getElementById("devstyle-copy")
-        .addEventListener(
-            "click",
-            () => {
+            const search =
+                searchInput.value
+                    .trim()
+                    .toLowerCase();
 
-                copyChangedCSS(element);
+
+            const fields =
+                panel.querySelectorAll(
+                    "[data-property-search]"
+                );
+
+
+            const categoriesElements =
+                panel.querySelectorAll(
+                    ".devstyle-category"
+                );
+
+
+            if (!search) {
+
+                fields.forEach(field => {
+
+                    field.style.display =
+                        "block";
+
+                });
+
+                return;
 
             }
-        );
+
+
+            fields.forEach(field => {
+
+                const propertyName =
+                    field.dataset
+                        .propertySearch;
+
+
+                field.style.display =
+                    propertyName.includes(search)
+                        ? "block"
+                        : "none";
+
+            });
+
+
+            categoriesElements.forEach(category => {
+
+                const visibleFields =
+                    category.querySelectorAll(
+                        '[data-property-search]:not([style*="display: none"])'
+                    );
+
+
+                const content =
+                    category.querySelector(
+                        ".devstyle-category-content"
+                    );
+
+
+                if (
+                    visibleFields.length > 0
+                ) {
+
+                    category.style.display =
+                        "block";
+
+                    content.style.display =
+                        "block";
+
+                }
+
+                else {
+
+                    category.style.display =
+                        "none";
+
+                }
+
+            });
+
+        }
+    );
 
 }
 
@@ -1019,5 +1341,22 @@ function rgbToHex(rgb) {
 
             })
             .join("");
+
+}
+
+
+// =====================================================
+// ESCAPE HTML
+// =====================================================
+
+function escapeHTML(value) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        value;
+
+    return div.innerHTML;
 
 }

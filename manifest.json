@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "DevStyle V1",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "description": "Visually edit font color, font size and element position.",
   "permissions": [
     "activeTab"
