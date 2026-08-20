@@ -564,3 +564,126 @@ input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
 
 }
+/* =====================================================
+   HEADER DRAGGING
+===================================================== */
+
+.devstyle-header {
+
+    cursor: move;
+
+    user-select: none;
+
+}
+
+
+.devstyle-header-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+}
+
+
+.devstyle-minimize,
+.devstyle-close {
+
+    width: 28px;
+
+    height: 28px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background: #27272a;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 16px;
+
+    line-height: 28px;
+
+}
+
+
+.devstyle-minimize:hover,
+.devstyle-close:hover {
+
+    background: #3f3f46;
+
+}
+
+
+/* =====================================================
+   RESIZABLE PANEL
+===================================================== */
+
+#devstyle-panel {
+
+    resize: both;
+
+    min-width: 280px;
+
+    min-height: 180px;
+
+}
+
+
+/* =====================================================
+   MINIMIZED PANEL
+===================================================== */
+
+#devstyle-panel.devstyle-minimized {
+
+    width: 190px !important;
+
+    min-width: 190px;
+
+    height: auto !important;
+
+    min-height: 0;
+
+    resize: none;
+
+    overflow: hidden;
+
+}
+
+
+#devstyle-panel.devstyle-minimized
+.devstyle-search,
+
+#devstyle-panel.devstyle-minimized
+.devstyle-categories,
+
+#devstyle-panel.devstyle-minimized
+.devstyle-copy,
+
+#devstyle-panel.devstyle-minimized
+.devstyle-status {
+
+    display: none;
+
+}
+
+
+#devstyle-panel.devstyle-minimized
+.devstyle-header {
+
+    margin-bottom: 0;
+
+}
+
+
+#devstyle-panel.devstyle-minimized
+.devstyle-element {
+
+    display: none;
+
+}

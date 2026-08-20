@@ -404,9 +404,44 @@ function showEditor(element) {
 
     panel.innerHTML = `
 
-        <div class="devstyle-header">
+        <div
+    class="devstyle-header"
+    id="devstyle-drag-handle"
+>
 
-            <div>
+    <div>
+
+        <div class="devstyle-title">
+            DevStyle
+        </div>
+
+        <div class="devstyle-element">
+            ${getElementName(element)}
+        </div>
+
+    </div>
+
+    <div class="devstyle-header-actions">
+
+        <button
+            class="devstyle-minimize"
+            id="devstyle-minimize"
+            title="Minimize"
+        >
+            −
+        </button>
+
+        <button
+            class="devstyle-close"
+            id="devstyle-close"
+            title="Close"
+        >
+            ×
+        </button>
+
+    </div>
+
+</div>
 
                 <div class="devstyle-title">
                     DevStyle
@@ -832,6 +867,13 @@ function setupPanel(element) {
 
     setupSearch();
 
+    setupDragging();
+
+    setupResizing();
+
+    setupMinimize();
+
+
     document
         .getElementById("devstyle-close")
         .addEventListener(
@@ -848,7 +890,6 @@ function setupPanel(element) {
         );
 
 }
-
 
 // =====================================================
 // CATEGORY TOGGLES
@@ -1358,5 +1399,249 @@ function escapeHTML(value) {
         value;
 
     return div.innerHTML;
+
+}
+// =====================================================
+// KEYBOARD SHORTCUT
+// =====================================================
+
+chrome.runtime.onMessage.addListener((message) => {
+
+    if (message.type === "START_INSPECT") {
+
+        startInspector();
+
+    }
+
+});
+function setupDragging() {
+
+    const handle =
+        document.getElementById(
+            "devstyle-drag-handle"
+        );
+
+
+    if (!handle) {
+        return;
+    }
+
+
+    let dragging = false;
+
+    let startX = 0;
+    let startY = 0;
+
+    let startLeft = 0;
+    let startTop = 0;
+
+
+    handle.addEventListener(
+        "mousedown",
+        (event) => {
+
+            if (
+                event.target.closest(
+                    "button"
+                )
+            ) {
+                return;
+            }
+
+
+            dragging = true;
+
+
+            const rect =
+                panel.getBoundingClientRect();
+
+
+            startX =
+                event.clientX;
+
+            startY =
+                event.clientY;
+
+            startLeft =
+                rect.left;
+
+            startTop =
+                rect.top;
+
+
+            panel.style.right =
+                "auto";
+
+            panel.style.bottom =
+                "auto";
+
+            panel.style.left =
+                `${startLeft}px`;
+
+            panel.style.top =
+                `${startTop}px`;
+
+
+            document.body.style.userSelect =
+                "none";
+
+        }
+    );
+
+
+    document.addEventListener(
+        "mousemove",
+        (event) => {
+
+            if (!dragging) {
+                return;
+            }
+
+
+            const deltaX =
+                event.clientX -
+                startX;
+
+
+            const deltaY =
+                event.clientY -
+                startY;
+
+
+            let newLeft =
+                startLeft + deltaX;
+
+
+            let newTop =
+                startTop + deltaY;
+
+
+            const maxLeft =
+                window.innerWidth -
+                panel.offsetWidth;
+
+
+            const maxTop =
+                window.innerHeight -
+                panel.offsetHeight;
+
+
+            newLeft =
+                Math.max(
+                    0,
+                    Math.min(
+                        newLeft,
+                        maxLeft
+                    )
+                );
+
+
+            newTop =
+                Math.max(
+                    0,
+                    Math.min(
+                        newTop,
+                        maxTop
+                    )
+                );
+
+
+            panel.style.left =
+                `${newLeft}px`;
+
+            panel.style.top =
+                `${newTop}px`;
+
+        }
+    );
+
+
+    document.addEventListener(
+        "mouseup",
+        () => {
+
+            dragging = false;
+
+            document.body.style.userSelect =
+                "";
+
+        }
+    );
+
+}
+function setupResizing() {
+
+    if (!panel) {
+        return;
+    }
+
+
+    panel.style.resize =
+        "both";
+
+    panel.style.overflow =
+        "auto";
+
+    panel.style.minWidth =
+        "280px";
+
+    panel.style.minHeight =
+        "180px";
+
+}
+function setupMinimize() {
+
+    const button =
+        document.getElementById(
+            "devstyle-minimize"
+        );
+
+
+    if (!button) {
+        return;
+    }
+
+
+    let minimized = false;
+
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            minimized =
+                !minimized;
+
+
+            if (minimized) {
+
+                panel.classList.add(
+                    "devstyle-minimized"
+                );
+
+                button.textContent =
+                    "+";
+
+                button.title =
+                    "Expand";
+
+            }
+
+            else {
+
+                panel.classList.remove(
+                    "devstyle-minimized"
+                );
+
+                button.textContent =
+                    "−";
+
+                button.title =
+                    "Minimize";
+
+            }
+
+        }
+    );
 
 }

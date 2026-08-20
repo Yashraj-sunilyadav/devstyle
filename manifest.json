@@ -1,15 +1,35 @@
 {
   "manifest_version": 3,
-  "name": "DevStyle V1",
-  "version": "1.2.0",
-  "description": "Visually edit font color, font size and element position.",
+
+  "name": "DevStyle",
+
+  "version": "1.3.0",
+
+  "description": "Visually edit CSS properties of any webpage element.",
+
   "permissions": [
     "activeTab"
   ],
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "commands": {
+    "start-inspector": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+E",
+        "mac": "Command+Shift+E"
+      },
+      "description": "Start DevStyle element inspector"
+    }
+  },
+
   "action": {
     "default_title": "DevStyle",
     "default_popup": "popup.html"
   },
+
   "content_scripts": [
     {
       "matches": ["<all_urls>"],

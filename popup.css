@@ -2,49 +2,204 @@
     box-sizing: border-box;
 }
 
+
 body {
+
     margin: 0;
-    width: 260px;
+
+    width: 300px;
 
     background: #18181b;
+
     color: white;
 
-    font-family: Arial, sans-serif;
+    font-family:
+        Arial,
+        sans-serif;
+
 }
+
 
 .popup {
-    padding: 20px;
+
+    padding: 18px;
+
 }
+
+
+/* ==============================
+   BRAND
+============================== */
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+
+}
+
+
+.brand-icon {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 36px;
+
+    height: 36px;
+
+    border-radius: 9px;
+
+    background: #27272a;
+
+    color: #ffffff;
+
+    font-size: 18px;
+
+}
+
 
 h2 {
-    margin: 0 0 6px;
-    font-size: 20px;
+
+    margin: 0;
+
+    font-size: 18px;
+
 }
 
-p {
-    margin: 0 0 18px;
 
-    color: #a1a1aa;
-    font-size: 13px;
+.brand p {
+
+    margin: 3px 0 0;
+
+    color: #71717a;
+
+    font-size: 11px;
+
 }
 
-button {
+
+/* ==============================
+   INSPECT BUTTON
+============================== */
+
+#inspectBtn {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
     width: 100%;
 
-    padding: 11px;
+    padding: 11px 12px;
 
     border: none;
+
     border-radius: 8px;
 
     background: #ffffff;
+
     color: #18181b;
 
-    font-size: 14px;
+    cursor: pointer;
+
+    font-size: 13px;
+
     font-weight: 600;
 
-    cursor: pointer;
 }
 
-button:hover {
+
+#inspectBtn:hover {
+
     background: #e4e4e7;
+
+}
+
+
+.shortcut {
+
+    padding: 3px 6px;
+
+    border-radius: 5px;
+
+    background: #e4e4e7;
+
+    color: #52525b;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+}
+
+
+/* ==============================
+   DIVIDER
+============================== */
+
+.popup-divider {
+
+    height: 1px;
+
+    margin: 16px 0;
+
+    background: #27272a;
+
+}
+
+
+/* ==============================
+   SHORTCUT INFO
+============================== */
+
+.shortcut-info {
+
+    display: flex;
+
+    gap: 10px;
+
+    color: #a1a1aa;
+
+}
+
+
+.shortcut-info > span {
+
+    font-size: 17px;
+
+}
+
+
+.shortcut-info strong {
+
+    display: block;
+
+    color: #d4d4d8;
+
+    font-size: 12px;
+
+}
+
+
+.shortcut-info p {
+
+    margin: 4px 0 0;
+
+    color: #71717a;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
 }
