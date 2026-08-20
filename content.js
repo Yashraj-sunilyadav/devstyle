@@ -1,9 +1,6 @@
 let inspecting = false;
-
 let selectedElement = null;
-
 let highlight = null;
-
 let panel = null;
 
 
@@ -14,9 +11,7 @@ let panel = null;
 chrome.runtime.onMessage.addListener((message) => {
 
     if (message.type === "START_INSPECT") {
-
         startInspector();
-
     }
 
 });
@@ -52,7 +47,7 @@ function startInspector() {
 
 
 // =====================================================
-// CREATE HIGHLIGHT BOX
+// CREATE HIGHLIGHT
 // =====================================================
 
 function createHighlight() {
@@ -61,11 +56,9 @@ function createHighlight() {
         return;
     }
 
-    highlight =
-        document.createElement("div");
+    highlight = document.createElement("div");
 
-    highlight.id =
-        "devstyle-highlight";
+    highlight.id = "devstyle-highlight";
 
     document.body.appendChild(highlight);
 
@@ -82,11 +75,7 @@ function handleMouseMove(event) {
         return;
     }
 
-    const element =
-        event.target;
-
-
-    // Don't highlight our own UI
+    const element = event.target;
 
     if (
         element === highlight ||
@@ -95,20 +84,14 @@ function handleMouseMove(event) {
         return;
     }
 
-
-    // Ignore HTML/body
-
     if (
-        element === document.documentElement ||
-        element === document.body
+        element === document.body ||
+        element === document.documentElement
     ) {
         return;
     }
 
-
-    const rect =
-        element.getBoundingClientRect();
-
+    const rect = element.getBoundingClientRect();
 
     highlight.style.left =
         `${rect.left}px`;
@@ -135,12 +118,7 @@ function handleElementClick(event) {
         return;
     }
 
-
-    const element =
-        event.target;
-
-
-    // Don't select our panel
+    const element = event.target;
 
     if (
         element === highlight ||
@@ -149,7 +127,6 @@ function handleElementClick(event) {
         return;
     }
 
-
     if (
         element === document.body ||
         element === document.documentElement
@@ -157,19 +134,11 @@ function handleElementClick(event) {
         return;
     }
 
-
-    // Stop website from receiving this click
-
     event.preventDefault();
-
     event.stopPropagation();
-
     event.stopImmediatePropagation();
 
-
-    selectedElement =
-        element;
-
+    selectedElement = element;
 
     stopInspector();
 
@@ -186,7 +155,6 @@ function stopInspector() {
 
     inspecting = false;
 
-
     document.removeEventListener(
         "mousemove",
         handleMouseMove,
@@ -198,7 +166,6 @@ function stopInspector() {
         handleElementClick,
         true
     );
-
 
     if (highlight) {
 
@@ -219,18 +186,11 @@ function showEditor(element) {
 
     removePanel();
 
+    const styles = getComputedStyle(element);
 
-    const styles =
-        getComputedStyle(element);
+    panel = document.createElement("div");
 
-
-    panel =
-        document.createElement("div");
-
-
-    panel.id =
-        "devstyle-panel";
-
+    panel.id = "devstyle-panel";
 
     panel.innerHTML = `
 
@@ -254,22 +214,16 @@ function showEditor(element) {
 
             &lt;${element.tagName.toLowerCase()}&gt;
 
-            ${element.id
-                ? "#" + element.id
-                : ""}
-
-            ${element.className &&
-              typeof element.className === "string"
-                ? "." +
-                  element.className
-                    .trim()
-                    .replace(/\s+/g, ".")
-                : ""}
+            ${
+                element.id
+                    ? "#" + element.id
+                    : ""
+            }
 
         </div>
 
 
-        <!-- SIZE -->
+        <!-- ================= SIZE ================= -->
 
         <div class="devstyle-group">
 
@@ -277,13 +231,11 @@ function showEditor(element) {
                 Size
             </div>
 
-
             ${createNumberField(
                 "Width",
                 "width",
                 parseFloat(styles.width)
             )}
-
 
             ${createNumberField(
                 "Height",
@@ -294,7 +246,7 @@ function showEditor(element) {
         </div>
 
 
-        <!-- POSITION -->
+        <!-- ================= POSITION ================= -->
 
         <div class="devstyle-group">
 
@@ -302,13 +254,11 @@ function showEditor(element) {
                 Position
             </div>
 
-
             ${createNumberField(
                 "Left",
                 "left",
                 parseFloat(styles.left)
             )}
-
 
             ${createNumberField(
                 "Top",
@@ -319,7 +269,7 @@ function showEditor(element) {
         </div>
 
 
-        <!-- TYPOGRAPHY -->
+        <!-- ================= TYPOGRAPHY ================= -->
 
         <div class="devstyle-group">
 
@@ -328,6 +278,53 @@ function showEditor(element) {
             </div>
 
 
+            <!-- Font Family -->
+
+            <div class="devstyle-field">
+
+                <label>
+                    Font Family
+                </label>
+
+                <select
+                    id="devstyle-font-family"
+                >
+
+                    <option value="Arial">
+                        Arial
+                    </option>
+
+                    <option value="Inter">
+                        Inter
+                    </option>
+
+                    <option value="Roboto">
+                        Roboto
+                    </option>
+
+                    <option value="Poppins">
+                        Poppins
+                    </option>
+
+                    <option value="sans-serif">
+                        Sans Serif
+                    </option>
+
+                    <option value="serif">
+                        Serif
+                    </option>
+
+                    <option value="monospace">
+                        Monospace
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Font Size -->
+
             ${createNumberField(
                 "Font Size",
                 "fontSize",
@@ -335,39 +332,198 @@ function showEditor(element) {
             )}
 
 
+            <!-- Font Weight -->
+
+            <div class="devstyle-field">
+
+                <label>
+                    Font Weight
+                </label>
+
+                <select
+                    id="devstyle-font-weight"
+                >
+
+                    <option value="100">
+                        100 - Thin
+                    </option>
+
+                    <option value="200">
+                        200 - Extra Light
+                    </option>
+
+                    <option value="300">
+                        300 - Light
+                    </option>
+
+                    <option value="400">
+                        400 - Normal
+                    </option>
+
+                    <option value="500">
+                        500 - Medium
+                    </option>
+
+                    <option value="600">
+                        600 - Semi Bold
+                    </option>
+
+                    <option value="700">
+                        700 - Bold
+                    </option>
+
+                    <option value="800">
+                        800 - Extra Bold
+                    </option>
+
+                    <option value="900">
+                        900 - Black
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Font Color -->
+
+            ${createColorField(
+                "Font Color",
+                "color",
+                rgbToHex(styles.color)
+            )}
+
+
+            <!-- Line Height -->
+
             ${createNumberField(
-                "Font Weight",
-                "fontWeight",
-                parseInt(styles.fontWeight)
+                "Line Height",
+                "lineHeight",
+                parseFloat(styles.lineHeight)
+            )}
+
+
+            <!-- Letter Spacing -->
+
+            ${createNumberField(
+                "Letter Spacing",
+                "letterSpacing",
+                parseFloat(styles.letterSpacing)
+            )}
+
+        </div>
+
+
+        <!-- ================= BACKGROUND ================= -->
+
+        <div class="devstyle-group">
+
+            <div class="devstyle-group-title">
+                Background
+            </div>
+
+            ${createColorField(
+                "Background Color",
+                "backgroundColor",
+                rgbToHex(styles.backgroundColor)
+            )}
+
+        </div>
+
+
+        <!-- ================= BORDER ================= -->
+
+        <div class="devstyle-group">
+
+            <div class="devstyle-group-title">
+                Border
+            </div>
+
+
+            ${createNumberField(
+                "Border Width",
+                "borderWidth",
+                parseFloat(styles.borderWidth)
+            )}
+
+
+            ${createNumberField(
+                "Border Radius",
+                "borderRadius",
+                parseFloat(styles.borderRadius)
+            )}
+
+
+            ${createColorField(
+                "Border Color",
+                "borderColor",
+                rgbToHex(styles.borderColor)
             )}
 
 
             <div class="devstyle-field">
 
                 <label>
-                    Font Color
+                    Border Style
                 </label>
 
-                <div class="devstyle-input-row">
+                <select
+                    id="devstyle-border-style"
+                >
 
-                    <input
-                        type="color"
-                        id="devstyle-color"
-                        value="${rgbToHex(styles.color)}"
-                    >
+                    <option value="none">
+                        None
+                    </option>
 
-                    <input
-                        type="text"
-                        id="devstyle-color-text"
-                        value="${rgbToHex(styles.color)}"
-                    >
+                    <option value="solid">
+                        Solid
+                    </option>
 
-                </div>
+                    <option value="dashed">
+                        Dashed
+                    </option>
+
+                    <option value="dotted">
+                        Dotted
+                    </option>
+
+                    <option value="double">
+                        Double
+                    </option>
+
+                </select>
 
             </div>
 
         </div>
 
+
+        <!-- ================= SPACING ================= -->
+
+        <div class="devstyle-group">
+
+            <div class="devstyle-group-title">
+                Spacing
+            </div>
+
+
+            ${createNumberField(
+                "Padding",
+                "padding",
+                parseFloat(styles.padding)
+            )}
+
+
+            ${createNumberField(
+                "Margin",
+                "margin",
+                parseFloat(styles.margin)
+            )}
+
+        </div>
+
+
+        <!-- ================= COPY ================= -->
 
         <button
             class="devstyle-copy"
@@ -389,14 +545,13 @@ function showEditor(element) {
 
     document.body.appendChild(panel);
 
-
     setupControls(element);
 
 }
 
 
 // =====================================================
-// CREATE NUMBER INPUT
+// NUMBER FIELD
 // =====================================================
 
 function createNumberField(
@@ -417,19 +572,61 @@ function createNumberField(
 
                 <input
                     type="number"
-                    value="${isNaN(value) ? 0 : value}"
+                    value="${
+                        isNaN(value)
+                            ? 0
+                            : value
+                    }"
                     data-property="${property}"
+                >
+
+                <span class="devstyle-unit">
+                    px
+                </span>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+// =====================================================
+// COLOR FIELD
+// =====================================================
+
+function createColorField(
+    label,
+    property,
+    value
+) {
+
+    return `
+
+        <div class="devstyle-field">
+
+            <label>
+                ${label}
+            </label>
+
+            <div class="devstyle-input-row">
+
+                <input
+                    type="color"
+                    data-color-property="${property}"
+                    value="${
+                        value || "#000000"
+                    }"
                 >
 
                 <input
                     type="text"
-                    value="px"
-                    disabled
-                    style="
-                        max-width:45px;
-                        text-align:center;
-                        opacity:.6;
-                    "
+                    data-color-text="${property}"
+                    value="${
+                        value || "#000000"
+                    }"
                 >
 
             </div>
@@ -448,7 +645,9 @@ function createNumberField(
 function setupControls(element) {
 
 
-    // Number fields
+    // ==========================================
+    // NUMBER INPUTS
+    // ==========================================
 
     const numberInputs =
         panel.querySelectorAll(
@@ -469,19 +668,22 @@ function setupControls(element) {
                     input.value;
 
 
-                // Position properties
+                // Position
 
                 if (
                     property === "left" ||
                     property === "top"
                 ) {
 
-                    // Make position usable
-
-                    if (
+                    const currentPosition =
                         getComputedStyle(
                             element
-                        ).position === "static"
+                        ).position;
+
+
+                    if (
+                        currentPosition ===
+                        "static"
                     ) {
 
                         element.style.position =
@@ -492,10 +694,11 @@ function setupControls(element) {
                 }
 
 
-                // Font weight doesn't use px
+                // Unitless properties
 
                 if (
-                    property === "fontWeight"
+                    property ===
+                    "fontWeight"
                 ) {
 
                     element.style[
@@ -518,71 +721,167 @@ function setupControls(element) {
     });
 
 
-    // Color picker
+    // ==========================================
+    // FONT FAMILY
+    // ==========================================
 
-    const colorInput =
+    const fontFamily =
         document.getElementById(
-            "devstyle-color"
+            "devstyle-font-family"
         );
 
 
-    const colorText =
-        document.getElementById(
-            "devstyle-color-text"
-        );
+    fontFamily.value =
+        getComputedStyle(
+            element
+        ).fontFamily
+        .split(",")[0]
+        .replace(/"/g, "")
+        .trim();
 
 
-    colorInput.addEventListener(
-        "input",
+    fontFamily.addEventListener(
+        "change",
         () => {
 
-            element.style.color =
-                colorInput.value;
-
-            colorText.value =
-                colorInput.value;
+            element.style.fontFamily =
+                fontFamily.value;
 
         }
     );
 
 
-    colorText.addEventListener(
-        "input",
+    // ==========================================
+    // FONT WEIGHT
+    // ==========================================
+
+    const fontWeight =
+        document.getElementById(
+            "devstyle-font-weight"
+        );
+
+
+    fontWeight.value =
+        getComputedStyle(
+            element
+        ).fontWeight;
+
+
+    fontWeight.addEventListener(
+        "change",
         () => {
 
-            if (
-                /^#[0-9A-F]{6}$/i.test(
-                    colorText.value
-                )
-            ) {
+            element.style.fontWeight =
+                fontWeight.value;
 
-                element.style.color =
-                    colorText.value;
+        }
+    );
 
-                colorInput.value =
-                    colorText.value;
+
+    // ==========================================
+    // BORDER STYLE
+    // ==========================================
+
+    const borderStyle =
+        document.getElementById(
+            "devstyle-border-style"
+        );
+
+
+    borderStyle.value =
+        getComputedStyle(
+            element
+        ).borderStyle;
+
+
+    borderStyle.addEventListener(
+        "change",
+        () => {
+
+            element.style.borderStyle =
+                borderStyle.value;
+
+        }
+    );
+
+
+    // ==========================================
+    // COLOR INPUTS
+    // ==========================================
+
+    const colorInputs =
+        panel.querySelectorAll(
+            'input[type="color"]'
+        );
+
+
+    colorInputs.forEach(colorInput => {
+
+        const property =
+            colorInput.dataset.colorProperty;
+
+
+        const textInput =
+            panel.querySelector(
+                `[data-color-text="${property}"]`
+            );
+
+
+        colorInput.addEventListener(
+            "input",
+            () => {
+
+                element.style[property] =
+                    colorInput.value;
+
+                textInput.value =
+                    colorInput.value;
 
             }
-
-        }
-    );
+        );
 
 
-    // Close
+        textInput.addEventListener(
+            "input",
+            () => {
+
+                const value =
+                    textInput.value;
+
+
+                if (
+                    /^#[0-9A-F]{6}$/i.test(value)
+                ) {
+
+                    element.style[property] =
+                        value;
+
+                    colorInput.value =
+                        value;
+
+                }
+
+            }
+        );
+
+    });
+
+
+    // ==========================================
+    // CLOSE
+    // ==========================================
 
     document
         .getElementById("devstyle-close")
         .addEventListener(
             "click",
-            () => {
-
-                removePanel();
-
-            }
+            removePanel
         );
 
 
-    // Copy
+    // ==========================================
+    // COPY CSS
+    // ==========================================
 
     document
         .getElementById("devstyle-copy")
@@ -590,9 +889,7 @@ function setupControls(element) {
             "click",
             () => {
 
-                copyChangedCSS(
-                    element
-                );
+                copyChangedCSS(element);
 
             }
         );
