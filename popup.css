@@ -1,0 +1,50 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    width: 260px;
+
+    background: #18181b;
+    color: white;
+
+    font-family: Arial, sans-serif;
+}
+
+.popup {
+    padding: 20px;
+}
+
+h2 {
+    margin: 0 0 6px;
+    font-size: 20px;
+}
+
+p {
+    margin: 0 0 18px;
+
+    color: #a1a1aa;
+    font-size: 13px;
+}
+
+button {
+    width: 100%;
+
+    padding: 11px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #18181b;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+button:hover {
+    background: #e4e4e7;
+}

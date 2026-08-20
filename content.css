@@ -1,0 +1,210 @@
+#devstyle-highlight {
+    position: fixed;
+
+    pointer-events: none;
+
+    z-index: 2147483646;
+
+    border: 2px solid #3b82f6;
+
+    background: rgba(59, 130, 246, 0.08);
+
+    box-sizing: border-box;
+}
+
+
+#devstyle-panel {
+    position: fixed;
+
+    top: 20px;
+    right: 20px;
+
+    width: 320px;
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    z-index: 2147483647;
+
+    padding: 18px;
+
+    background: #18181b;
+    color: #ffffff;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.45);
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    box-sizing: border-box;
+}
+
+
+#devstyle-panel * {
+    box-sizing: border-box;
+}
+
+
+.devstyle-header {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 6px;
+}
+
+
+.devstyle-title {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+
+.devstyle-close {
+    width: 28px;
+    height: 28px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: #27272a;
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 16px;
+}
+
+
+.devstyle-close:hover {
+    background: #3f3f46;
+}
+
+
+.devstyle-element {
+    margin-bottom: 18px;
+
+    color: #a1a1aa;
+
+    font-size: 12px;
+}
+
+
+.devstyle-group {
+    margin-top: 18px;
+}
+
+
+.devstyle-group-title {
+    margin-bottom: 10px;
+
+    color: #a1a1aa;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+}
+
+
+.devstyle-field {
+    margin-bottom: 10px;
+}
+
+
+.devstyle-field label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 12px;
+}
+
+
+.devstyle-input-row {
+    display: flex;
+
+    gap: 6px;
+}
+
+
+.devstyle-field input[type="text"],
+.devstyle-field input[type="number"] {
+
+    width: 100%;
+
+    padding: 8px;
+
+    border: 1px solid #3f3f46;
+    border-radius: 6px;
+
+    background: #27272a;
+    color: white;
+
+    outline: none;
+}
+
+
+.devstyle-field input:focus {
+    border-color: #3b82f6;
+}
+
+
+.devstyle-field input[type="color"] {
+
+    width: 45px;
+    height: 34px;
+
+    padding: 2px;
+
+    border: 1px solid #3f3f46;
+
+    border-radius: 6px;
+
+    background: #27272a;
+
+    cursor: pointer;
+}
+
+
+.devstyle-copy {
+
+    width: 100%;
+
+    margin-top: 12px;
+
+    padding: 10px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: #ffffff;
+    color: #18181b;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.devstyle-copy:hover {
+    background: #e4e4e7;
+}
+
+
+.devstyle-status {
+
+    margin-top: 8px;
+
+    text-align: center;
+
+    color: #a1a1aa;
+
+    font-size: 11px;
+}

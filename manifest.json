@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "DevStyle V1",
+  "version": "1.0.0",
+  "description": "Visually edit font color, font size and element position.",
+  "permissions": [
+    "activeTab"
+  ],
+  "action": {
+    "default_title": "DevStyle",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
