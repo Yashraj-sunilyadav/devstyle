@@ -1021,7 +1021,7 @@ function renderProperty(
 function setupPanel(element) {
 
     setupCategoryToggles();
-
+setupResponsiveStickyCategory();
     setupPropertyInputs(element);
 
     setupSearch();
@@ -1999,4 +1999,64 @@ function setupActiveCategoryTracking() {
 
     updateActiveCategory();
 
+}
+function setupResponsiveStickyCategory() {
+
+    if (!panel) {
+        return;
+    }
+
+    const resizeObserver =
+        new ResizeObserver(() => {
+
+            const width =
+                panel.getBoundingClientRect().width;
+
+            // Large / normal panel
+            if (width >= 340) {
+
+                panel.classList.remove(
+                    "devstyle-small-panel"
+                );
+
+                panel.classList.remove(
+                    "devstyle-medium-panel"
+                );
+
+            }
+
+            // Medium panel
+            else if (width >= 290) {
+
+                panel.classList.remove(
+                    "devstyle-small-panel"
+                );
+
+                panel.classList.add(
+                    "devstyle-medium-panel"
+                );
+
+            }
+
+            // Small panel
+            else {
+
+                panel.classList.remove(
+                    "devstyle-medium-panel"
+                );
+
+                panel.classList.add(
+                    "devstyle-small-panel"
+                );
+
+            }
+
+        });
+
+
+    resizeObserver.observe(panel);
+
+    // Store observer so it can be cleaned up
+    panel._devstyleResizeObserver =
+        resizeObserver;
 }

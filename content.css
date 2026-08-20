@@ -1,4 +1,10 @@
 /* =====================================================
+   DEVSTYLE - CONTENT CSS
+   Responsive Inspector UI
+===================================================== */
+
+
+/* =====================================================
    HIGHLIGHT
 ===================================================== */
 
@@ -12,17 +18,15 @@
 
     box-sizing: border-box;
 
-    border:
-        2px solid #3b82f6;
+    border: 2px solid #3b82f6;
 
-    background:
-        rgba(59, 130, 246, 0.08);
+    background: rgba(59, 130, 246, 0.08);
 
 }
 
 
 /* =====================================================
-   PANEL
+   MAIN PANEL
 ===================================================== */
 
 #devstyle-panel {
@@ -43,11 +47,11 @@
 
     height: 650px;
 
-    min-width: 300px;
+    min-width: 260px;
 
     min-height: 220px;
 
-    max-width: 80vw;
+    max-width: 85vw;
 
     max-height: 90vh;
 
@@ -61,8 +65,7 @@
 
     color: #ffffff;
 
-    border:
-        1px solid #3f3f46;
+    border: 1px solid #3f3f46;
 
     border-radius: 14px;
 
@@ -74,6 +77,23 @@
         Arial,
         sans-serif;
 
+    /*
+        Allows the CSS below to respond
+        to the actual panel width.
+    */
+    container-type: inline-size;
+
+}
+
+
+/* =====================================================
+   PANEL SCROLLBAR
+===================================================== */
+
+#devstyle-panel::-webkit-scrollbar {
+
+    width: 6px;
+
 }
 
 
@@ -83,11 +103,9 @@
 
 .devstyle-header {
 
-    position: sticky;
+    position: relative;
 
-    top: 0;
-
-    z-index: 20;
+    z-index: 30;
 
     display: flex;
 
@@ -97,7 +115,10 @@
 
     flex-shrink: 0;
 
-    padding: 14px 14px 10px;
+    min-height: 56px;
+
+    padding:
+        10px 12px;
 
     border-bottom:
         1px solid #27272a;
@@ -111,25 +132,39 @@
 }
 
 
+/* =====================================================
+   HEADER MAIN
+===================================================== */
+
 .devstyle-header-main {
 
     min-width: 0;
+
+    overflow: hidden;
 
 }
 
 
 .devstyle-brand {
 
-    font-size: 20px;
+    margin: 0;
+
+    font-size: 19px;
 
     font-weight: 700;
+
+    line-height: 1.2;
 
 }
 
 
+/* =====================================================
+   SELECTED ELEMENT
+===================================================== */
+
 .devstyle-selected-element {
 
-    max-width: 235px;
+    max-width: 230px;
 
     margin-top: 3px;
 
@@ -137,7 +172,7 @@
 
     color: #71717a;
 
-    font-size: 11px;
+    font-size: 10px;
 
     white-space: nowrap;
 
@@ -146,18 +181,26 @@
 }
 
 
+/* =====================================================
+   HEADER ACTIONS
+===================================================== */
+
 .devstyle-header-actions {
 
     display: flex;
 
     align-items: center;
 
-    gap: 6px;
+    gap: 5px;
 
     flex-shrink: 0;
 
 }
 
+
+/* =====================================================
+   HEADER BUTTONS
+===================================================== */
 
 .devstyle-header-button {
 
@@ -167,9 +210,9 @@
 
     justify-content: center;
 
-    width: 34px;
+    width: 32px;
 
-    height: 34px;
+    height: 32px;
 
     padding: 0;
 
@@ -179,11 +222,13 @@
 
     background: #27272a;
 
-    color: white;
+    color: #ffffff;
 
     cursor: pointer;
 
-    font-size: 18px;
+    font-size: 17px;
+
+    line-height: 1;
 
 }
 
@@ -196,30 +241,32 @@
 
 
 /* =====================================================
-   STICKY SEARCH
+   SEARCH
 ===================================================== */
 
 .devstyle-search-wrap {
 
-    position: sticky;
+    position: relative;
 
-    top: 0;
-
-    z-index: 19;
+    z-index: 25;
 
     display: flex;
 
     align-items: center;
 
-    gap: 8px;
+    gap: 7px;
 
     flex-shrink: 0;
 
-    margin: 10px 12px;
+    width: calc(100% - 20px);
 
-    padding: 0 10px;
+    height: 42px;
 
-    height: 44px;
+    margin:
+        7px auto;
+
+    padding:
+        0 10px;
 
     border:
         1px solid #3f3f46;
@@ -228,21 +275,39 @@
 
     background: #27272a;
 
+    box-sizing: border-box;
+
 }
 
+
+/* =====================================================
+   SEARCH ICON
+===================================================== */
 
 .devstyle-search-icon {
 
+    flex-shrink: 0;
+
     color: #a1a1aa;
 
-    font-size: 16px;
+    font-size: 15px;
 
 }
 
+
+/* =====================================================
+   SEARCH INPUT
+===================================================== */
 
 .devstyle-search-wrap input {
 
     width: 100%;
+
+    min-width: 0;
+
+    height: 100%;
+
+    padding: 0;
 
     border: none;
 
@@ -250,9 +315,9 @@
 
     background: transparent;
 
-    color: white;
+    color: #ffffff;
 
-    font-size: 12px;
+    font-size: 11px;
 
 }
 
@@ -265,7 +330,7 @@
 
 
 /* =====================================================
-   CONTENT
+   MAIN SCROLLING CONTENT
 ===================================================== */
 
 .devstyle-content {
@@ -276,21 +341,25 @@
 
     overflow-y: auto;
 
+    overflow-x: hidden;
+
     padding:
-        0 12px 12px;
+        0 10px 10px;
 
     scroll-behavior: smooth;
+
+    box-sizing: border-box;
 
 }
 
 
 /* =====================================================
-   SCROLLBAR
+   CONTENT SCROLLBAR
 ===================================================== */
 
 .devstyle-content::-webkit-scrollbar {
 
-    width: 7px;
+    width: 6px;
 
 }
 
@@ -324,14 +393,16 @@
 
 .devstyle-category {
 
-    margin-bottom: 8px;
+    position: relative;
 
-    overflow: hidden;
+    margin-bottom: 7px;
+
+    overflow: visible;
 
     border:
         1px solid #27272a;
 
-    border-radius: 10px;
+    border-radius: 9px;
 
     background: #18181b;
 
@@ -339,7 +410,8 @@
 
 
 /* =====================================================
-   NORMAL CATEGORY HEADER
+   CATEGORY HEADER
+   Normal size
 ===================================================== */
 
 .devstyle-category-header {
@@ -352,31 +424,31 @@
 
     width: 100%;
 
-    height: 48px;
+    height: 44px;
 
-    padding: 0 12px;
+    padding:
+        0 10px;
 
     border: none;
 
-    border-radius: 9px;
+    border-radius: 8px;
 
     background: #202023;
 
-    color: white;
+    color: #ffffff;
 
     cursor: pointer;
 
     text-align: left;
 
-    font-size: 13px;
+    font-size: 12px;
 
     font-weight: 600;
 
     transition:
         height 0.15s ease,
         padding 0.15s ease,
-        font-size 0.15s ease,
-        border-radius 0.15s ease;
+        font-size 0.15s ease;
 
 }
 
@@ -389,7 +461,60 @@
 
 
 /* =====================================================
-   OPEN CATEGORY
+   CATEGORY LEFT
+===================================================== */
+
+.devstyle-category-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    min-width: 0;
+
+}
+
+
+/* =====================================================
+   CATEGORY ICON
+===================================================== */
+
+.devstyle-category-icon {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 20px;
+
+    flex-shrink: 0;
+
+    font-size: 13px;
+
+}
+
+
+/* =====================================================
+   CATEGORY ARROW
+===================================================== */
+
+.devstyle-arrow {
+
+    flex-shrink: 0;
+
+    color: #a1a1aa;
+
+    font-size: 11px;
+
+}
+
+
+/* =====================================================
+   OPEN CATEGORY - STICKY
 ===================================================== */
 
 .devstyle-category.is-open
@@ -404,71 +529,25 @@
     background: #202023;
 
     box-shadow:
-        0 4px 12px rgba(0, 0, 0, 0.25);
+        0 3px 10px
+        rgba(0, 0, 0, 0.25);
 
 }
 
 
 /* =====================================================
-   COMPACT STICKY LOOK
-===================================================== */
-
-.devstyle-category.is-open
-.devstyle-category-header {
-
-    height: 36px;
-
-    padding:
-        0 9px;
-
-    border-radius: 6px;
-
-    font-size: 11px;
-
-}
-
-
-/* Smaller icon */
-
-.devstyle-category.is-open
-.devstyle-category-icon {
-
-    width: 18px;
-
-    font-size: 11px;
-
-}
-
-
-/* Smaller gap */
-
-.devstyle-category.is-open
-.devstyle-category-left {
-
-    gap: 6px;
-
-}
-
-
-/* Smaller arrow */
-
-.devstyle-category.is-open
-.devstyle-arrow {
-
-    font-size: 10px;
-
-}
-
-
-/* =====================================================
-   CATEGORY CONTENT
+   OPEN CATEGORY CONTENT
 ===================================================== */
 
 .devstyle-category-content {
 
     display: none;
 
-    padding: 12px;
+    padding:
+        10px;
+
+    border-top:
+        1px solid #27272a;
 
 }
 
@@ -479,16 +558,6 @@
     display: block;
 
 }
-.devstyle-category-content {
-
-    display: none;
-
-    padding: 12px;
-
-    border-top:
-        1px solid #27272a;
-
-}
 
 
 /* =====================================================
@@ -497,7 +566,7 @@
 
 .devstyle-field {
 
-    margin-bottom: 12px;
+    margin-bottom: 11px;
 
 }
 
@@ -509,15 +578,19 @@
 }
 
 
+/* =====================================================
+   FIELD LABEL
+===================================================== */
+
 .devstyle-field label {
 
     display: block;
 
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 
-    color: #e4e4e7;
+    color: #d4d4d8;
 
-    font-size: 11px;
+    font-size: 10px;
 
 }
 
@@ -532,27 +605,30 @@
 
     align-items: center;
 
-    gap: 7px;
+    gap: 6px;
+
+    width: 100%;
 
 }
 
 
 /* =====================================================
-   TEXT / NUMBER
+   TEXT + NUMBER INPUT
 ===================================================== */
 
 .devstyle-field
-input[type="number"],
+input[type="text"],
 .devstyle-field
-input[type="text"] {
+input[type="number"] {
 
     width: 100%;
 
     min-width: 0;
 
-    height: 38px;
+    height: 36px;
 
-    padding: 0 10px;
+    padding:
+        0 9px;
 
     border:
         1px solid #3f3f46;
@@ -563,17 +639,19 @@ input[type="text"] {
 
     background: #27272a;
 
-    color: white;
+    color: #ffffff;
 
-    font-size: 12px;
+    font-size: 11px;
+
+    box-sizing: border-box;
 
 }
 
 
 .devstyle-field
-input[type="number"]:focus,
+input[type="text"]:focus,
 .devstyle-field
-input[type="text"]:focus {
+input[type="number"]:focus {
 
     border-color: #3b82f6;
 
@@ -588,9 +666,12 @@ input[type="text"]:focus {
 
     width: 100%;
 
-    height: 40px;
+    min-width: 0;
 
-    padding: 0 10px;
+    height: 37px;
+
+    padding:
+        0 9px;
 
     border:
         1px solid #3f3f46;
@@ -601,11 +682,13 @@ input[type="text"]:focus {
 
     background: #27272a;
 
-    color: white;
+    color: #ffffff;
 
     cursor: pointer;
 
-    font-size: 12px;
+    font-size: 11px;
+
+    box-sizing: border-box;
 
 }
 
@@ -618,15 +701,15 @@ input[type="text"]:focus {
 
 
 /* =====================================================
-   COLOR
+   COLOR INPUT
 ===================================================== */
 
 .devstyle-field
 input[type="color"] {
 
-    width: 52px;
+    width: 45px;
 
-    height: 38px;
+    height: 36px;
 
     flex-shrink: 0;
 
@@ -640,6 +723,8 @@ input[type="color"] {
     background: #27272a;
 
     cursor: pointer;
+
+    box-sizing: border-box;
 
 }
 
@@ -656,9 +741,13 @@ input[type="color"] {
 
     justify-content: center;
 
-    min-width: 44px;
+    width: 38px;
 
-    height: 38px;
+    min-width: 38px;
+
+    height: 36px;
+
+    flex-shrink: 0;
 
     border-radius: 7px;
 
@@ -666,7 +755,7 @@ input[type="color"] {
 
     color: #71717a;
 
-    font-size: 11px;
+    font-size: 10px;
 
 }
 
@@ -679,7 +768,8 @@ input[type="color"] {
 
     flex-shrink: 0;
 
-    padding: 10px 12px 12px;
+    padding:
+        9px 10px 10px;
 
     border-top:
         1px solid #27272a;
@@ -690,26 +780,26 @@ input[type="color"] {
 
 
 /* =====================================================
-   COPY
+   COPY BUTTON
 ===================================================== */
 
 .devstyle-copy {
 
     width: 100%;
 
-    height: 40px;
+    height: 38px;
 
     border: none;
 
     border-radius: 8px;
 
-    background: white;
+    background: #ffffff;
 
     color: #18181b;
 
     cursor: pointer;
 
-    font-size: 13px;
+    font-size: 12px;
 
     font-weight: 700;
 
@@ -723,15 +813,19 @@ input[type="color"] {
 }
 
 
+/* =====================================================
+   STATUS
+===================================================== */
+
 .devstyle-status {
 
-    margin-top: 7px;
+    margin-top: 6px;
 
     color: #71717a;
 
     text-align: center;
 
-    font-size: 10px;
+    font-size: 9px;
 
 }
 
@@ -742,30 +836,81 @@ input[type="color"] {
 
 #devstyle-panel.devstyle-compact {
 
-    width: 300px;
+    width: 280px;
 
     height: 420px;
 
-    min-width: 280px;
+    min-width: 260px;
 
-    min-height: 240px;
+    min-height: 220px;
 
 }
 
 
 /*
    In compact mode:
-   - Header remains
-   - Search remains
-   - Every category remains visible
-   - Properties are hidden until user opens one
-   - User can scroll through categories
+   Categories are still available.
+   Nothing becomes permanently open.
 */
 
 #devstyle-panel.devstyle-compact
 .devstyle-category-content {
 
     display: none;
+
+}
+
+
+#devstyle-panel.devstyle-compact
+.devstyle-category.is-open
+.devstyle-category-content {
+
+    display: block;
+
+}
+
+
+/* =====================================================
+   COMPACT HEADER
+===================================================== */
+
+#devstyle-panel.devstyle-compact
+.devstyle-header {
+
+    min-height: 48px;
+
+    padding:
+        7px 9px;
+
+}
+
+
+#devstyle-panel.devstyle-compact
+.devstyle-brand {
+
+    font-size: 16px;
+
+}
+
+
+#devstyle-panel.devstyle-compact
+.devstyle-selected-element {
+
+    max-width: 130px;
+
+    font-size: 9px;
+
+}
+
+
+#devstyle-panel.devstyle-compact
+.devstyle-header-button {
+
+    width: 28px;
+
+    height: 28px;
+
+    font-size: 14px;
 
 }
 
@@ -777,9 +922,21 @@ input[type="color"] {
 #devstyle-panel.devstyle-compact
 .devstyle-search-wrap {
 
-    margin: 8px 10px;
+    width:
+        calc(100% - 14px);
 
-    height: 40px;
+    height: 36px;
+
+    margin:
+        6px auto;
+
+}
+
+
+#devstyle-panel.devstyle-compact
+.devstyle-search-wrap input {
+
+    font-size: 10px;
 
 }
 
@@ -792,7 +949,36 @@ input[type="color"] {
 .devstyle-content {
 
     padding:
-        0 10px 10px;
+        0 7px 7px;
+
+}
+
+
+/* =====================================================
+   COMPACT CATEGORY
+===================================================== */
+
+#devstyle-panel.devstyle-compact
+.devstyle-category-header {
+
+    height: 37px;
+
+    padding:
+        0 8px;
+
+    font-size: 10px;
+
+}
+
+
+/* =====================================================
+   COMPACT CATEGORY CONTENT
+===================================================== */
+
+#devstyle-panel.devstyle-compact
+.devstyle-category-content {
+
+    padding: 8px;
 
 }
 
@@ -805,159 +991,13 @@ input[type="color"] {
 .devstyle-footer {
 
     padding:
-        8px 10px 10px;
-
-}
-
-/* =====================================================
-   CATEGORY
-===================================================== */
-
-.devstyle-category {
-
-    position: relative;
-
-    margin-bottom: 8px;
-
-    overflow: visible;
-
-    border:
-        1px solid #27272a;
-
-    border-radius: 10px;
-
-    background: #18181b;
+        7px 8px 8px;
 
 }
 
 
 /* =====================================================
-   CATEGORY HEADER
-===================================================== */
-
-.devstyle-category-header {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    width: 100%;
-
-    height: 48px;
-
-    padding: 0 12px;
-
-    border: none;
-
-    border-radius: 9px;
-
-    background: #202023;
-
-    color: white;
-
-    cursor: pointer;
-
-    text-align: left;
-
-    font-size: 13px;
-
-    font-weight: 600;
-
-}
-
-
-.devstyle-category-header:hover {
-
-    background: #27272a;
-
-}
-
-
-.devstyle-category-left {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 9px;
-
-}
-
-
-.devstyle-category-icon {
-
-    display: inline-flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    width: 22px;
-
-    font-size: 14px;
-
-}
-
-
-.devstyle-arrow {
-
-    color: #a1a1aa;
-
-    font-size: 12px;
-
-}
-
-
-/* =====================================================
-   OPEN CATEGORY
-===================================================== */
-
-.devstyle-category.is-open
-.devstyle-category-header {
-
-    position: sticky;
-
-    top: 0;
-
-    z-index: 15;
-
-    background: #202023;
-
-    box-shadow:
-        0 4px 12px
-        rgba(0, 0, 0, 0.25);
-
-}
-
-
-/* =====================================================
-   CATEGORY CONTENT
-===================================================== */
-
-.devstyle-category-content {
-
-    display: none;
-
-    padding: 12px;
-
-}
-
-
-/* =====================================================
-   OPEN CONTENT
-===================================================== */
-
-.devstyle-category.is-open
-.devstyle-category-content {
-
-    display: block;
-
-}
-
-/* =====================================================
-   NUMBER SPINNERS
+   REMOVE NUMBER SPINNERS
 ===================================================== */
 
 #devstyle-panel
@@ -975,12 +1015,493 @@ input[type="number"]::-webkit-outer-spin-button {
 
 
 /* =====================================================
-   BETTER COMPACT BUTTON
+   PANEL RESPONSIVE CONTAINER QUERIES
+
+   LARGE PANEL
+   340px+
 ===================================================== */
 
-#devstyle-panel.devstyle-compact
-#devstyle-minimize {
+@container (min-width: 340px) {
 
-    font-size: 16px;
+    #devstyle-panel
+    .devstyle-category.is-open
+    .devstyle-category-header {
+
+        height: 36px;
+
+        padding:
+            0 9px;
+
+        font-size: 11px;
+
+    }
+
+    #devstyle-panel
+    .devstyle-category.is-open
+    .devstyle-category-icon {
+
+        width: 18px;
+
+        font-size: 11px;
+
+    }
+
+    #devstyle-panel
+    .devstyle-category.is-open
+    .devstyle-category-left {
+
+        gap: 6px;
+
+    }
+
+    #devstyle-panel
+    .devstyle-category.is-open
+    .devstyle-arrow {
+
+        font-size: 10px;
+
+    }
+
+}
+
+
+/* =====================================================
+   MEDIUM PANEL
+   290px - 339px
+
+   Sticky category gets smaller.
+===================================================== */
+
+@container (min-width: 290px) and (max-width: 339px) {
+
+    #devstyle-panel
+    .devstyle-header {
+
+        min-height: 50px;
+
+        padding:
+            8px 9px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-brand {
+
+        font-size: 17px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-selected-element {
+
+        max-width: 150px;
+
+        font-size: 9px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-header-button {
+
+        width: 29px;
+
+        height: 29px;
+
+        font-size: 15px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-search-wrap {
+
+        width:
+            calc(100% - 14px);
+
+        height: 36px;
+
+        margin:
+            6px auto;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-search-wrap input {
+
+        font-size: 10px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-category.is-open
+    .devstyle-category-header {
+
+        height: 32px;
+
+        padding:
+            0 8px;
+
+        border-radius: 6px;
+
+        font-size: 10px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-category.is-open
+    .devstyle-category-icon {
+
+        width: 17px;
+
+        font-size: 10px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-category.is-open
+    .devstyle-category-left {
+
+        gap: 5px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-category.is-open
+    .devstyle-arrow {
+
+        font-size: 9px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-category-content {
+
+        padding: 8px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-field {
+
+        margin-bottom: 8px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-field label {
+
+        font-size: 9px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-field
+    input[type="text"],
+    #devstyle-panel
+    .devstyle-field
+    input[type="number"],
+    #devstyle-panel
+    .devstyle-field
+    select {
+
+        height: 33px;
+
+        font-size: 10px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-unit {
+
+        width: 34px;
+
+        min-width: 34px;
+
+        height: 33px;
+
+        font-size: 9px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-field
+    input[type="color"] {
+
+        width: 40px;
+
+        height: 33px;
+
+    }
+
+}
+
+
+/* =====================================================
+   SMALL PANEL
+   Below 290px
+
+   Sticky behavior is DISABLED.
+   This gives the user more useful space.
+===================================================== */
+
+@container (max-width: 289px) {
+
+    #devstyle-panel
+    .devstyle-header {
+
+        min-height: 44px;
+
+        padding:
+            6px 7px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-brand {
+
+        font-size: 15px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-selected-element {
+
+        max-width: 95px;
+
+        font-size: 8px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-header-button {
+
+        width: 26px;
+
+        height: 26px;
+
+        font-size: 13px;
+
+    }
+
+
+    /* -------------------------
+       Search
+    ------------------------- */
+
+    #devstyle-panel
+    .devstyle-search-wrap {
+
+        width:
+            calc(100% - 10px);
+
+        height: 32px;
+
+        margin:
+            5px auto;
+
+        padding:
+            0 7px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-search-icon {
+
+        font-size: 12px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-search-wrap input {
+
+        font-size: 9px;
+
+    }
+
+
+    /* -------------------------
+       Disable sticky category
+    ------------------------- */
+
+    #devstyle-panel
+    .devstyle-category.is-open
+    .devstyle-category-header {
+
+        position: relative;
+
+        top: auto;
+
+        z-index: 1;
+
+        height: 32px;
+
+        padding:
+            0 7px;
+
+        border-radius: 6px;
+
+        box-shadow: none;
+
+        font-size: 9px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-category.is-open
+    .devstyle-category-icon {
+
+        width: 16px;
+
+        font-size: 9px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-category.is-open
+    .devstyle-category-left {
+
+        gap: 4px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-category.is-open
+    .devstyle-arrow {
+
+        font-size: 8px;
+
+    }
+
+
+    /* -------------------------
+       Category content
+    ------------------------- */
+
+    #devstyle-panel
+    .devstyle-category-content {
+
+        padding: 6px;
+
+    }
+
+
+    /* -------------------------
+       Fields
+    ------------------------- */
+
+    #devstyle-panel
+    .devstyle-field {
+
+        margin-bottom: 6px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-field label {
+
+        margin-bottom: 2px;
+
+        font-size: 8px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-field
+    input[type="text"],
+    #devstyle-panel
+    .devstyle-field
+    input[type="number"],
+    #devstyle-panel
+    .devstyle-field
+    select {
+
+        height: 29px;
+
+        padding:
+            0 7px;
+
+        font-size: 9px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-field
+    input[type="color"] {
+
+        width: 36px;
+
+        height: 29px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-unit {
+
+        width: 30px;
+
+        min-width: 30px;
+
+        height: 29px;
+
+        font-size: 8px;
+
+    }
+
+
+    /* -------------------------
+       Footer
+    ------------------------- */
+
+    #devstyle-panel
+    .devstyle-footer {
+
+        padding:
+            6px 7px 7px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-copy {
+
+        height: 34px;
+
+        font-size: 10px;
+
+    }
+
+
+    #devstyle-panel
+    .devstyle-status {
+
+        font-size: 8px;
+
+    }
 
 }
