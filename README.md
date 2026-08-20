@@ -27,27 +27,64 @@ Copy CSS
 
 ---
 
-## ✨ Current Features — V1
+## ✨ Current Features — V1.1
 
-* 🔍 Visual element selector
-* 🎨 Change font color
-* 🔠 Change font size
-* 📐 Change element width
-* 📏 Change element height
-* 📍 Change element position
-* ⚡ Live CSS changes
-* 📋 Copy modified CSS
-* ❌ Close the inspector when finished
+### 🔍 Element Inspector
+
+* Visual element selector
+* Hover highlighting
+* Select elements directly from the webpage
+* Display selected element information
+
+### 📐 Size & Position
+
+* Change width
+* Change height
+* Change left position
+* Change top position
+
+### 🔤 Typography
+
+* Change font family
+* Change font size
+* Change font weight / boldness
+* Change font color
+* Change line height
+* Change letter spacing
+
+### 🎨 Background
+
+* Change background color
+
+### 🧱 Border
+
+* Change border width
+* Change border radius
+* Change border color
+* Change border style
+* Supports solid, dashed, dotted and double borders
+
+### 📦 Spacing
+
+* Change padding
+* Change margin
+
+### ⚡ Developer Workflow
+
+* Live CSS changes
+* No page refresh required
+* Copy modified inline CSS
+* Simple visual editing interface
 
 ---
 
-## 🌐 Website & Localhost Access
+# 🌐 Website & Localhost Access
 
 The current development version can be tested on **localhost**, local HTML files, and live websites.
 
-### 🏠 Local Development
+## 🏠 Local Development
 
-You can test DevStyle on:
+You can test DevStyle on development servers such as:
 
 ```text
 http://localhost:3000
@@ -55,7 +92,7 @@ http://localhost:5173
 http://127.0.0.1:3000
 ```
 
-You can also test it with local HTML files:
+You can also test local HTML files:
 
 ```text
 file:///C:/your-project/index.html
@@ -67,9 +104,11 @@ If you are testing local HTML files, enable:
 
 from the DevStyle extension settings.
 
-### 🌍 Live Websites
+---
 
-If DevStyle doesn't work on a live website, check its site-access permission.
+## 🌍 Live Websites
+
+If DevStyle doesn't work on a live website, check the extension's site-access permission.
 
 1. Open:
 
@@ -89,47 +128,43 @@ chrome://extensions
 
 **On all sites**
 
-This allows the extension to run on websites across the internet.
+This allows DevStyle to run on websites across the internet.
 
-> **Note:** Only enable the permissions you are comfortable granting to the extension.
+> **Note:** Only enable permissions you are comfortable granting to the extension.
 
 ---
 
-## ⚠️ Current Version
+# ⚠️ Current Version
 
-**Version: V1 — Early Development Release**
+**Version: V1.1.0**
 
-The current version is primarily intended for **development, testing, and experimentation**.
+**Status: 🚧 Active Development**
 
-Current capabilities are intentionally limited to basic CSS editing.
+DevStyle is currently an early-stage development project.
 
-### Currently supported
+The current version focuses on basic visual CSS editing and experimentation.
 
-* Localhost development websites
-* Local HTML files
-* Live websites after enabling the required site-access permission
-* Basic CSS property editing
+### Current limitations
 
-### Known limitations
-
-* Limited CSS properties
-* No Flexbox editor yet
-* No CSS Grid editor yet
-* No visual margin/padding editor
+* Limited CSS property support
+* No Flexbox editor
+* No CSS Grid editor
+* No visual box-model editor
 * No undo/redo
 * No CSS history
+* No saved presets
 * Position editing may behave differently depending on the element's existing layout
 * Advanced websites and complex DOM structures may require additional compatibility work
 
-These limitations will be addressed in future versions.
+These limitations will be addressed in future releases.
 
 ---
 
-## 🖥️ Demo
+# 🖥️ Demo
 
 > Demo GIF/video coming soon.
 
-Basic workflow:
+### Basic workflow
 
 ```text
 Open Website
@@ -142,7 +177,7 @@ Hover over Element
      ↓
 Select Element
      ↓
-Change CSS
+Edit CSS
      ↓
 Preview Changes
      ↓
@@ -151,13 +186,13 @@ Copy CSS
 
 ---
 
-## 🛠️ Tech Stack
+# 🛠️ Tech Stack
 
-DevStyle V1 is intentionally built using a lightweight stack.
+DevStyle V1.1 is built with:
 
+* **JavaScript**
 * **HTML**
 * **CSS**
-* **JavaScript**
 * **Chrome Extension APIs**
 * **Manifest V3**
 * **DOM API**
@@ -168,7 +203,7 @@ No backend or database is required for the current version.
 
 ---
 
-## 📁 Project Structure
+# 📁 Project Structure
 
 ```text
 devstyle/
@@ -196,9 +231,9 @@ devstyle/
 
 ---
 
-## ⚙️ How It Works
+# ⚙️ How It Works
 
-The extension uses a **content script** to interact directly with the webpage DOM.
+DevStyle uses a Chrome content script to interact with the webpage DOM.
 
 ```text
 Chrome Extension
@@ -220,26 +255,33 @@ Chrome Extension
  Read Current CSS
        │
        ▼
- Modify Element
+ Modify Element Styles
        │
        ▼
  Live Preview
 ```
 
-For example, DevStyle can read the current style:
+For example, DevStyle reads the current CSS:
 
 ```javascript
 const styles = getComputedStyle(element);
 
 console.log(styles.fontSize);
+console.log(styles.fontFamily);
+console.log(styles.fontWeight);
 console.log(styles.color);
+console.log(styles.backgroundColor);
+console.log(styles.borderRadius);
 ```
 
-and modify it instantly:
+Then changes can be applied immediately:
 
 ```javascript
-element.style.fontSize = "40px";
+element.style.fontSize = "32px";
+element.style.fontWeight = "700";
 element.style.color = "#ff0000";
+element.style.backgroundColor = "#111827";
+element.style.borderRadius = "16px";
 ```
 
 ---
@@ -252,7 +294,7 @@ element.style.color = "#ff0000";
 git clone https://github.com/YOUR-USERNAME/devstyle.git
 ```
 
-Then enter the project:
+Enter the project:
 
 ```bash
 cd devstyle
@@ -286,13 +328,7 @@ Click:
 
 **Load unpacked**
 
-Then select the cloned:
-
-```text
-devstyle
-```
-
-folder.
+Then select the cloned `devstyle` folder.
 
 Make sure `manifest.json` is directly inside the selected folder.
 
@@ -310,40 +346,43 @@ Select:
 
 Hover over an element and click it.
 
-You can then modify its:
+The DevStyle editor will appear.
 
-* Width
-* Height
-* Position
-* Font size
-* Font weight
-* Font color
-
-Changes should appear immediately.
+You can then experiment with the available CSS properties.
 
 ---
 
 # 🔧 Development Workflow
 
-When you modify the extension's code:
-
-1. Save your changes.
-2. Go to:
+When making changes:
 
 ```text
+Edit Code
+    ↓
+Save Files
+    ↓
 chrome://extensions
+    ↓
+Reload DevStyle
+    ↓
+Refresh Webpage
+    ↓
+Test
 ```
 
-3. Find DevStyle.
-4. Click **Reload**.
-5. Refresh the webpage.
-6. Test again.
+After making sure everything works, commit the changes:
+
+```bash
+git add .
+git commit -m "feat: add typography, background, border, and spacing controls"
+git push origin main
+```
 
 ---
 
 # 🗺️ Roadmap
 
-## V1 — Basic Inspector
+## ✅ V1.0 — Basic Inspector
 
 * [x] Element selection
 * [x] Element highlighting
@@ -358,55 +397,67 @@ chrome://extensions
 
 ---
 
-## V2 — Better CSS Editing
+## ✅ V1.1 — Extended CSS Controls
 
-* [ ] Padding controls
-* [ ] Margin controls
-* [ ] Border controls
-* [ ] Border radius
-* [ ] Background color
-* [ ] Better color picker
-* [ ] Undo / Redo
-* [ ] CSS history
-* [ ] CSS selector generation
+* [x] Font family
+* [x] Line height
+* [x] Letter spacing
+* [x] Background color
+* [x] Border width
+* [x] Border radius
+* [x] Border color
+* [x] Border style
+* [x] Padding
+* [x] Margin
+* [x] Improved editor UI
 
 ---
 
-## V3 — Advanced Layout
+## 🔜 V1.2 — Box Model
+
+* [ ] Individual top/right/bottom/left padding
+* [ ] Individual top/right/bottom/left margin
+* [ ] Box model visualizer
+* [ ] Individual border controls
+* [ ] `box-sizing`
+* [ ] Min/max width
+* [ ] Min/max height
+
+---
+
+## 🔜 V2 — Layout Editor
 
 * [ ] Flexbox editor
 * [ ] CSS Grid editor
+* [ ] Gap controls
+* [ ] Alignment controls
 * [ ] Drag-to-resize
 * [ ] Visual spacing controls
-* [ ] Transform controls
 * [ ] Z-index controls
-* [ ] Positioning improvements
-* [ ] Responsive viewport testing
+* [ ] Advanced positioning
 
 ---
 
-## V4 — Developer Workflow
+## 🔜 V3 — Developer Workflow
 
+* [ ] Undo / Redo
+* [ ] CSS history
+* [ ] CSS selector generation
 * [ ] Copy as Tailwind CSS
 * [ ] Copy as SCSS
 * [ ] Saved style presets
-* [ ] Component export
 * [ ] Keyboard shortcuts
-* [ ] Design-system helpers
-* [ ] CSS comparison/history
-* [ ] Better iframe support
-* [ ] Shadow DOM support
+* [ ] Responsive viewport preview
 
 ---
 
 ## 🔮 Future Ideas
 
-Potential future features include:
+Potential future features:
 
 * 🤖 AI-powered CSS suggestions
 * 🎨 Design-system presets
-* 📱 Responsive design preview
-* 📐 Visual box-model editor
+* 📱 Responsive design testing
 * 🧩 Component extraction
 * ☁️ Cloud-saved projects
 * 🔄 Cross-device synchronization
@@ -418,14 +469,15 @@ Potential future features include:
 
 Contributions, ideas, bug reports, and feature requests are welcome.
 
-If you find a bug:
+### Reporting a bug
 
 1. Open an **Issue**.
-2. Explain what happened.
-3. Include the website/environment where it happened if possible.
-4. Include screenshots or console errors when relevant.
+2. Describe the problem.
+3. Include the browser/environment if relevant.
+4. Include screenshots or console errors when possible.
+5. Explain how to reproduce the issue.
 
-If you want to contribute code:
+### Contributing code
 
 ```text
 Fork
@@ -445,23 +497,23 @@ Pull Request
 
 # 💡 Why DevStyle?
 
-Finding the right CSS value often involves repeatedly changing a value and checking the result.
+Finding the right CSS value often involves repeatedly changing values and checking the result.
 
 For example:
 
 ```text
 420px
-↓
+  ↓
 450px
-↓
+  ↓
 480px
-↓
+  ↓
 460px
-↓
+  ↓
 470px
 ```
 
-DevStyle aims to make this process visual.
+DevStyle aims to make that process visual.
 
 > **Don't guess the CSS value. See it.**
 
@@ -473,19 +525,22 @@ If you find DevStyle useful, consider giving the repository a ⭐.
 
 It helps the project reach more developers and motivates continued development.
 
-If you encounter a problem or have an idea, feel free to open an issue.
+Found a bug or have an idea?
+
+Open an issue and help improve DevStyle.
 
 ---
 
-# 📌 Project Status
+# 📊 Project Status
 
-**Current Version:** `v1.0.0`
-
-**Status:** 🚧 Active Development
-
-DevStyle is currently an experimental project and is being actively developed.
-
-The feature set and architecture may change as the project evolves.
+| Item             | Status                |
+| ---------------- | --------------------- |
+| Current Version  | `1.1.0`               |
+| Status           | 🚧 Active Development |
+| Chrome Extension | Manifest V3           |
+| Backend          | Not required          |
+| Database         | Not required          |
+| License          | Coming soon           |
 
 ---
 
