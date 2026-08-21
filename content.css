@@ -1887,3 +1887,136 @@ input[type="number"]::-webkit-outer-spin-button {
     border-color: #3b82f6;
 
 }
+/* =====================================================
+   MOVE ELEMENT
+===================================================== */
+
+.devstyle-move-section {
+
+    margin-bottom: 12px;
+
+    padding: 10px;
+
+    border:
+        1px solid #27272a;
+
+    border-radius: 8px;
+
+    background: #202023;
+
+}
+
+
+.devstyle-move-title {
+
+    color: #ffffff;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+}
+
+
+.devstyle-move-description {
+
+    margin-top: 3px;
+
+    color: #71717a;
+
+    font-size: 9px;
+
+    line-height: 1.4;
+
+}
+
+
+.devstyle-move-button {
+
+    width: 100%;
+
+    height: 34px;
+
+    margin-top: 9px;
+
+    border:
+        1px solid #3f3f46;
+
+    border-radius: 7px;
+
+    background: #27272a;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+}
+
+
+.devstyle-move-button:hover {
+
+    background: #3f3f46;
+
+}
+
+
+.devstyle-move-button.is-moving {
+
+    background: #3b82f6;
+
+    border-color: #3b82f6;
+
+    color: white;
+
+}
+
+
+.devstyle-move-button:disabled {
+
+    opacity: 0.45;
+
+    cursor: not-allowed;
+
+}
+
+
+.devstyle-move-status {
+
+    margin-top: 6px;
+
+    color: #71717a;
+
+    text-align: center;
+
+    font-size: 9px;
+
+}
+
+
+/* =====================================================
+   MOVE OVERLAY
+===================================================== */
+
+#devstyle-move-overlay {
+
+    position: fixed;
+
+    z-index: 2147483645;
+
+    box-sizing: border-box;
+
+    border:
+        2px dashed #3b82f6;
+
+    background:
+        rgba(59, 130, 246, 0.08);
+
+    cursor: move;
+
+    pointer-events: auto;
+
+}

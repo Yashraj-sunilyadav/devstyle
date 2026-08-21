@@ -2,30 +2,34 @@
     box-sizing: border-box;
 }
 
+
 body {
 
     margin: 0;
 
-    width: 300px;
+    width: 330px;
 
     background: #18181b;
 
-    color: white;
+    color: #ffffff;
 
     font-family:
         Arial,
         sans-serif;
+
 }
+
 
 .popup {
 
     padding: 18px;
+
 }
 
 
-/* =========================================
+/* =====================================================
    BRAND
-========================================= */
+===================================================== */
 
 .brand {
 
@@ -36,7 +40,9 @@ body {
     gap: 10px;
 
     margin-bottom: 18px;
+
 }
+
 
 .brand-icon {
 
@@ -54,17 +60,21 @@ body {
 
     background: #27272a;
 
-    color: white;
+    color: #ffffff;
 
     font-size: 18px;
+
 }
 
-h2 {
+
+.brand h2 {
 
     margin: 0;
 
     font-size: 18px;
+
 }
+
 
 .brand p {
 
@@ -73,12 +83,13 @@ h2 {
     color: #71717a;
 
     font-size: 11px;
+
 }
 
 
-/* =========================================
+/* =====================================================
    INSPECT BUTTON
-========================================= */
+===================================================== */
 
 #inspectBtn {
 
@@ -90,31 +101,43 @@ h2 {
 
     width: 100%;
 
-    padding: 11px 12px;
+    min-height: 42px;
+
+    padding:
+        0 11px;
 
     border: none;
 
     border-radius: 8px;
 
-    background: white;
+    background: #ffffff;
 
     color: #18181b;
 
     cursor: pointer;
 
-    font-size: 13px;
+    font-size: 12px;
 
     font-weight: 600;
+
 }
+
 
 #inspectBtn:hover {
 
     background: #e4e4e7;
+
 }
+
+
+/* =====================================================
+   GENERIC SHORTCUT BADGE
+===================================================== */
 
 .shortcut {
 
-    padding: 3px 6px;
+    padding:
+        4px 7px;
 
     border-radius: 5px;
 
@@ -122,60 +145,240 @@ h2 {
 
     color: #52525b;
 
-    font-size: 10px;
+    font-size: 9px;
 
-    font-weight: 500;
+    font-weight: 600;
+
 }
 
 
-/* =========================================
+/* =====================================================
    DIVIDER
-========================================= */
+===================================================== */
 
 .popup-divider {
 
     height: 1px;
 
-    margin: 16px 0;
+    margin:
+        16px 0;
 
     background: #27272a;
+
 }
 
 
-/* =========================================
+/* =====================================================
+   SECTION TITLE
+===================================================== */
+
+.section-title {
+
+    margin-bottom: 9px;
+
+    color: #a1a1aa;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.04em;
+
+    text-transform: uppercase;
+
+}
+
+
+/* =====================================================
+   SHORTCUT LIST
+===================================================== */
+
+.shortcut-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+
+}
+
+
+/* =====================================================
+   SHORTCUT ROW
+===================================================== */
+
+.shortcut-row {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    min-height: 52px;
+
+    padding:
+        8px 9px;
+
+    border:
+        1px solid #27272a;
+
+    border-radius: 8px;
+
+    background: #202023;
+
+}
+
+
+/* =====================================================
    SHORTCUT INFO
-========================================= */
+===================================================== */
 
 .shortcut-info {
 
     display: flex;
 
-    gap: 10px;
+    align-items: center;
 
-    color: #a1a1aa;
+    gap: 9px;
+
+    min-width: 0;
+
 }
 
-.shortcut-info > span {
 
-    font-size: 17px;
+.shortcut-icon {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 28px;
+
+    height: 28px;
+
+    flex-shrink: 0;
+
+    border-radius: 6px;
+
+    background: #27272a;
+
+    color: #d4d4d8;
+
+    font-size: 13px;
+
 }
+
 
 .shortcut-info strong {
 
     display: block;
 
-    color: #d4d4d8;
-
-    font-size: 12px;
-}
-
-.shortcut-info p {
-
-    margin: 4px 0 0;
-
-    color: #71717a;
+    color: #e4e4e7;
 
     font-size: 11px;
 
-    line-height: 1.5;
+}
+
+
+.shortcut-info span {
+
+    display: block;
+
+    margin-top: 2px;
+
+    overflow: hidden;
+
+    color: #71717a;
+
+    font-size: 9px;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+}
+
+
+/* =====================================================
+   KEY
+===================================================== */
+
+kbd {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 27px;
+
+    height: 25px;
+
+    padding:
+        0 6px;
+
+    border:
+        1px solid #3f3f46;
+
+    border-radius: 5px;
+
+    background: #18181b;
+
+    color: #d4d4d8;
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 1px 0 #111113;
+
+}
+
+
+.key-group {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+}
+
+
+.key-group span {
+
+    color: #71717a;
+
+    font-size: 9px;
+
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.popup-footer {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    color: #52525b;
+
+    font-size: 9px;
+
 }

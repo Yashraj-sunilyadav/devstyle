@@ -20,7 +20,146 @@ let panelStartTop = 0;
 // =====================================================
 // CSS PROPERTY CONFIGURATION
 // =====================================================
+// =====================================================
+// DEVSTYLE KEYBOARD SHORTCUTS
+// M = Move selected element
+// H = Select another element
+// ESC = Cancel current mode
+// =====================================================
 
+function activateSelectMode() {
+
+    // Clean up any existing modes first
+    if (movingElement) {
+        stopElementMove();
+    }
+
+    if (inspecting) {
+        stopInspector();
+    }
+
+    // Force inspect mode ON
+    inspecting = true;
+
+    createHighlight();
+
+    document.addEventListener(
+        "mousemove",
+        handleMouseMove,
+        true
+    );
+
+    document.addEventListener(
+        "click",
+        handleElementClick,
+        true
+    );
+}
+document.addEventListener(
+    "keydown",
+    (event) => {
+
+        const tag =
+            event.target?.tagName?.toLowerCase();
+
+        const isTyping =
+            tag === "input" ||
+            tag === "textarea" ||
+            tag === "select" ||
+            event.target?.isContentEditable;
+
+        if (isTyping) {
+            return;
+        }
+
+
+        // ==========================================
+        // H = SELECT ANOTHER ELEMENT
+        // Trigger the SAME action as Inspect Element
+        // ==========================================
+
+        if (
+            event.key.toLowerCase() === "h" &&
+            panel
+        ) {
+
+            event.preventDefault();
+
+            // Stop move mode first if active
+            if (movingElement) {
+                stopElementMove();
+            }
+
+            // Use the existing inspector function
+            startInspector();
+
+            return;
+        }
+
+
+        // ==========================================
+        // M = MOVE CURRENT ELEMENT
+        // Trigger the SAME action as Move Element
+        // ==========================================
+
+        if (
+            event.key.toLowerCase() === "m" &&
+            panel &&
+            selectedElement
+        ) {
+
+            event.preventDefault();
+
+            // Find the existing Move Element button
+            const moveButton =
+                document.getElementById(
+                    "devstyle-move-button"
+                );
+
+            if (moveButton) {
+
+                // This does EXACTLY what clicking
+                // the button manually does.
+                moveButton.click();
+
+            }
+
+            return;
+        }
+
+
+        // ==========================================
+        // ESC
+        // ==========================================
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            if (movingElement) {
+
+                event.preventDefault();
+
+                stopElementMove();
+
+                return;
+            }
+
+
+            if (inspecting) {
+
+                event.preventDefault();
+
+                stopInspector();
+
+                return;
+            }
+
+        }
+
+    },
+    true
+);
 const categories = [
 
     {
@@ -280,19 +419,19 @@ const categories = [
 
         ]
     }
-    ,{
-    id: "box-model",
-    name: "Box Model",
-    icon: "▣",
+    , {
+        id: "box-model",
+        name: "Box Model",
+        icon: "▣",
 
-    properties: [
-        {
-            label: "Box Model",
-            property: "boxModel",
-            type: "boxModel"
-        }
-    ]
-},
+        properties: [
+            {
+                label: "Box Model",
+                property: "boxModel",
+                type: "boxModel"
+            }
+        ]
+    },
 
 ];
 
@@ -723,13 +862,13 @@ function renderCategories(element) {
                     >
 
                         ${category.properties
-                            .map(property =>
-                                renderProperty(
-                                    element,
-                                    property
-                                )
-                            )
-                            .join("")}
+                    .map(property =>
+                        renderProperty(
+                            element,
+                            property
+                        )
+                    )
+                    .join("")}
 
                     </div>
 
@@ -790,13 +929,12 @@ function renderProperty(
 
                     <input
                         type="number"
-                        value="${
-                            Number.isNaN(
-                                numericValue
-                            )
-                                ? 0
-                                : numericValue
-                        }"
+                        value="${Number.isNaN(
+            numericValue
+        )
+                ? 0
+                : numericValue
+            }"
                         data-property="${property.property}"
                     >
 
@@ -937,23 +1075,22 @@ function renderProperty(
                 >
 
                     ${fonts
-                        .map(font => `
+                .map(font => `
 
                             <option
                                 value="${font}"
-                                ${
-                                    currentFont
-                                        .toLowerCase() ===
-                                    font.toLowerCase()
-                                        ? "selected"
-                                        : ""
-                                }
+                                ${currentFont
+                        .toLowerCase() ===
+                        font.toLowerCase()
+                        ? "selected"
+                        : ""
+                    }
                             >
                                 ${font}
                             </option>
 
                         `)
-                        .join("")}
+                .join("")}
 
                 </select>
 
@@ -987,31 +1124,30 @@ function renderProperty(
                 >
 
                     ${property.options
-                        .map((option, index) => {
+                .map((option, index) => {
 
-                            const label =
-                                property.optionLabels
-                                    ? property.optionLabels[index]
-                                    : option;
+                    const label =
+                        property.optionLabels
+                            ? property.optionLabels[index]
+                            : option;
 
 
-                            return `
+                    return `
 
                                 <option
                                     value="${option}"
-                                    ${
-                                        value === option
-                                            ? "selected"
-                                            : ""
-                                    }
+                                    ${value === option
+                            ? "selected"
+                            : ""
+                        }
                                 >
                                     ${label}
                                 </option>
 
                             `;
 
-                        })
-                        .join("")}
+                })
+                .join("")}
 
                 </select>
 
@@ -1021,13 +1157,13 @@ function renderProperty(
 
     }
 
-if (property.type === "boxModel") {
+    if (property.type === "boxModel") {
 
-    const styles = getComputedStyle(element);
+        const styles = getComputedStyle(element);
 
-    return createBoxModelEditor(element, styles);
+        return createBoxModelEditor(element, styles);
 
-}
+    }
     return "";
 
 
@@ -1042,7 +1178,7 @@ if (property.type === "boxModel") {
 function setupPanel(element) {
 
     setupCategoryToggles();
-setupResponsiveStickyCategory();
+    setupResponsiveStickyCategory();
     setupPropertyInputs(element);
 
     setupSearch();
@@ -1198,7 +1334,6 @@ function setupPropertyInputs(element) {
                     const property =
                         input.dataset.property;
 
-
                     const value =
                         input.value;
 
@@ -1271,7 +1406,6 @@ function setupPropertyInputs(element) {
                     const property =
                         input.dataset.property;
 
-
                     element.style[property] =
                         input.value;
 
@@ -1297,7 +1431,6 @@ function setupPropertyInputs(element) {
 
                     const property =
                         select.dataset.property;
-
 
                     element.style[property] =
                         select.value;
@@ -1328,6 +1461,11 @@ function setupPropertyInputs(element) {
                 );
 
 
+            if (!textInput) {
+                return;
+            }
+
+
             colorInput.addEventListener(
                 "input",
                 () => {
@@ -1335,10 +1473,8 @@ function setupPropertyInputs(element) {
                     const value =
                         colorInput.value;
 
-
                     element.style[property] =
                         value;
-
 
                     textInput.value =
                         value;
@@ -1364,7 +1500,6 @@ function setupPropertyInputs(element) {
                         element.style[property] =
                             value;
 
-
                         colorInput.value =
                             value;
 
@@ -1374,34 +1509,94 @@ function setupPropertyInputs(element) {
             );
 
         });
-        // ==========================================
-// BOX MODEL INPUTS
-// ==========================================
 
-panel
-    .querySelectorAll(
-        "[data-box-property]"
-    )
-    .forEach(input => {
 
-        input.addEventListener(
-            "input",
+    // -----------------------------------------
+    // BOX MODEL INPUTS
+    // -----------------------------------------
+
+    panel
+        .querySelectorAll(
+            "[data-box-property]"
+        )
+        .forEach(input => {
+
+            input.addEventListener(
+                "input",
+                () => {
+
+                    const property =
+                        input.dataset.boxProperty;
+
+                    const value =
+                        input.value;
+
+
+                    element.style[property] =
+                        `${value}px`;
+
+                }
+            );
+
+        });
+
+
+    // -----------------------------------------
+    // MOVE ELEMENT
+    // -----------------------------------------
+
+    const moveButton =
+        document.getElementById(
+            "devstyle-move-button"
+        );
+
+
+    if (moveButton) {
+
+        moveButton.addEventListener(
+            "click",
             () => {
 
-                const property =
-                    input.dataset.boxProperty;
+                if (movingElement) {
 
-                const value =
-                    input.value;
+                    stopElementMove();
 
+                }
 
-                element.style[property] =
-                    `${value}px`;
+                else {
+
+                    startElementMove(
+                        element
+                    );
+
+                }
 
             }
         );
 
-    });
+    }
+
+}
+// ==========================================
+// MOVE ELEMENT
+// ==========================================
+
+const moveButton =
+    document.getElementById(
+        "devstyle-move-button"
+    );
+
+
+if (moveButton) {
+
+    moveButton.addEventListener(
+        "click",
+        () => {
+
+            startElementMove(element);
+
+        }
+    );
 
 }
 
@@ -2111,13 +2306,77 @@ function setupResponsiveStickyCategory() {
 }
 function createBoxModelEditor(element, styles) {
 
+    const isRootElement =
+        element === document.body ||
+        element === document.documentElement;
+
+    const currentPosition =
+        styles.position;
+
+    const movementDisabled =
+        isRootElement;
+
+
     return `
 
         <div class="devstyle-box-model">
 
-            <!--
-                MARGIN
-            -->
+            <!-- =================================================
+                 MOVE ELEMENT
+            ================================================= -->
+
+            <div class="devstyle-move-section">
+
+                <div class="devstyle-move-header">
+
+                    <div>
+
+                        <div class="devstyle-move-title">
+                            Move Element
+                        </div>
+
+                        <div class="devstyle-move-description">
+                            Drag the selected element directly on the page.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="devstyle-move-button"
+                    class="devstyle-move-button"
+                    ${movementDisabled ? "disabled" : ""}
+                >
+
+                    ${movementDisabled
+            ? "Not available for root element"
+            : "↔  Move Element"
+        }
+
+                </button>
+
+
+                <div
+                    id="devstyle-move-status"
+                    class="devstyle-move-status"
+                >
+
+                    ${movementDisabled
+            ? "Select a child element to move it."
+            : `Current position: ${currentPosition}`
+        }
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 VISUAL BOX MODEL
+            ================================================= -->
 
             <div class="devstyle-box-layer devstyle-margin-layer">
 
@@ -2249,7 +2508,8 @@ function createBoxModelEditor(element, styles) {
                             </span>
 
                             <strong>
-                                ${Math.round(element.getBoundingClientRect().width)} ×
+                                ${Math.round(element.getBoundingClientRect().width)}
+                                ×
                                 ${Math.round(element.getBoundingClientRect().height)}
                             </strong>
 
@@ -2262,28 +2522,43 @@ function createBoxModelEditor(element, styles) {
             </div>
 
 
+            <!-- =================================================
+                 BOX INFO
+            ================================================= -->
+
             <div class="devstyle-box-model-info">
 
                 <div>
-                    <span>Content Width</span>
+                    <span>
+                        Content Width
+                    </span>
+
                     <strong>
                         ${Math.round(
-                            parseFloat(styles.width) || 0
-                        )}px
+            parseFloat(styles.width) || 0
+        )}px
                     </strong>
                 </div>
 
+
                 <div>
-                    <span>Content Height</span>
+                    <span>
+                        Content Height
+                    </span>
+
                     <strong>
                         ${Math.round(
-                            parseFloat(styles.height) || 0
-                        )}px
+            parseFloat(styles.height) || 0
+        )}px
                     </strong>
                 </div>
 
+
                 <div>
-                    <span>Box Sizing</span>
+                    <span>
+                        Box Sizing
+                    </span>
+
                     <strong>
                         ${styles.boxSizing}
                     </strong>
@@ -2294,4 +2569,516 @@ function createBoxModelEditor(element, styles) {
         </div>
 
     `;
+}
+// =====================================================
+// MOVE STATE
+// =====================================================
+
+let movingElement = false;
+
+let moveOverlay = null;
+
+let movePointerId = null;
+
+let moveStartMouseX = 0;
+
+let moveStartMouseY = 0;
+
+let moveStartLeft = 0;
+
+let moveStartTop = 0;
+
+// =====================================================
+// START MOVE MODE
+// =====================================================
+
+function startElementMove(element) {
+
+    if (movingElement) {
+        return;
+    }
+
+
+    // Root elements should not be moved.
+    if (
+        element === document.body ||
+        element === document.documentElement
+    ) {
+        return;
+    }
+
+
+    movingElement = true;
+
+
+    const styles =
+        getComputedStyle(element);
+
+
+    // Static elements cannot respond to
+    // top / left, so use relative positioning.
+    if (
+        styles.position === "static"
+    ) {
+
+        element.style.position =
+            "relative";
+
+        moveStartLeft = 0;
+
+        moveStartTop = 0;
+
+    }
+
+    else {
+
+        moveStartLeft =
+            parseFloat(styles.left) || 0;
+
+        moveStartTop =
+            parseFloat(styles.top) || 0;
+
+    }
+
+
+    createMoveOverlay(element);
+
+
+    const button =
+        document.getElementById(
+            "devstyle-move-button"
+        );
+
+
+    if (button) {
+
+        button.textContent =
+            "Drag the highlighted element";
+
+        button.classList.add(
+            "is-moving"
+        );
+
+    }
+
+
+    const status =
+        document.getElementById(
+            "devstyle-move-status"
+        );
+
+
+    if (status) {
+
+        status.textContent =
+            "Press and drag the highlighted area.";
+
+    }
+
+}
+
+
+// =====================================================
+// CREATE MOVE OVERLAY
+// =====================================================
+
+function createMoveOverlay(element) {
+
+    removeMoveOverlay();
+
+
+    moveOverlay =
+        document.createElement("div");
+
+
+    moveOverlay.id =
+        "devstyle-move-overlay";
+
+
+    // Very important:
+    // allow the overlay to receive pointer events.
+    moveOverlay.style.pointerEvents =
+        "auto";
+
+
+    moveOverlay.style.cursor =
+        "move";
+
+
+    document.documentElement
+        .appendChild(moveOverlay);
+
+
+    updateMoveOverlay(element);
+
+
+    // Pointer Events are much more reliable
+    // than the previous mouse implementation.
+    moveOverlay.addEventListener(
+        "pointerdown",
+        startPointerDrag
+    );
+
+}
+
+
+// =====================================================
+// POSITION OVERLAY
+// =====================================================
+
+function updateMoveOverlay(element) {
+
+    if (!moveOverlay) {
+        return;
+    }
+
+
+    const rect =
+        element.getBoundingClientRect();
+
+
+    moveOverlay.style.left =
+        `${rect.left}px`;
+
+
+    moveOverlay.style.top =
+        `${rect.top}px`;
+
+
+    moveOverlay.style.width =
+        `${rect.width}px`;
+
+
+    moveOverlay.style.height =
+        `${rect.height}px`;
+
+}
+
+
+// =====================================================
+// START POINTER DRAG
+// =====================================================
+// =====================================================
+// START POINTER DRAG
+// =====================================================
+
+function startPointerDrag(event) {
+
+    if (!movingElement) {
+        return;
+    }
+
+
+    event.preventDefault();
+    event.stopPropagation();
+
+
+    // ==========================================
+    // GET CURRENT ELEMENT POSITION
+    // EVERY DRAG STARTS FROM HERE
+    // ==========================================
+
+    const styles =
+        getComputedStyle(
+            selectedElement
+        );
+
+
+    moveStartLeft =
+        parseFloat(styles.left) || 0;
+
+
+    moveStartTop =
+        parseFloat(styles.top) || 0;
+
+
+    // ==========================================
+    // GET MOUSE POSITION FOR THIS DRAG
+    // ==========================================
+
+    moveStartMouseX =
+        event.clientX;
+
+
+    moveStartMouseY =
+        event.clientY;
+
+
+    movePointerId =
+        event.pointerId;
+
+
+    // ==========================================
+    // POINTER CAPTURE
+    // ==========================================
+
+    try {
+
+        moveOverlay.setPointerCapture(
+            event.pointerId
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Pointer capture unavailable:",
+            error
+        );
+
+    }
+
+
+    // ==========================================
+    // LISTEN FOR THIS DRAG
+    // ==========================================
+
+    moveOverlay.addEventListener(
+        "pointermove",
+        handlePointerMove
+    );
+
+
+    moveOverlay.addEventListener(
+        "pointerup",
+        finishPointerDrag
+    );
+
+
+    moveOverlay.addEventListener(
+        "pointercancel",
+        finishPointerDrag
+    );
+
+
+    document.body.style.userSelect =
+        "none";
+
+
+    updateMoveStatus(
+        moveStartLeft,
+        moveStartTop
+    );
+
+}
+// =====================================================
+// HANDLE DRAG
+// =====================================================
+
+function handlePointerMove(event) {
+
+    if (
+        !movingElement ||
+        event.pointerId !== movePointerId ||
+        !selectedElement
+    ) {
+        return;
+    }
+
+
+    event.preventDefault();
+
+
+    const deltaX =
+        event.clientX -
+        moveStartMouseX;
+
+
+    const deltaY =
+        event.clientY -
+        moveStartMouseY;
+
+
+    const newLeft =
+        moveStartLeft +
+        deltaX;
+
+
+    const newTop =
+        moveStartTop +
+        deltaY;
+
+
+    selectedElement.style.left =
+        `${Math.round(newLeft)}px`;
+
+
+    selectedElement.style.top =
+        `${Math.round(newTop)}px`;
+
+
+    updateMoveOverlay(
+        selectedElement
+    );
+
+
+    updateMoveStatus(
+        newLeft,
+        newTop
+    );
+
+}
+
+
+// =====================================================
+// UPDATE MOVE STATUS
+// =====================================================
+
+function updateMoveStatus(
+    left,
+    top
+) {
+
+    const status =
+        document.getElementById(
+            "devstyle-move-status"
+        );
+
+
+    if (!status) {
+        return;
+    }
+
+
+    status.textContent =
+        `X: ${Math.round(left)}px   Y: ${Math.round(top)}px`;
+
+}
+
+
+// =====================================================
+// FINISH POINTER DRAG
+// =====================================================
+
+function finishPointerDrag(event) {
+
+    if (
+        !movingElement ||
+        event.pointerId !== movePointerId
+    ) {
+        return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+
+    // -----------------------------------------
+    // RELEASE POINTER CAPTURE
+    // -----------------------------------------
+
+    if (moveOverlay) {
+
+        try {
+
+            moveOverlay.releasePointerCapture(
+                event.pointerId
+            );
+
+        } catch (error) {
+
+            // Pointer may already be released.
+        }
+
+
+        moveOverlay.removeEventListener(
+            "pointermove",
+            handlePointerMove
+        );
+
+        moveOverlay.removeEventListener(
+            "pointerup",
+            finishPointerDrag
+        );
+
+        moveOverlay.removeEventListener(
+            "pointercancel",
+            finishPointerDrag
+        );
+
+    }
+
+
+    // -----------------------------------------
+    // GET FINAL POSITION
+    // -----------------------------------------
+
+    if (selectedElement) {
+
+        const styles =
+            getComputedStyle(
+                selectedElement
+            );
+
+        const finalLeft =
+            parseFloat(styles.left) || 0;
+
+        const finalTop =
+            parseFloat(styles.top) || 0;
+
+
+        console.log(
+            "Final position:",
+            finalLeft,
+            finalTop
+        );
+
+    }
+
+
+    // -----------------------------------------
+    // EXIT MOVE MODE
+    // IMPORTANT
+    // This removes the blue overlay.
+    // -----------------------------------------
+
+    stopElementMove();
+
+}
+
+// =====================================================
+// EXIT MOVE MODE
+// =====================================================
+
+function stopElementMove() {
+
+    movingElement = false;
+
+    movePointerId = null;
+
+    document.body.style.userSelect = "";
+
+    removeMoveOverlay();
+
+    const button =
+        document.getElementById(
+            "devstyle-move-button"
+        );
+
+    if (button) {
+        button.textContent =
+            "↔ Move Element";
+
+        button.classList.remove(
+            "is-moving"
+        );
+    }
+
+}
+
+// =====================================================
+// REMOVE OVERLAY
+// =====================================================
+
+function removeMoveOverlay() {
+
+    if (!moveOverlay) {
+        return;
+    }
+
+
+    moveOverlay.remove();
+
+    moveOverlay =
+        null;
+
 }
