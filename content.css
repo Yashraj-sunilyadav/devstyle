@@ -1505,3 +1505,385 @@ input[type="number"]::-webkit-outer-spin-button {
     }
 
 }
+/* =====================================================
+   VISUAL BOX MODEL
+===================================================== */
+
+.devstyle-box-model {
+
+    width: 100%;
+
+    padding: 10px 4px;
+
+}
+
+
+/* =====================================================
+   BOX LAYERS
+===================================================== */
+
+.devstyle-box-layer {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    box-sizing: border-box;
+
+}
+
+
+/* =====================================================
+   MARGIN
+===================================================== */
+
+.devstyle-margin-layer {
+
+    min-height: 260px;
+
+    padding: 42px;
+
+    border:
+        2px dashed #52525b;
+
+    background:
+        rgba(234, 179, 8, 0.08);
+
+}
+
+
+/* =====================================================
+   BORDER
+===================================================== */
+
+.devstyle-border-layer {
+
+    min-height: 175px;
+
+    padding: 32px;
+
+    border:
+        2px solid #71717a;
+
+    background:
+        rgba(96, 165, 250, 0.08);
+
+}
+
+
+/* =====================================================
+   PADDING
+===================================================== */
+
+.devstyle-padding-layer {
+
+    min-height: 105px;
+
+    padding: 25px;
+
+    border:
+        2px solid #52525b;
+
+    background:
+        rgba(74, 222, 128, 0.08);
+
+}
+
+
+/* =====================================================
+   CONTENT
+===================================================== */
+
+.devstyle-box-content {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 100%;
+
+    min-height: 45px;
+
+    padding: 6px;
+
+    border-radius: 5px;
+
+    background:
+        rgba(168, 85, 247, 0.18);
+
+    color: #e4e4e7;
+
+    text-align: center;
+
+    font-size: 9px;
+
+}
+
+
+/* =====================================================
+   LAYER LABEL
+===================================================== */
+
+.devstyle-layer-label {
+
+    position: absolute;
+
+    top: 4px;
+
+    left: 7px;
+
+    color: #a1a1aa;
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+}
+
+
+/* =====================================================
+   BOX INPUTS
+===================================================== */
+
+.box-input {
+
+    position: absolute;
+
+    width: 34px;
+
+    height: 25px;
+
+    padding: 0 3px;
+
+    border:
+        1px solid #52525b;
+
+    border-radius: 4px;
+
+    outline: none;
+
+    background: #18181b;
+
+    color: #ffffff;
+
+    text-align: center;
+
+    font-size: 9px;
+
+}
+
+
+/* =====================================================
+   MARGIN POSITIONS
+===================================================== */
+
+.box-margin-top {
+
+    top: 9px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+}
+
+
+.box-margin-right {
+
+    right: 7px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+}
+
+
+.box-margin-bottom {
+
+    bottom: 9px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+}
+
+
+.box-margin-left {
+
+    left: 7px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+}
+
+
+/* =====================================================
+   BORDER POSITIONS
+===================================================== */
+
+.box-border-top {
+
+    top: 5px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+}
+
+
+.box-border-right {
+
+    right: 4px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+}
+
+
+.box-border-bottom {
+
+    bottom: 5px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+}
+
+
+.box-border-left {
+
+    left: 4px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+}
+
+
+/* =====================================================
+   PADDING POSITIONS
+===================================================== */
+
+.box-padding-top {
+
+    top: 3px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+}
+
+
+.box-padding-right {
+
+    right: 3px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+}
+
+
+.box-padding-bottom {
+
+    bottom: 3px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+}
+
+
+.box-padding-left {
+
+    left: 3px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+}
+
+
+/* =====================================================
+   BOX MODEL INFO
+===================================================== */
+
+.devstyle-box-model-info {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 5px;
+
+    margin-top: 9px;
+
+}
+
+
+.devstyle-box-model-info > div {
+
+    padding: 7px;
+
+    border-radius: 6px;
+
+    background: #202023;
+
+}
+
+
+.devstyle-box-model-info span {
+
+    display: block;
+
+    color: #71717a;
+
+    font-size: 8px;
+
+}
+
+
+.devstyle-box-model-info strong {
+
+    display: block;
+
+    margin-top: 3px;
+
+    color: #e4e4e7;
+
+    font-size: 9px;
+
+}
+
+
+/* =====================================================
+   FOCUS
+===================================================== */
+
+.box-input:focus {
+
+    border-color: #3b82f6;
+
+}

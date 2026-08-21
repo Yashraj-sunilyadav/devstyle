@@ -280,6 +280,19 @@ const categories = [
 
         ]
     }
+    ,{
+    id: "box-model",
+    name: "Box Model",
+    icon: "▣",
+
+    properties: [
+        {
+            label: "Box Model",
+            property: "boxModel",
+            type: "boxModel"
+        }
+    ]
+},
 
 ];
 
@@ -1008,8 +1021,16 @@ function renderProperty(
 
     }
 
+if (property.type === "boxModel") {
 
+    const styles = getComputedStyle(element);
+
+    return createBoxModelEditor(element, styles);
+
+}
     return "";
+
+
 
 }
 
@@ -1353,6 +1374,34 @@ function setupPropertyInputs(element) {
             );
 
         });
+        // ==========================================
+// BOX MODEL INPUTS
+// ==========================================
+
+panel
+    .querySelectorAll(
+        "[data-box-property]"
+    )
+    .forEach(input => {
+
+        input.addEventListener(
+            "input",
+            () => {
+
+                const property =
+                    input.dataset.boxProperty;
+
+                const value =
+                    input.value;
+
+
+                element.style[property] =
+                    `${value}px`;
+
+            }
+        );
+
+    });
 
 }
 
@@ -2059,4 +2108,190 @@ function setupResponsiveStickyCategory() {
     // Store observer so it can be cleaned up
     panel._devstyleResizeObserver =
         resizeObserver;
+}
+function createBoxModelEditor(element, styles) {
+
+    return `
+
+        <div class="devstyle-box-model">
+
+            <!--
+                MARGIN
+            -->
+
+            <div class="devstyle-box-layer devstyle-margin-layer">
+
+                <span class="devstyle-layer-label">
+                    Margin
+                </span>
+
+
+                <input
+                    class="box-input box-margin-top"
+                    type="number"
+                    value="${parseFloat(styles.marginTop) || 0}"
+                    data-box-property="marginTop"
+                >
+
+
+                <input
+                    class="box-input box-margin-right"
+                    type="number"
+                    value="${parseFloat(styles.marginRight) || 0}"
+                    data-box-property="marginRight"
+                >
+
+
+                <input
+                    class="box-input box-margin-bottom"
+                    type="number"
+                    value="${parseFloat(styles.marginBottom) || 0}"
+                    data-box-property="marginBottom"
+                >
+
+
+                <input
+                    class="box-input box-margin-left"
+                    type="number"
+                    value="${parseFloat(styles.marginLeft) || 0}"
+                    data-box-property="marginLeft"
+                >
+
+
+                <!-- BORDER -->
+
+                <div class="devstyle-box-layer devstyle-border-layer">
+
+                    <span class="devstyle-layer-label">
+                        Border
+                    </span>
+
+
+                    <input
+                        class="box-input box-border-top"
+                        type="number"
+                        value="${parseFloat(styles.borderTopWidth) || 0}"
+                        data-box-property="borderTopWidth"
+                    >
+
+
+                    <input
+                        class="box-input box-border-right"
+                        type="number"
+                        value="${parseFloat(styles.borderRightWidth) || 0}"
+                        data-box-property="borderRightWidth"
+                    >
+
+
+                    <input
+                        class="box-input box-border-bottom"
+                        type="number"
+                        value="${parseFloat(styles.borderBottomWidth) || 0}"
+                        data-box-property="borderBottomWidth"
+                    >
+
+
+                    <input
+                        class="box-input box-border-left"
+                        type="number"
+                        value="${parseFloat(styles.borderLeftWidth) || 0}"
+                        data-box-property="borderLeftWidth"
+                    >
+
+
+                    <!-- PADDING -->
+
+                    <div class="devstyle-box-layer devstyle-padding-layer">
+
+                        <span class="devstyle-layer-label">
+                            Padding
+                        </span>
+
+
+                        <input
+                            class="box-input box-padding-top"
+                            type="number"
+                            value="${parseFloat(styles.paddingTop) || 0}"
+                            data-box-property="paddingTop"
+                        >
+
+
+                        <input
+                            class="box-input box-padding-right"
+                            type="number"
+                            value="${parseFloat(styles.paddingRight) || 0}"
+                            data-box-property="paddingRight"
+                        >
+
+
+                        <input
+                            class="box-input box-padding-bottom"
+                            type="number"
+                            value="${parseFloat(styles.paddingBottom) || 0}"
+                            data-box-property="paddingBottom"
+                        >
+
+
+                        <input
+                            class="box-input box-padding-left"
+                            type="number"
+                            value="${parseFloat(styles.paddingLeft) || 0}"
+                            data-box-property="paddingLeft"
+                        >
+
+
+                        <!-- CONTENT -->
+
+                        <div class="devstyle-box-content">
+
+                            <span>
+                                Content
+                            </span>
+
+                            <strong>
+                                ${Math.round(element.getBoundingClientRect().width)} ×
+                                ${Math.round(element.getBoundingClientRect().height)}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="devstyle-box-model-info">
+
+                <div>
+                    <span>Content Width</span>
+                    <strong>
+                        ${Math.round(
+                            parseFloat(styles.width) || 0
+                        )}px
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Content Height</span>
+                    <strong>
+                        ${Math.round(
+                            parseFloat(styles.height) || 0
+                        )}px
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Box Sizing</span>
+                    <strong>
+                        ${styles.boxSizing}
+                    </strong>
+                </div>
+
+            </div>
+
+        </div>
+
+    `;
 }
