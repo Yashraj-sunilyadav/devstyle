@@ -90,6 +90,13 @@ document.addEventListener(
                 stopElementMove();
             }
 
+            // startInspector() toggles OFF if inspecting is
+            // already true, so stop it first here to guarantee
+            // H always (re)starts a fresh selection flow.
+            if (inspecting) {
+                stopInspector();
+            }
+
             // Use the existing inspector function
             startInspector();
 
@@ -765,6 +772,13 @@ function showEditor(element) {
 
     document.documentElement
         .appendChild(panel);
+
+
+    // removePanel() (called above) nulls the global
+    // selectedElement whenever a panel already existed.
+    // Restore it here so Move Element / the M shortcut
+    // always act on the element this panel is showing.
+    selectedElement = element;
 
 
     setupPanel(element);
@@ -1575,28 +1589,6 @@ function setupPropertyInputs(element) {
         );
 
     }
-
-}
-// ==========================================
-// MOVE ELEMENT
-// ==========================================
-
-const moveButton =
-    document.getElementById(
-        "devstyle-move-button"
-    );
-
-
-if (moveButton) {
-
-    moveButton.addEventListener(
-        "click",
-        () => {
-
-            startElementMove(element);
-
-        }
-    );
 
 }
 
