@@ -660,8 +660,59 @@ function stopInspector() {
 
 function showEditor(element) {
 
+    // =====================================================
+    // SAVE CURRENT PANEL STATE
+    // =====================================================
+
+    let oldPanelState = null;
+
+
+    if (panel) {
+
+        const rect =
+            panel.getBoundingClientRect();
+
+
+        oldPanelState = {
+
+            left: rect.left,
+
+            top: rect.top,
+
+            width: rect.width,
+
+            height: rect.height,
+
+            compact:
+                panel.classList.contains(
+                    "devstyle-compact"
+                )
+
+        };
+
+    }
+
+
+    // =====================================================
+    // REMOVE OLD PANEL
+    // =====================================================
+
     removePanel();
 
+
+    // =====================================================
+    // VERY IMPORTANT
+    // restore the newly selected element
+    // because removePanel() sets selectedElement = null
+    // =====================================================
+
+    selectedElement =
+        element;
+
+
+    // =====================================================
+    // CREATE NEW PANEL
+    // =====================================================
 
     panel =
         document.createElement("div");
@@ -683,6 +734,7 @@ function showEditor(element) {
                 <div class="devstyle-brand">
                     DevStyle
                 </div>
+
 
                 <div
                     class="devstyle-selected-element"
@@ -727,6 +779,7 @@ function showEditor(element) {
                 ⌕
             </span>
 
+
             <input
                 id="devstyle-search-input"
                 type="text"
@@ -769,21 +822,60 @@ function showEditor(element) {
     `;
 
 
+    // =====================================================
+    // ADD NEW PANEL
+    // =====================================================
+
     document.documentElement
         .appendChild(panel);
 
 
-    // removePanel() (called above) nulls the global
-    // selectedElement whenever a panel already existed.
-    // Restore it here so Move Element / the M shortcut
-    // always act on the element this panel is showing.
-    selectedElement = element;
+    // =====================================================
+    // RESTORE PANEL POSITION / SIZE
+    // =====================================================
 
+    if (oldPanelState) {
+
+        panel.style.left =
+            `${oldPanelState.left}px`;
+
+
+        panel.style.top =
+            `${oldPanelState.top}px`;
+
+
+        panel.style.right =
+            "auto";
+
+
+        panel.style.width =
+            `${oldPanelState.width}px`;
+
+
+        panel.style.height =
+            `${oldPanelState.height}px`;
+
+
+        if (
+            oldPanelState.compact
+        ) {
+
+            panel.classList.add(
+                "devstyle-compact"
+            );
+
+        }
+
+    }
+
+
+    // =====================================================
+    // SETUP PANEL
+    // =====================================================
 
     setupPanel(element);
 
 }
-
 
 // =====================================================
 // ELEMENT NAME
