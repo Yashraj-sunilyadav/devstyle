@@ -16,7 +16,6 @@ let panelStartLeft = 0;
 
 let panelStartTop = 0;
 
-
 // =====================================================
 // CSS PROPERTY CONFIGURATION
 // =====================================================
@@ -1221,7 +1220,34 @@ function setupPanel(element) {
             }
         );
 
-}
+
+const resizeButton =
+    document.getElementById(
+        "devstyle-resize-button"
+    );
+
+if (resizeButton) {
+
+    resizeButton.addEventListener(
+        "click",
+        () => {
+
+            if (resizingElement) {
+
+                stopElementResize();
+
+            } else {
+
+                startElementResize(
+                    element
+                );
+
+            }
+
+        }
+    );
+
+}    }
 
 
 // =====================================================
@@ -2349,6 +2375,13 @@ function createBoxModelEditor(element, styles) {
         }
 
                 </button>
+                <button
+    type="button"
+    id="devstyle-resize-button"
+    class="devstyle-resize-button"
+>
+    ↗ Resize Element
+</button>
 
 
                 <div
@@ -2579,7 +2612,26 @@ let moveStartMouseY = 0;
 let moveStartLeft = 0;
 
 let moveStartTop = 0;
+// =====================================================
+// RESIZE STATE
+// =====================================================
 
+let resizingElement = false;
+
+let resizeOverlay = null;
+
+let resizePointerId = null;
+
+let resizeDirection = null;
+
+let resizeStartMouseX = 0;
+let resizeStartMouseY = 0;
+
+let resizeStartWidth = 0;
+let resizeStartHeight = 0;
+
+let resizeStartLeft = 0;
+let resizeStartTop = 0;
 // =====================================================
 // START MOVE MODE
 // =====================================================
@@ -3072,5 +3124,482 @@ function removeMoveOverlay() {
 
     moveOverlay =
         null;
+
+}
+// =====================================================
+// RESIZE STATE
+// =====================================================
+
+
+
+// =====================================================
+// START RESIZE
+// =====================================================
+
+function startElementResize(element) {
+
+    if (
+        !element ||
+        element === document.body ||
+        element === document.documentElement
+    ) {
+        return;
+    }
+
+    if (movingElement) {
+        stopElementMove();
+    }
+
+    if (resizingElement) {
+        return;
+    }
+
+    resizingElement = true;
+
+    createResizeOverlay(element);
+
+
+    const button =
+        document.getElementById(
+            "devstyle-resize-button"
+        );
+
+    if (button) {
+
+        button.textContent =
+            "↗ Resizing...";
+
+        button.classList.add(
+            "is-resizing"
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// CREATE RESIZE OVERLAY
+// =====================================================
+
+function createResizeOverlay(element) {
+
+    removeResizeOverlay();
+
+
+    resizeOverlay =
+        document.createElement("div");
+
+    resizeOverlay.id =
+        "devstyle-resize-overlay";
+
+
+    document.documentElement
+        .appendChild(resizeOverlay);
+
+
+    updateResizeOverlay(element);
+
+
+    const directions = [
+        "nw",
+        "ne",
+        "sw",
+        "se"
+    ];
+
+
+    directions.forEach(
+        direction => {
+
+            const handle =
+                document.createElement(
+                    "div"
+                );
+
+            handle.className =
+                `devstyle-resize-handle handle-${direction}`;
+
+            handle.dataset.direction =
+                direction;
+
+
+            handle.addEventListener(
+                "pointerdown",
+                startResizeDrag
+            );
+
+
+            resizeOverlay.appendChild(
+                handle
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// UPDATE RESIZE OVERLAY
+// =====================================================
+
+function updateResizeOverlay(element) {
+
+    if (!resizeOverlay) {
+        return;
+    }
+
+
+    const rect =
+        element.getBoundingClientRect();
+
+
+    resizeOverlay.style.left =
+        `${rect.left}px`;
+
+    resizeOverlay.style.top =
+        `${rect.top}px`;
+
+    resizeOverlay.style.width =
+        `${rect.width}px`;
+
+    resizeOverlay.style.height =
+        `${rect.height}px`;
+
+}
+
+
+// =====================================================
+// START RESIZE DRAG
+// =====================================================
+
+function startResizeDrag(event) {
+
+    if (
+        !resizingElement ||
+        !selectedElement
+    ) {
+        return;
+    }
+
+
+    event.preventDefault();
+
+    event.stopPropagation();
+
+
+    const rect =
+        selectedElement.getBoundingClientRect();
+
+
+    resizeDirection =
+        event.currentTarget.dataset.direction;
+
+
+    resizeStartMouseX =
+        event.clientX;
+
+    resizeStartMouseY =
+        event.clientY;
+
+
+    resizeStartWidth =
+        rect.width;
+
+    resizeStartHeight =
+        rect.height;
+
+
+    resizePointerId =
+        event.pointerId;
+
+
+    try {
+
+        event.currentTarget.setPointerCapture(
+            event.pointerId
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Resize pointer capture unavailable:",
+            error
+        );
+
+    }
+
+
+    event.currentTarget.addEventListener(
+        "pointermove",
+        handleResizeDrag
+    );
+
+
+    event.currentTarget.addEventListener(
+        "pointerup",
+        finishResizeDrag
+    );
+
+
+    event.currentTarget.addEventListener(
+        "pointercancel",
+        finishResizeDrag
+    );
+
+
+    document.body.style.userSelect =
+        "none";
+
+}
+
+
+// =====================================================
+// HANDLE RESIZE DRAG
+// =====================================================
+
+function handleResizeDrag(event) {
+
+    if (
+        !resizingElement ||
+        !selectedElement ||
+        event.pointerId !== resizePointerId
+    ) {
+        return;
+    }
+
+
+    event.preventDefault();
+
+
+    const deltaX =
+        event.clientX -
+        resizeStartMouseX;
+
+
+    const deltaY =
+        event.clientY -
+        resizeStartMouseY;
+
+
+    let newWidth =
+        resizeStartWidth;
+
+
+    let newHeight =
+        resizeStartHeight;
+
+
+    // Right-side movement
+
+    if (
+        resizeDirection === "se" ||
+        resizeDirection === "ne"
+    ) {
+
+        newWidth =
+            resizeStartWidth +
+            deltaX;
+
+    }
+
+
+    // Left-side movement
+
+    if (
+        resizeDirection === "sw" ||
+        resizeDirection === "nw"
+    ) {
+
+        newWidth =
+            resizeStartWidth -
+            deltaX;
+
+    }
+
+
+    // Bottom-side movement
+
+    if (
+        resizeDirection === "se" ||
+        resizeDirection === "sw"
+    ) {
+
+        newHeight =
+            resizeStartHeight +
+            deltaY;
+
+    }
+
+
+    // Top-side movement
+
+    if (
+        resizeDirection === "ne" ||
+        resizeDirection === "nw"
+    ) {
+
+        newHeight =
+            resizeStartHeight -
+            deltaY;
+
+    }
+
+
+    // Minimum size
+
+    newWidth =
+        Math.max(
+            20,
+            newWidth
+        );
+
+
+    newHeight =
+        Math.max(
+            20,
+            newHeight
+        );
+
+
+    // Apply
+
+    selectedElement.style.width =
+        `${Math.round(newWidth)}px`;
+
+
+    selectedElement.style.height =
+        `${Math.round(newHeight)}px`;
+
+
+    updateResizeOverlay(
+        selectedElement
+    );
+
+}
+
+
+// =====================================================
+// FINISH RESIZE
+// =====================================================
+
+function finishResizeDrag(event) {
+
+    if (
+        event.pointerId !== resizePointerId
+    ) {
+        return;
+    }
+
+
+    event.preventDefault();
+
+    event.stopPropagation();
+
+
+    const handle =
+        event.currentTarget;
+
+
+    try {
+
+        handle.releasePointerCapture(
+            event.pointerId
+        );
+
+    } catch (error) {
+        // Already released.
+    }
+
+
+    handle.removeEventListener(
+        "pointermove",
+        handleResizeDrag
+    );
+
+
+    handle.removeEventListener(
+        "pointerup",
+        finishResizeDrag
+    );
+
+
+    handle.removeEventListener(
+        "pointercancel",
+        finishResizeDrag
+    );
+
+
+    resizePointerId =
+        null;
+
+
+    document.body.style.userSelect =
+        "";
+
+
+    stopElementResize();
+
+}
+
+
+// =====================================================
+// STOP RESIZE
+// =====================================================
+
+function stopElementResize() {
+
+    resizingElement =
+        false;
+
+    resizePointerId =
+        null;
+
+    resizeDirection =
+        null;
+
+
+    document.body.style.userSelect =
+        "";
+
+
+    removeResizeOverlay();
+
+
+    const button =
+        document.getElementById(
+            "devstyle-resize-button"
+        );
+
+
+    if (button) {
+
+        button.textContent =
+            "↗ Resize Element";
+
+        button.classList.remove(
+            "is-resizing"
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// REMOVE RESIZE OVERLAY
+// =====================================================
+
+function removeResizeOverlay() {
+
+    if (!resizeOverlay) {
+        return;
+    }
+
+
+    resizeOverlay.remove();
+
+    resizeOverlay = null;
 
 }
