@@ -923,9 +923,21 @@ function getElementName(element) {
 // ALL CLOSED INITIALLY
 // =====================================================
 
+
+
+
+// =====================================================
+// RENDER PROPERTY
+// =====================================================
+
+// =====================================================
+// RENDER CATEGORIES
+// ALL CLOSED INITIALLY
+// =====================================================
+
 function renderCategories(element) {
 
-    return categories
+    let html = categories
         .map(category => {
 
             return `
@@ -967,13 +979,13 @@ function renderCategories(element) {
                     >
 
                         ${category.properties
-                    .map(property =>
-                        renderProperty(
-                            element,
-                            property
-                        )
-                    )
-                    .join("")}
+                            .map(property =>
+                                renderProperty(
+                                    element,
+                                    property
+                                )
+                            )
+                            .join("")}
 
                     </div>
 
@@ -984,42 +996,41 @@ function renderCategories(element) {
         })
         .join("");
 
+
+    // =====================================================
+    // FLEXBOX
+    // Only show when selected element is a flex container
+    // =====================================================
+
+    html += renderFlexCategory(element);
+
+
+    return html;
 }
-
-
 // =====================================================
 // RENDER PROPERTY
 // =====================================================
 
-function renderProperty(
-    element,
-    property
-) {
+function renderProperty(element, property) {
 
-    const styles =
-        getComputedStyle(element);
+    const styles = getComputedStyle(element);
 
-
-    const value =
-        styles[property.property];
-
+    const value = styles[property.property];
 
     const searchText =
         property.label.toLowerCase();
 
 
-    // -----------------------------------------
+    // =========================================
     // NUMBER
-    // -----------------------------------------
+    // =========================================
 
     if (property.type === "number") {
 
         const numericValue =
             parseFloat(value);
 
-
         return `
-
             <div
                 class="devstyle-field"
                 data-property-name="${searchText}"
@@ -1029,20 +1040,17 @@ function renderProperty(
                     ${property.label}
                 </label>
 
-
                 <div class="devstyle-input-row">
 
                     <input
                         type="number"
-                        value="${Number.isNaN(
-            numericValue
-        )
-                ? 0
-                : numericValue
-            }"
+                        value="${
+                            Number.isNaN(numericValue)
+                                ? 0
+                                : numericValue
+                        }"
                         data-property="${property.property}"
                     >
-
 
                     <span class="devstyle-unit">
                         ${property.unit}
@@ -1051,20 +1059,17 @@ function renderProperty(
                 </div>
 
             </div>
-
         `;
-
     }
 
 
-    // -----------------------------------------
+    // =========================================
     // TEXT
-    // -----------------------------------------
+    // =========================================
 
     if (property.type === "text") {
 
         return `
-
             <div
                 class="devstyle-field"
                 data-property-name="${searchText}"
@@ -1073,7 +1078,6 @@ function renderProperty(
                 <label>
                     ${property.label}
                 </label>
-
 
                 <input
                     type="text"
@@ -1082,24 +1086,19 @@ function renderProperty(
                 >
 
             </div>
-
         `;
-
     }
 
 
-    // -----------------------------------------
+    // =========================================
     // COLOR
-    // -----------------------------------------
+    // =========================================
 
     if (property.type === "color") {
 
-        const hex =
-            rgbToHex(value);
-
+        const hex = rgbToHex(value);
 
         return `
-
             <div
                 class="devstyle-field"
                 data-property-name="${searchText}"
@@ -1109,7 +1108,6 @@ function renderProperty(
                     ${property.label}
                 </label>
 
-
                 <div class="devstyle-input-row">
 
                     <input
@@ -1117,7 +1115,6 @@ function renderProperty(
                         value="${hex}"
                         data-color-property="${property.property}"
                     >
-
 
                     <input
                         type="text"
@@ -1128,15 +1125,13 @@ function renderProperty(
                 </div>
 
             </div>
-
         `;
-
     }
 
 
-    // -----------------------------------------
+    // =========================================
     // FONT
-    // -----------------------------------------
+    // =========================================
 
     if (property.type === "font") {
 
@@ -1155,16 +1150,13 @@ function renderProperty(
             "monospace"
         ];
 
-
         const currentFont =
             value
                 .split(",")[0]
                 .replace(/"/g, "")
                 .trim();
 
-
         return `
-
             <div
                 class="devstyle-field"
                 data-property-name="${searchText}"
@@ -1173,47 +1165,41 @@ function renderProperty(
                 <label>
                     ${property.label}
                 </label>
-
 
                 <select
                     data-property="${property.property}"
                 >
 
                     ${fonts
-                .map(font => `
-
+                        .map(font => `
                             <option
                                 value="${font}"
-                                ${currentFont
-                        .toLowerCase() ===
-                        font.toLowerCase()
-                        ? "selected"
-                        : ""
-                    }
+                                ${
+                                    currentFont.toLowerCase() ===
+                                    font.toLowerCase()
+                                        ? "selected"
+                                        : ""
+                                }
                             >
                                 ${font}
                             </option>
-
                         `)
-                .join("")}
+                        .join("")}
 
                 </select>
 
             </div>
-
         `;
-
     }
 
 
-    // -----------------------------------------
+    // =========================================
     // SELECT
-    // -----------------------------------------
+    // =========================================
 
     if (property.type === "select") {
 
         return `
-
             <div
                 class="devstyle-field"
                 data-property-name="${searchText}"
@@ -1223,58 +1209,506 @@ function renderProperty(
                     ${property.label}
                 </label>
 
-
                 <select
                     data-property="${property.property}"
                 >
 
                     ${property.options
-                .map((option, index) => {
+                        .map((option, index) => {
 
-                    const label =
-                        property.optionLabels
-                            ? property.optionLabels[index]
-                            : option;
+                            const label =
+                                property.optionLabels
+                                    ? property.optionLabels[index]
+                                    : option;
 
-
-                    return `
-
+                            return `
                                 <option
                                     value="${option}"
-                                    ${value === option
-                            ? "selected"
-                            : ""
-                        }
+                                    ${
+                                        value === option
+                                            ? "selected"
+                                            : ""
+                                    }
                                 >
                                     ${label}
                                 </option>
-
                             `;
 
-                })
-                .join("")}
+                        })
+                        .join("")}
 
                 </select>
 
             </div>
-
         `;
-
     }
+
+
+    // =========================================
+    // BOX MODEL
+    // =========================================
 
     if (property.type === "boxModel") {
 
-        const styles = getComputedStyle(element);
+        const styles =
+            getComputedStyle(element);
 
-        return createBoxModelEditor(element, styles);
-
+        return createBoxModelEditor(
+            element,
+            styles
+        );
     }
+
+
     return "";
-
-
-
 }
+function renderFlexCategory(element) {
 
+    const styles =
+        getComputedStyle(element);
+
+    const isFlex =
+        styles.display === "flex" ||
+        styles.display === "inline-flex";
+
+
+    // Flex controls only appear for flex containers
+
+    if (!isFlex) {
+        return "";
+    }
+
+
+    return `
+
+        <section
+            class="devstyle-category"
+            data-category="flex"
+        >
+
+            <button
+                type="button"
+                class="devstyle-category-header"
+                data-category-toggle="flex"
+            >
+
+                <span class="devstyle-category-left">
+
+                    <span class="devstyle-category-icon">
+                        ↔
+                    </span>
+
+                    <span>
+                        Flexbox
+                    </span>
+
+                </span>
+
+                <span class="devstyle-arrow">
+                    ⌄
+                </span>
+
+            </button>
+
+
+            <div
+                class="devstyle-category-content"
+                data-category-content="flex"
+            >
+
+                <!-- DIRECTION -->
+
+                <div class="devstyle-field">
+
+                    <label>
+                        Direction
+                    </label>
+
+                    <select
+                        data-property="flexDirection"
+                    >
+
+                        <option
+                            value="row"
+                            ${styles.flexDirection === "row"
+                                ? "selected"
+                                : ""}
+                        >
+                            row
+                        </option>
+
+                        <option
+                            value="row-reverse"
+                            ${styles.flexDirection === "row-reverse"
+                                ? "selected"
+                                : ""}
+                        >
+                            row-reverse
+                        </option>
+
+                        <option
+                            value="column"
+                            ${styles.flexDirection === "column"
+                                ? "selected"
+                                : ""}
+                        >
+                            column
+                        </option>
+
+                        <option
+                            value="column-reverse"
+                            ${styles.flexDirection === "column-reverse"
+                                ? "selected"
+                                : ""}
+                        >
+                            column-reverse
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- WRAP -->
+
+                <div class="devstyle-field">
+
+                    <label>
+                        Wrap
+                    </label>
+
+                    <select
+                        data-property="flexWrap"
+                    >
+
+                        <option
+                            value="nowrap"
+                            ${styles.flexWrap === "nowrap"
+                                ? "selected"
+                                : ""}
+                        >
+                            nowrap
+                        </option>
+
+                        <option
+                            value="wrap"
+                            ${styles.flexWrap === "wrap"
+                                ? "selected"
+                                : ""}
+                        >
+                            wrap
+                        </option>
+
+                        <option
+                            value="wrap-reverse"
+                            ${styles.flexWrap === "wrap-reverse"
+                                ? "selected"
+                                : ""}
+                        >
+                            wrap-reverse
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- JUSTIFY CONTENT -->
+
+                <div class="devstyle-field">
+
+                    <label>
+                        Justify Content
+                    </label>
+
+                    <select
+                        data-property="justifyContent"
+                    >
+
+                        <option
+                            value="flex-start"
+                            ${styles.justifyContent === "flex-start"
+                                ? "selected"
+                                : ""}
+                        >
+                            flex-start
+                        </option>
+
+                        <option
+                            value="center"
+                            ${styles.justifyContent === "center"
+                                ? "selected"
+                                : ""}
+                        >
+                            center
+                        </option>
+
+                        <option
+                            value="flex-end"
+                            ${styles.justifyContent === "flex-end"
+                                ? "selected"
+                                : ""}
+                        >
+                            flex-end
+                        </option>
+
+                        <option
+                            value="space-between"
+                            ${styles.justifyContent === "space-between"
+                                ? "selected"
+                                : ""}
+                        >
+                            space-between
+                        </option>
+
+                        <option
+                            value="space-around"
+                            ${styles.justifyContent === "space-around"
+                                ? "selected"
+                                : ""}
+                        >
+                            space-around
+                        </option>
+
+                        <option
+                            value="space-evenly"
+                            ${styles.justifyContent === "space-evenly"
+                                ? "selected"
+                                : ""}
+                        >
+                            space-evenly
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- ALIGN ITEMS -->
+
+                <div class="devstyle-field">
+
+                    <label>
+                        Align Items
+                    </label>
+
+                    <select
+                        data-property="alignItems"
+                    >
+
+                        <option
+                            value="stretch"
+                            ${styles.alignItems === "stretch"
+                                ? "selected"
+                                : ""}
+                        >
+                            stretch
+                        </option>
+
+                        <option
+                            value="flex-start"
+                            ${styles.alignItems === "flex-start"
+                                ? "selected"
+                                : ""}
+                        >
+                            flex-start
+                        </option>
+
+                        <option
+                            value="center"
+                            ${styles.alignItems === "center"
+                                ? "selected"
+                                : ""}
+                        >
+                            center
+                        </option>
+
+                        <option
+                            value="flex-end"
+                            ${styles.alignItems === "flex-end"
+                                ? "selected"
+                                : ""}
+                        >
+                            flex-end
+                        </option>
+
+                        <option
+                            value="baseline"
+                            ${styles.alignItems === "baseline"
+                                ? "selected"
+                                : ""}
+                        >
+                            baseline
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- ALIGN CONTENT -->
+
+                <div class="devstyle-field">
+
+                    <label>
+                        Align Content
+                    </label>
+
+                    <select
+                        data-property="alignContent"
+                    >
+
+                        <option
+                            value="normal"
+                            ${styles.alignContent === "normal"
+                                ? "selected"
+                                : ""}
+                        >
+                            normal
+                        </option>
+
+                        <option
+                            value="flex-start"
+                            ${styles.alignContent === "flex-start"
+                                ? "selected"
+                                : ""}
+                        >
+                            flex-start
+                        </option>
+
+                        <option
+                            value="center"
+                            ${styles.alignContent === "center"
+                                ? "selected"
+                                : ""}
+                        >
+                            center
+                        </option>
+
+                        <option
+                            value="flex-end"
+                            ${styles.alignContent === "flex-end"
+                                ? "selected"
+                                : ""}
+                        >
+                            flex-end
+                        </option>
+
+                        <option
+                            value="space-between"
+                            ${styles.alignContent === "space-between"
+                                ? "selected"
+                                : ""}
+                        >
+                            space-between
+                        </option>
+
+                        <option
+                            value="space-around"
+                            ${styles.alignContent === "space-around"
+                                ? "selected"
+                                : ""}
+                        >
+                            space-around
+                        </option>
+
+                        <option
+                            value="stretch"
+                            ${styles.alignContent === "stretch"
+                                ? "selected"
+                                : ""}
+                        >
+                            stretch
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- GAP -->
+
+                <div class="devstyle-field">
+
+                    <label>
+                        Gap
+                    </label>
+
+                    <div class="devstyle-input-row">
+
+                        <input
+                            type="number"
+                            data-property="gap"
+                            min="0"
+                            value="${parseFloat(styles.gap) || 0}"
+                        >
+
+                        <span class="devstyle-unit">
+                            px
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ROW GAP -->
+
+                <div class="devstyle-field">
+
+                    <label>
+                        Row Gap
+                    </label>
+
+                    <div class="devstyle-input-row">
+
+                        <input
+                            type="number"
+                            data-property="rowGap"
+                            min="0"
+                            value="${parseFloat(styles.rowGap) || 0}"
+                        >
+
+                        <span class="devstyle-unit">
+                            px
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- COLUMN GAP -->
+
+                <div class="devstyle-field">
+
+                    <label>
+                        Column Gap
+                    </label>
+
+                    <div class="devstyle-input-row">
+
+                        <input
+                            type="number"
+                            data-property="columnGap"
+                            min="0"
+                            value="${parseFloat(styles.columnGap) || 0}"
+                        >
+
+                        <span class="devstyle-unit">
+                            px
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    `;
+}
 
 // =====================================================
 // SETUP PANEL
