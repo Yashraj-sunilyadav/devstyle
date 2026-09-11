@@ -15,6 +15,10 @@ let dragStartY = 0;
 let panelStartLeft = 0;
 
 let panelStartTop = 0;
+let layoutInspectorActive = false;
+let layoutInspectorOverlay = null;
+let layoutInspectorRoot = null;
+let layoutInspectorFrame = null;
 
 // =====================================================
 // CSS PROPERTY CONFIGURATION
@@ -54,6 +58,14 @@ function activateSelectMode() {
         true
     );
 }
+// =====================================================
+// DEVSTYLE KEYBOARD SHORTCUTS
+//
+// M = Move selected element
+// H = Select another element
+// ESC = Cancel current mode
+// =====================================================
+
 document.addEventListener(
     "keydown",
     (event) => {
@@ -61,21 +73,26 @@ document.addEventListener(
         const tag =
             event.target?.tagName?.toLowerCase();
 
+
         const isTyping =
             tag === "input" ||
             tag === "textarea" ||
             tag === "select" ||
             event.target?.isContentEditable;
 
+
+        // -----------------------------------------
+        // DO NOT TRIGGER SHORTCUTS WHILE TYPING
+        // -----------------------------------------
+
         if (isTyping) {
             return;
         }
 
 
-        // ==========================================
+        // =========================================
         // H = SELECT ANOTHER ELEMENT
-        // Trigger the SAME action as Inspect Element
-        // ==========================================
+        // =========================================
 
         if (
             event.key.toLowerCase() === "h" &&
@@ -84,29 +101,89 @@ document.addEventListener(
 
             event.preventDefault();
 
-            // Stop move mode first if active
+
+            // -------------------------------------
+            // 1. CLOSE LAYOUT INSPECTOR
+            // -------------------------------------
+
+            if (
+                typeof stopUniversalLayoutInspector ===
+                "function"
+            ) {
+
+                stopUniversalLayoutInspector();
+
+            }
+
+
+            if (
+                typeof clearLayoutHighlight ===
+                "function"
+            ) {
+
+                clearLayoutHighlight();
+
+            }
+
+
+            // -------------------------------------
+            // 2. STOP MOVE MODE
+            // -------------------------------------
+
             if (movingElement) {
+
                 stopElementMove();
+
             }
 
-            // startInspector() toggles OFF if inspecting is
-            // already true, so stop it first here to guarantee
-            // H always (re)starts a fresh selection flow.
+
+            // -------------------------------------
+            // 3. STOP RESIZE MODE
+            // -------------------------------------
+
+            if (
+                typeof resizingElement !==
+                "undefined" &&
+                resizingElement
+            ) {
+
+                if (
+                    typeof stopElementResize ===
+                    "function"
+                ) {
+
+                    stopElementResize();
+
+                }
+
+            }
+
+
+            // -------------------------------------
+            // 4. STOP CURRENT INSPECTOR
+            // -------------------------------------
+
             if (inspecting) {
+
                 stopInspector();
+
             }
 
-            // Use the existing inspector function
+
+            // -------------------------------------
+            // 5. START NORMAL INSPECT MODE
+            // -------------------------------------
+
             startInspector();
+
 
             return;
         }
 
 
-        // ==========================================
-        // M = MOVE CURRENT ELEMENT
-        // Trigger the SAME action as Move Element
-        // ==========================================
+        // =========================================
+        // M = MOVE CURRENTLY SELECTED ELEMENT
+        // =========================================
 
         if (
             event.key.toLowerCase() === "m" &&
@@ -116,31 +193,137 @@ document.addEventListener(
 
             event.preventDefault();
 
-            // Find the existing Move Element button
+
+            // -------------------------------------
+            // 1. CLOSE LAYOUT INSPECTOR
+            // -------------------------------------
+
+            if (
+                typeof stopUniversalLayoutInspector ===
+                "function"
+            ) {
+
+                stopUniversalLayoutInspector();
+
+            }
+
+
+            if (
+                typeof clearLayoutHighlight ===
+                "function"
+            ) {
+
+                clearLayoutHighlight();
+
+            }
+
+
+            // -------------------------------------
+            // 2. STOP NORMAL INSPECTOR
+            // -------------------------------------
+
+            if (inspecting) {
+
+                stopInspector();
+
+            }
+
+
+            // -------------------------------------
+            // 3. STOP RESIZE MODE
+            // -------------------------------------
+
+            if (
+                typeof resizingElement !==
+                "undefined" &&
+                resizingElement
+            ) {
+
+                if (
+                    typeof stopElementResize ===
+                    "function"
+                ) {
+
+                    stopElementResize();
+
+                }
+
+            }
+
+
+            // -------------------------------------
+            // 4. USE EXISTING MOVE BUTTON
+            // -------------------------------------
+
             const moveButton =
                 document.getElementById(
                     "devstyle-move-button"
                 );
 
+
             if (moveButton) {
 
-                // This does EXACTLY what clicking
-                // the button manually does.
                 moveButton.click();
 
             }
+
 
             return;
         }
 
 
-        // ==========================================
-        // ESC
-        // ==========================================
+        // =========================================
+        // ESC = CANCEL ACTIVE MODE
+        // =========================================
 
         if (
             event.key === "Escape"
         ) {
+
+
+            // -------------------------------------
+            // LAYOUT INSPECTOR
+            // -------------------------------------
+
+            if (
+                typeof layoutInspectorActive !==
+                "undefined" &&
+                layoutInspectorActive
+            ) {
+
+                event.preventDefault();
+
+
+                stopUniversalLayoutInspector();
+
+                clearLayoutHighlight();
+
+
+                const layoutButton =
+                    document.getElementById(
+                        "devstyle-layout-inspector-button"
+                    );
+
+
+                if (layoutButton) {
+
+                    layoutButton.textContent =
+                        "Show";
+
+                    layoutButton
+                        .classList
+                        .remove("is-active");
+
+                }
+
+
+                return;
+            }
+
+
+            // -------------------------------------
+            // MOVE
+            // -------------------------------------
 
             if (movingElement) {
 
@@ -151,6 +334,37 @@ document.addEventListener(
                 return;
             }
 
+
+            // -------------------------------------
+            // RESIZE
+            // -------------------------------------
+
+            if (
+                typeof resizingElement !==
+                "undefined" &&
+                resizingElement
+            ) {
+
+                event.preventDefault();
+
+
+                if (
+                    typeof stopElementResize ===
+                    "function"
+                ) {
+
+                    stopElementResize();
+
+                }
+
+
+                return;
+            }
+
+
+            // -------------------------------------
+            // NORMAL INSPECTOR
+            // -------------------------------------
 
             if (inspecting) {
 
@@ -1005,7 +1219,18 @@ function renderCategories(element) {
     html += renderFlexCategory(element);
 
 
+// =================================================
+// GRID
+// Only show when selected element is a grid container
+// =================================================
+
+html += renderGridCategory(element);
+
+
+html += renderUniversalLayoutCategory(element);
+
     return html;
+
 }
 // =====================================================
 // RENDER PROPERTY
@@ -1709,10 +1934,1549 @@ function renderFlexCategory(element) {
 
     `;
 }
+// =====================================================
+// RENDER GRID CATEGORY
+// Only appears for CSS Grid containers
+// =====================================================
+
+
+function renderGridCategory(element) {
+
+    const styles =
+        getComputedStyle(element);
+
+
+    const isGrid =
+        styles.display === "grid" ||
+        styles.display === "inline-grid";
+
+
+    // Grid controls only appear for grid containers
+    if (!isGrid) {
+        return "";
+    }
+
+
+    return `
+
+        <section
+            class="devstyle-category"
+            data-category="grid"
+        >
+
+            <button
+                type="button"
+                class="devstyle-category-header"
+                data-category-toggle="grid"
+            >
+
+                <span class="devstyle-category-left">
+
+                    <span class="devstyle-category-icon">
+                        ▦
+                    </span>
+
+                    <span>
+                        Grid
+                    </span>
+
+                </span>
+
+                <span class="devstyle-arrow">
+                    ⌄
+                </span>
+
+            </button>
+
+
+            <div
+                class="devstyle-category-content"
+                data-category-content="grid"
+            >
+
+
+                <!-- =====================================
+                     GRID TEMPLATE COLUMNS
+                ====================================== -->
+
+                <div
+                    class="devstyle-field"
+                    data-property-name="grid template columns"
+                >
+
+                    <label>
+                        Template Columns
+                    </label>
+
+                    <input
+                        type="text"
+                        value="${escapeAttribute(
+                            styles.gridTemplateColumns
+                        )}"
+                        data-property="gridTemplateColumns"
+                    >
+
+                </div>
+
+
+                <!-- =====================================
+                     GRID TEMPLATE ROWS
+                ====================================== -->
+
+                <div
+                    class="devstyle-field"
+                    data-property-name="grid template rows"
+                >
+
+                    <label>
+                        Template Rows
+                    </label>
+
+                    <input
+                        type="text"
+                        value="${escapeAttribute(
+                            styles.gridTemplateRows
+                        )}"
+                        data-property="gridTemplateRows"
+                    >
+
+                </div>
+
+
+                <!-- =====================================
+                     COLUMN GAP
+                ====================================== -->
+
+                <div
+                    class="devstyle-field"
+                    data-property-name="column gap"
+                >
+
+                    <label>
+                        Column Gap
+                    </label>
+
+                    <div class="devstyle-input-row">
+
+                        <input
+                            type="number"
+                            min="0"
+                            value="${parseFloat(styles.columnGap) || 0}"
+                            data-property="columnGap"
+                        >
+
+                        <span class="devstyle-unit">
+                            px
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =====================================
+                     ROW GAP
+                ====================================== -->
+
+                <div
+                    class="devstyle-field"
+                    data-property-name="row gap"
+                >
+
+                    <label>
+                        Row Gap
+                    </label>
+
+                    <div class="devstyle-input-row">
+
+                        <input
+                            type="number"
+                            min="0"
+                            value="${parseFloat(styles.rowGap) || 0}"
+                            data-property="rowGap"
+                        >
+
+                        <span class="devstyle-unit">
+                            px
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =====================================
+                     JUSTIFY ITEMS
+                ====================================== -->
+
+                <div
+                    class="devstyle-field"
+                    data-property-name="justify items"
+                >
+
+                    <label>
+                        Justify Items
+                    </label>
+
+                    <select
+                        data-property="justifyItems"
+                    >
+
+                        <option
+                            value="normal"
+                            ${styles.justifyItems === "normal"
+                                ? "selected"
+                                : ""}
+                        >
+                            normal
+                        </option>
+
+                        <option
+                            value="stretch"
+                            ${styles.justifyItems === "stretch"
+                                ? "selected"
+                                : ""}
+                        >
+                            stretch
+                        </option>
+
+                        <option
+                            value="start"
+                            ${styles.justifyItems === "start"
+                                ? "selected"
+                                : ""}
+                        >
+                            start
+                        </option>
+
+                        <option
+                            value="center"
+                            ${styles.justifyItems === "center"
+                                ? "selected"
+                                : ""}
+                        >
+                            center
+                        </option>
+
+                        <option
+                            value="end"
+                            ${styles.justifyItems === "end"
+                                ? "selected"
+                                : ""}
+                        >
+                            end
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- =====================================
+                     ALIGN ITEMS
+                ====================================== -->
+
+                <div
+                    class="devstyle-field"
+                    data-property-name="align items"
+                >
+
+                    <label>
+                        Align Items
+                    </label>
+
+                    <select
+                        data-property="alignItems"
+                    >
+
+                        <option
+                            value="normal"
+                            ${styles.alignItems === "normal"
+                                ? "selected"
+                                : ""}
+                        >
+                            normal
+                        </option>
+
+                        <option
+                            value="stretch"
+                            ${styles.alignItems === "stretch"
+                                ? "selected"
+                                : ""}
+                        >
+                            stretch
+                        </option>
+
+                        <option
+                            value="start"
+                            ${styles.alignItems === "start"
+                                ? "selected"
+                                : ""}
+                        >
+                            start
+                        </option>
+
+                        <option
+                            value="center"
+                            ${styles.alignItems === "center"
+                                ? "selected"
+                                : ""}
+                        >
+                            center
+                        </option>
+
+                        <option
+                            value="end"
+                            ${styles.alignItems === "end"
+                                ? "selected"
+                                : ""}
+                        >
+                            end
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- =====================================
+                     JUSTIFY CONTENT
+                ====================================== -->
+
+                <div
+                    class="devstyle-field"
+                    data-property-name="justify content"
+                >
+
+                    <label>
+                        Justify Content
+                    </label>
+
+                    <select
+                        data-property="justifyContent"
+                    >
+
+                        <option
+                            value="normal"
+                            ${styles.justifyContent === "normal"
+                                ? "selected"
+                                : ""}
+                        >
+                            normal
+                        </option>
+
+                        <option
+                            value="start"
+                            ${styles.justifyContent === "start"
+                                ? "selected"
+                                : ""}
+                        >
+                            start
+                        </option>
+
+                        <option
+                            value="center"
+                            ${styles.justifyContent === "center"
+                                ? "selected"
+                                : ""}
+                        >
+                            center
+                        </option>
+
+                        <option
+                            value="end"
+                            ${styles.justifyContent === "end"
+                                ? "selected"
+                                : ""}
+                        >
+                            end
+                        </option>
+
+                        <option
+                            value="space-between"
+                            ${styles.justifyContent === "space-between"
+                                ? "selected"
+                                : ""}
+                        >
+                            space-between
+                        </option>
+
+                        <option
+                            value="space-around"
+                            ${styles.justifyContent === "space-around"
+                                ? "selected"
+                                : ""}
+                        >
+                            space-around
+                        </option>
+
+                        <option
+                            value="space-evenly"
+                            ${styles.justifyContent === "space-evenly"
+                                ? "selected"
+                                : ""}
+                        >
+                            space-evenly
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- =====================================
+                     ALIGN CONTENT
+                ====================================== -->
+
+                <div
+                    class="devstyle-field"
+                    data-property-name="align content"
+                >
+
+                    <label>
+                        Align Content
+                    </label>
+
+                    <select
+                        data-property="alignContent"
+                    >
+
+                        <option
+                            value="normal"
+                            ${styles.alignContent === "normal"
+                                ? "selected"
+                                : ""}
+                        >
+                            normal
+                        </option>
+
+                        <option
+                            value="start"
+                            ${styles.alignContent === "start"
+                                ? "selected"
+                                : ""}
+                        >
+                            start
+                        </option>
+
+                        <option
+                            value="center"
+                            ${styles.alignContent === "center"
+                                ? "selected"
+                                : ""}
+                        >
+                            center
+                        </option>
+
+                        <option
+                            value="end"
+                            ${styles.alignContent === "end"
+                                ? "selected"
+                                : ""}
+                        >
+                            end
+                        </option>
+
+                        <option
+                            value="space-between"
+                            ${styles.alignContent === "space-between"
+                                ? "selected"
+                                : ""}
+                        >
+                            space-between
+                        </option>
+
+                        <option
+                            value="space-around"
+                            ${styles.alignContent === "space-around"
+                                ? "selected"
+                                : ""}
+                        >
+                            space-around
+                        </option>
+
+                        <option
+                            value="space-evenly"
+                            ${styles.alignContent === "space-evenly"
+                                ? "selected"
+                                : ""}
+                        >
+                            space-evenly
+                        </option>
+
+                        <option
+                            value="stretch"
+                            ${styles.alignContent === "stretch"
+                                ? "selected"
+                                : ""}
+                        >
+                            stretch
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+    `;
+}
 
 // =====================================================
-// SETUP PANEL
+// BOOTSTRAP CATEGORY
+// Detects common Bootstrap utility/layout classes
 // =====================================================
+// =====================================================
+// BOOTSTRAP CATEGORY
+// =====================================================
+
+
+// =====================================================
+// UNIVERSAL LAYOUT INSPECTOR CATEGORY
+// Works for EVERY selected element
+// =====================================================
+// =====================================================
+// UNIVERSAL LAYOUT INSPECTOR
+// VISUAL COMPONENT STRUCTURE
+// =====================================================
+
+// =====================================================
+// UNIVERSAL LAYOUT INSPECTOR
+// =====================================================
+
+function renderUniversalLayoutCategory(element) {
+
+    if (!element) {
+        return "";
+    }
+
+
+    return `
+
+        <section
+            class="devstyle-category"
+            data-category="layout-inspector"
+        >
+
+            <button
+                type="button"
+                class="devstyle-category-header"
+                data-category-toggle="layout-inspector"
+            >
+
+                <span class="devstyle-category-left">
+
+                    <span class="devstyle-category-icon">
+                        ▦
+                    </span>
+
+                    <span>
+                        Layout Inspector
+                    </span>
+
+                </span>
+
+
+                <span class="devstyle-arrow">
+                    ⌄
+                </span>
+
+            </button>
+
+
+            <div
+                class="devstyle-category-content"
+                data-category-content="layout-inspector"
+            >
+
+                <!-- =====================================
+                     TOOLBAR
+                ====================================== -->
+
+                <div class="devstyle-layout-toolbar">
+
+                    <div class="devstyle-layout-toolbar-info">
+
+                        <div class="devstyle-layout-title">
+                            Component Structure
+                        </div>
+
+                        <div class="devstyle-layout-subtitle">
+                            Visual hierarchy of this element
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        id="devstyle-layout-inspector-button"
+                        class="devstyle-layout-show-button"
+                    >
+                        Show
+                    </button>
+
+                </div>
+
+
+                <!-- =====================================
+                     COMPONENT TREE
+                ====================================== -->
+
+                <div
+                    id="devstyle-layout-tree"
+                    class="devstyle-layout-tree"
+                >
+
+                    ${renderUniversalLayoutTree(
+                        element,
+                        0,
+                        6
+                    )}
+
+                </div>
+
+
+                <!-- =====================================
+                     FOOTER
+                ====================================== -->
+
+                <div class="devstyle-layout-footer">
+
+                    <span>
+                        Click an element to inspect
+                    </span>
+
+                    <span>
+                        ${countLayoutElements(element)}
+                        elements
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    `;
+}
+
+// =====================================================
+// UNIVERSAL LAYOUT TREE
+// =====================================================
+// =====================================================
+// UNIVERSAL LAYOUT TREE
+// =====================================================
+
+function renderUniversalLayoutTree(
+    element,
+    depth = 0,
+    maxDepth = 6
+) {
+
+    if (!element) {
+        return "";
+    }
+
+
+    const children =
+        Array.from(
+            element.children
+        ).filter(
+            child =>
+                isLayoutVisible(child)
+        );
+
+
+    const styles =
+        getComputedStyle(element);
+
+
+    const rect =
+        element.getBoundingClientRect();
+
+
+    const layoutType =
+        getLayoutType(styles);
+
+
+    // -----------------------------------------
+    // ELEMENT NAME
+    // -----------------------------------------
+
+    let elementName = "";
+
+
+    if (element.id) {
+
+        elementName =
+            `#${element.id}`;
+
+    }
+
+    else if (
+        typeof element.className === "string" &&
+        element.className.trim()
+    ) {
+
+        elementName =
+            "." +
+            element.className
+                .trim()
+                .split(/\s+/)
+                .slice(0, 2)
+                .join(".");
+
+    }
+
+
+    // -----------------------------------------
+    // CHILDREN LAYOUT
+    // -----------------------------------------
+
+    let childrenClass =
+        "devstyle-layout-children-normal";
+
+
+    if (
+        styles.display === "flex" ||
+        styles.display === "inline-flex"
+    ) {
+
+        childrenClass =
+            "devstyle-layout-children-flex";
+
+
+    }
+
+
+    else if (
+        styles.display === "grid" ||
+        styles.display === "inline-grid"
+    ) {
+
+        childrenClass =
+            "devstyle-layout-children-grid";
+
+    }
+
+
+    return `
+
+        <div
+            class="devstyle-layout-tree-node"
+            data-layout-element="true"
+            data-layout-depth="${depth}"
+            style="margin-left:${depth * 8}px"
+        >
+
+
+            <!-- =====================================
+                 ELEMENT ROW
+            ====================================== -->
+
+            <div
+                class="devstyle-layout-tree-row"
+                data-layout-target="true"
+            >
+
+                <span
+                    class="devstyle-layout-tree-arrow"
+                >
+
+                    ${
+                        children.length > 0 &&
+                        depth < maxDepth
+
+                            ? "▾"
+
+                            : "·"
+                    }
+
+                </span>
+
+
+                <span
+                    class="devstyle-layout-tree-tag"
+                >
+                    ${element.tagName.toLowerCase()}
+                </span>
+
+
+                ${
+                    elementName
+
+                        ? `
+
+                            <span
+                                class="devstyle-layout-tree-name"
+                            >
+                                ${escapeHTML(
+                                    elementName
+                                )}
+                            </span>
+
+                        `
+
+                        : ""
+                }
+
+
+                <span
+                    class="devstyle-layout-tree-type"
+                >
+                    ${layoutType}
+                </span>
+
+
+                <span
+                    class="devstyle-layout-tree-size"
+                >
+                    ${Math.round(rect.width)}
+                    ×
+                    ${Math.round(rect.height)}
+                </span>
+
+            </div>
+
+
+            <!-- =====================================
+                 CHILDREN
+            ====================================== -->
+
+            ${
+                children.length > 0 &&
+                depth < maxDepth
+
+                    ? `
+
+                        <div
+                            class="
+                                devstyle-layout-tree-children
+                                ${childrenClass}
+                            "
+                        >
+
+                            ${children
+                                .map(
+                                    child =>
+                                        renderUniversalLayoutTree(
+                                            child,
+                                            depth + 1,
+                                            maxDepth
+                                        )
+                                )
+                                .join("")
+                            }
+
+                        </div>
+
+                    `
+
+                    : ""
+            }
+
+        </div>
+
+    `;
+}
+// =====================================================
+// COUNT LAYOUT ELEMENTS
+// =====================================================
+
+function countLayoutElements(element) {
+
+    if (!element) {
+        return 0;
+    }
+
+
+    let count = 1;
+
+
+    const children =
+        Array.from(
+            element.querySelectorAll("*")
+        );
+
+
+    children.forEach(child => {
+
+        if (
+            isLayoutVisible(child)
+        ) {
+
+            count++;
+
+        }
+
+    });
+
+
+    return count;
+
+}
+
+// =====================================================
+// LAYOUT HELPERS
+// =====================================================
+
+function isLayoutVisible(element) {
+
+    if (!element) {
+        return false;
+    }
+
+
+    // Never inspect DevStyle itself
+    if (
+        element.id === "devstyle-panel" ||
+        element.closest("#devstyle-panel")
+    ) {
+
+        return false;
+
+    }
+
+
+    const styles =
+        getComputedStyle(element);
+
+
+    const rect =
+        element.getBoundingClientRect();
+
+
+    if (
+        styles.display === "none" ||
+        styles.visibility === "hidden"
+    ) {
+
+        return false;
+
+    }
+
+
+    if (
+        rect.width <= 0 ||
+        rect.height <= 0
+    ) {
+
+        return false;
+
+    }
+
+
+    return true;
+}
+
+
+// =====================================================
+// LAYOUT TYPE
+// =====================================================
+
+function getLayoutType(styles) {
+
+    if (
+        styles.display === "flex" ||
+        styles.display === "inline-flex"
+    ) {
+
+        return "Flex";
+
+    }
+
+
+    if (
+        styles.display === "grid" ||
+        styles.display === "inline-grid"
+    ) {
+
+        return "Grid";
+
+    }
+
+
+    if (
+        styles.position === "absolute"
+    ) {
+
+        return "Absolute";
+
+    }
+
+
+    if (
+        styles.position === "fixed"
+    ) {
+
+        return "Fixed";
+
+    }
+
+
+    return styles.display;
+}
+
+
+// =====================================================
+// ELEMENT NAME
+// =====================================================
+
+function getLayoutElementName(element) {
+
+    let name =
+        element.tagName.toLowerCase();
+
+
+    if (element.id) {
+
+        name +=
+            ` #${element.id}`;
+
+    }
+
+
+    if (
+        typeof element.className === "string" &&
+        element.className.trim()
+    ) {
+
+        const classes =
+            element.className
+                .trim()
+                .split(/\s+/)
+                .slice(0, 2);
+
+
+        name +=
+            `.${classes.join(".")}`;
+
+    }
+
+
+    return name;
+}
+
+
+// =====================================================
+// SELECTOR
+// =====================================================
+
+function getLayoutSelector(element) {
+
+    let selector =
+        element.tagName.toLowerCase();
+
+
+    if (element.id) {
+
+        selector +=
+            `#${element.id}`;
+
+    }
+
+
+    else if (
+        typeof element.className === "string" &&
+        element.className.trim()
+    ) {
+
+        selector +=
+            "." +
+            element.className
+                .trim()
+                .split(/\s+/)
+                .slice(0, 3)
+                .join(".");
+
+    }
+
+
+    return selector;
+}
+
+
+// =====================================================
+// BOX VALUES
+// =====================================================
+
+function formatBoxValues(
+    styles,
+    type
+) {
+
+    return [
+
+        styles[`${type}Top`],
+
+        styles[`${type}Right`],
+
+        styles[`${type}Bottom`],
+
+        styles[`${type}Left`]
+
+    ].join("  ");
+}
+
+
+// =====================================================
+// BORDER VALUES
+// =====================================================
+
+function formatBorderValues(styles) {
+
+    return [
+
+        styles.borderTopWidth,
+
+        styles.borderRightWidth,
+
+        styles.borderBottomWidth,
+
+        styles.borderLeftWidth
+
+    ].join("  ");
+}
+// =====================================================
+// BOOTSTRAP GUTTER OPTIONS
+// =====================================================
+// =====================================================
+// START UNIVERSAL LAYOUT INSPECTOR
+// =====================================================
+
+function startUniversalLayoutInspector(
+    element
+) {
+
+    if (!element) {
+        return;
+    }
+
+
+    stopUniversalLayoutInspector();
+
+
+    layoutInspectorActive =
+        true;
+
+
+    layoutInspectorRoot =
+        element;
+
+
+    layoutInspectorOverlay =
+        document.createElement(
+            "div"
+        );
+
+
+    layoutInspectorOverlay.id =
+        "devstyle-universal-layout-overlay";
+
+
+    Object.assign(
+        layoutInspectorOverlay.style,
+        {
+
+            position: "fixed",
+
+            left: "0",
+
+            top: "0",
+
+            width: "100vw",
+
+            height: "100vh",
+
+            zIndex: "2147483640",
+
+            pointerEvents: "none"
+
+        }
+    );
+
+
+    document.documentElement
+        .appendChild(
+            layoutInspectorOverlay
+        );
+
+
+    updateUniversalLayoutOverlay();
+
+
+    window.addEventListener(
+        "scroll",
+        updateUniversalLayoutOverlay,
+        true
+    );
+
+
+    window.addEventListener(
+        "resize",
+        updateUniversalLayoutOverlay
+    );
+
+}
+
+// =====================================================
+// BOOTSTRAP COLUMN OPTIONS
+// =====================================================
+
+// =====================================================
+// UPDATE OVERLAY
+// =====================================================
+
+function updateUniversalLayoutOverlay() {
+
+    if (
+        !layoutInspectorActive ||
+        !layoutInspectorRoot ||
+        !layoutInspectorOverlay
+    ) {
+
+        return;
+
+    }
+
+
+    if (layoutInspectorFrame) {
+        return;
+    }
+
+
+    layoutInspectorFrame =
+        requestAnimationFrame(
+            () => {
+
+                layoutInspectorFrame =
+                    null;
+
+
+                layoutInspectorOverlay.innerHTML =
+                    "";
+
+
+                renderUniversalOverlayNode(
+                    layoutInspectorRoot,
+                    0,
+                    6
+                );
+
+            }
+        );
+
+}
+
+// =====================================================
+// BOOTSTRAP NUMBER OPTIONS
+// =====================================================
+
+
+// =====================================================
+// RENDER VISUAL NODE
+// =====================================================
+
+function renderUniversalOverlayNode(
+    element,
+    depth,
+    maxDepth
+) {
+
+    if (
+        depth > maxDepth ||
+        !isLayoutVisible(element)
+    ) {
+
+        return;
+
+    }
+
+
+    const rect =
+        element.getBoundingClientRect();
+
+
+    const styles =
+        getComputedStyle(element);
+
+
+    const box =
+        document.createElement("div");
+
+
+    box.className =
+        "devstyle-universal-layout-box";
+
+
+    Object.assign(
+        box.style,
+        {
+
+            position: "fixed",
+
+            left: `${rect.left}px`,
+
+            top: `${rect.top}px`,
+
+            width: `${rect.width}px`,
+
+            height: `${rect.height}px`,
+
+            boxSizing: "border-box",
+
+            pointerEvents: "none",
+
+            zIndex:
+                String(
+                    2147483640 - depth
+                )
+
+        }
+    );
+
+
+    // =========================================
+    // ADAPTIVE STROKE
+    // =========================================
+
+    const area =
+        rect.width *
+        rect.height;
+
+
+    let width;
+
+
+    if (depth === 0) {
+
+        width = 3;
+
+    }
+
+    else if (
+        area > 250000
+    ) {
+
+        width = 2.5;
+
+    }
+
+    else if (
+        area > 80000
+    ) {
+
+        width = 2;
+
+    }
+
+    else if (
+        area > 20000
+    ) {
+
+        width = 1.5;
+
+    }
+
+    else {
+
+        width = 1;
+
+    }
+
+
+    box.style.border =
+        `${width}px solid rgba(70, 140, 255, ${
+            Math.max(
+                0.25,
+                0.8 - depth * 0.09
+            )
+        })`;
+
+
+    // =========================================
+    // LABEL ONLY FOR IMPORTANT ELEMENTS
+    // =========================================
+
+    if (
+        depth <= 2 &&
+        rect.width >= 80 &&
+        rect.height >= 25
+    ) {
+
+        const label =
+            document.createElement("div");
+
+
+        label.className =
+            "devstyle-universal-layout-label";
+
+
+        label.textContent =
+            `${getLayoutElementName(element)}  ${Math.round(rect.width)} × ${Math.round(rect.height)}`;
+
+
+        Object.assign(
+            label.style,
+            {
+
+                position: "absolute",
+
+                left: "0",
+
+                top: "0",
+
+                transform:
+                    "translateY(-100%)",
+
+                maxWidth:
+                    `${Math.min(
+                        300,
+                        Math.max(
+                            100,
+                            rect.width
+                        )
+                    )}px`,
+
+                overflow: "hidden",
+
+                textOverflow:
+                    "ellipsis",
+
+                whiteSpace:
+                    "nowrap",
+
+                padding:
+                    depth === 0
+                        ? "4px 7px"
+                        : "2px 5px",
+
+                fontSize:
+                    depth === 0
+                        ? "11px"
+                        : "9px",
+
+                lineHeight: "1.3",
+
+                background:
+                    "rgba(15,15,20,.92)",
+
+                color:
+                    "#ffffff",
+
+                borderRadius:
+                    "3px"
+
+            }
+        );
+
+
+        box.appendChild(
+            label
+        );
+
+    }
+
+
+    layoutInspectorOverlay
+        .appendChild(box);
+
+
+    // =========================================
+    // CHILDREN
+    // =========================================
+
+    if (
+        depth < maxDepth
+    ) {
+
+        Array.from(
+            element.children
+        )
+        .filter(child =>
+            isLayoutVisible(child)
+        )
+        .forEach(child => {
+
+            renderUniversalOverlayNode(
+                child,
+                depth + 1,
+                maxDepth
+            );
+
+        });
+
+    }
+
+}
+// =====================================================
+// DETECT BOOTSTRAP
+// =====================================================
+
+// =====================================================
+// STOP UNIVERSAL LAYOUT INSPECTOR
+// =====================================================
+
+function stopUniversalLayoutInspector() {
+
+    layoutInspectorActive =
+        false;
+
+
+    layoutInspectorRoot =
+        null;
+
+
+    if (layoutInspectorFrame) {
+
+        cancelAnimationFrame(
+            layoutInspectorFrame
+        );
+
+        layoutInspectorFrame =
+            null;
+
+    }
+
+
+    window.removeEventListener(
+        "scroll",
+        updateUniversalLayoutOverlay,
+        true
+    );
+
+
+    window.removeEventListener(
+        "resize",
+        updateUniversalLayoutOverlay
+    );
+
+
+    if (layoutInspectorOverlay) {
+
+        layoutInspectorOverlay.remove();
+
+        layoutInspectorOverlay =
+            null;
+
+    }
+
+}
+
+// =====================================================
+// UPDATE BOOTSTRAP
+// =====================================================
+
+
+
+// =====================================================
+// REMOVE BOOTSTRAP CLASSES
+// =====================================================
+
 
 function setupPanel(element) {
 
@@ -1880,16 +3644,16 @@ function setupCategoryToggles() {
 // =====================================================
 // PROPERTY INPUTS
 // =====================================================
-
 function setupPropertyInputs(element) {
 
     // -----------------------------------------
     // NUMBER INPUTS
+    // Exclude Grid track inputs
     // -----------------------------------------
 
     panel
         .querySelectorAll(
-            'input[type="number"]'
+            'input[type="number"]:not([data-grid-track])'
         )
         .forEach(input => {
 
@@ -1956,6 +3720,80 @@ function setupPropertyInputs(element) {
 
 
     // -----------------------------------------
+    // GRID TRACK INPUTS
+    // -----------------------------------------
+
+    panel
+        .querySelectorAll(
+            'input[data-grid-track]'
+        )
+        .forEach(input => {
+
+            input.addEventListener(
+                "input",
+                () => {
+
+                    const trackType =
+                        input.dataset.gridTrack;
+
+                    const index =
+                        Number(
+                            input.dataset.gridIndex
+                        );
+
+
+                    const property =
+                        trackType === "column"
+                            ? "gridTemplateColumns"
+                            : "gridTemplateRows";
+
+
+                    let current =
+                        element.style[property];
+
+
+                    // If no inline value exists,
+                    // use the computed value.
+                    if (!current) {
+
+                        current =
+                            getComputedStyle(
+                                element
+                            )[property];
+
+                    }
+
+
+                    const tracks =
+                        parseGridTrackValues(
+                            current
+                        );
+
+
+                    // Make sure the index exists
+                    while (
+                        tracks.length <= index
+                    ) {
+
+                        tracks.push("0px");
+
+                    }
+
+
+                    tracks[index] =
+                        `${input.value || 0}px`;
+
+
+                    element.style[property] =
+                        tracks.join(" ");
+
+                }
+            );
+
+        });
+
+
+    // -----------------------------------------
     // TEXT INPUTS
     // -----------------------------------------
 
@@ -1971,6 +3809,7 @@ function setupPropertyInputs(element) {
 
                     const property =
                         input.dataset.property;
+
 
                     element.style[property] =
                         input.value;
@@ -1997,6 +3836,7 @@ function setupPropertyInputs(element) {
 
                     const property =
                         select.dataset.property;
+
 
                     element.style[property] =
                         select.value;
@@ -2039,8 +3879,10 @@ function setupPropertyInputs(element) {
                     const value =
                         colorInput.value;
 
+
                     element.style[property] =
                         value;
+
 
                     textInput.value =
                         value;
@@ -2065,6 +3907,7 @@ function setupPropertyInputs(element) {
 
                         element.style[property] =
                             value;
+
 
                         colorInput.value =
                             value;
@@ -2142,9 +3985,179 @@ function setupPropertyInputs(element) {
 
     }
 
+
+    // -----------------------------------------
+    // UNIVERSAL LAYOUT INSPECTOR
+    // -----------------------------------------
+
+    const layoutInspectorButton =
+        document.getElementById(
+            "devstyle-layout-inspector-button"
+        );
+
+
+    if (layoutInspectorButton) {
+
+        layoutInspectorButton.addEventListener(
+            "click",
+            () => {
+
+                if (
+                    layoutInspectorActive
+                ) {
+
+                    stopUniversalLayoutInspector();
+
+
+                    layoutInspectorButton.textContent =
+                        "⊞ Show Layout";
+
+
+                    layoutInspectorButton
+                        .classList
+                        .remove("is-active");
+
+                }
+
+                else {
+
+                    startUniversalLayoutInspector(
+                        element
+                    );
+
+
+                    layoutInspectorButton.textContent =
+                        "× Hide Layout";
+
+
+                    layoutInspectorButton
+                        .classList
+                        .add("is-active");
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // -----------------------------------------
+    // LAYOUT TREE INTERACTION
+    // -----------------------------------------
+
+    const layoutTree =
+        panel.querySelector(
+            "#devstyle-layout-tree"
+        );
+
+
+    if (layoutTree) {
+
+        layoutTree
+            .querySelectorAll(
+                "[data-layout-target]"
+            )
+            .forEach(row => {
+
+                // -----------------------------
+                // HOVER
+                // -----------------------------
+
+                row.addEventListener(
+                    "mouseenter",
+                    () => {
+
+                        const node =
+                            row.closest(
+                                "[data-layout-element]"
+                            );
+
+
+                        const target =
+                            findLayoutElementFromTree(
+                                node,
+                                element
+                            );
+
+
+                        if (target) {
+
+                            highlightLayoutElement(
+                                target
+                            );
+
+                        }
+
+                    }
+                );
+
+
+                // -----------------------------
+                // REMOVE HIGHLIGHT
+                // -----------------------------
+
+                row.addEventListener(
+                    "mouseleave",
+                    () => {
+
+                        clearLayoutHighlight();
+
+                    }
+                );
+
+
+                // -----------------------------
+                // CLICK
+                // -----------------------------
+
+                row.addEventListener(
+                    "click",
+                    () => {
+
+                        const node =
+                            row.closest(
+                                "[data-layout-element]"
+                            );
+
+
+                        const target =
+                            findLayoutElementFromTree(
+                                node,
+                                element
+                            );
+
+
+                        if (!target) {
+                            return;
+                        }
+
+
+                        // Already selected
+                        if (
+                            target === element
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        // Select the clicked
+                        // element using the
+                        // existing editor system.
+                        showEditor(
+                            target
+                        );
+
+                    }
+                );
+
+            });
+
+    }
+
 }
-
-
 // =====================================================
 // SEARCH
 // =====================================================
@@ -2599,23 +4612,152 @@ async function copyChangedCSS(element) {
 // REMOVE PANEL
 // =====================================================
 
+// =====================================================
+// REMOVE PANEL
+//
+// Also completely resets:
+// - Layout Inspector
+// - Layout hover highlight
+// - Move mode
+// - Resize mode
+// - Inspect mode
+// =====================================================
+
 function removePanel() {
 
-    if (!panel) {
-        return;
+
+    // =========================================
+    // STOP UNIVERSAL LAYOUT INSPECTOR
+    // =========================================
+
+    if (
+        typeof stopUniversalLayoutInspector ===
+        "function"
+    ) {
+
+        stopUniversalLayoutInspector();
+
     }
 
+
+    // =========================================
+    // CLEAR LAYOUT HIGHLIGHT
+    // =========================================
+
+    if (
+        typeof clearLayoutHighlight ===
+        "function"
+    ) {
+
+        clearLayoutHighlight();
+
+    }
+
+
+    // =========================================
+    // RESET LAYOUT BUTTON STATE
+    // =========================================
+
+    const layoutButton =
+        document.getElementById(
+            "devstyle-layout-inspector-button"
+        );
+
+
+    if (layoutButton) {
+
+        layoutButton.textContent =
+            "Show";
+
+        layoutButton
+            .classList
+            .remove("is-active");
+
+    }
+
+
+    // =========================================
+    // STOP MOVE MODE
+    // =========================================
+
+    if (movingElement) {
+
+        stopElementMove();
+
+    }
+
+
+    // =========================================
+    // STOP RESIZE MODE
+    // =========================================
+
+    if (
+        typeof resizingElement !==
+        "undefined" &&
+        resizingElement
+    ) {
+
+        if (
+            typeof stopElementResize ===
+            "function"
+        ) {
+
+            stopElementResize();
+
+        }
+
+    }
+
+
+    // =========================================
+    // STOP NORMAL INSPECTOR
+    // =========================================
+
+    if (inspecting) {
+
+        stopInspector();
+
+    }
+
+
+    // =========================================
+    // IF THERE IS NO PANEL
+    // =========================================
+
+    if (!panel) {
+
+        selectedElement =
+            null;
+
+        return;
+
+    }
+
+
+    // =========================================
+    // STOP PANEL DRAGGING
+    // =========================================
 
     stopDragging();
 
 
+    // =========================================
+    // REMOVE PANEL
+    // =========================================
+
     panel.remove();
 
 
-    panel = null;
+    panel =
+        null;
 
 
-    selectedElement = null;
+    // =========================================
+    // CLEAR SELECTED ELEMENT
+    // =========================================
+
+    selectedElement =
+        null;
 
 }
 
