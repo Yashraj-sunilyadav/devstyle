@@ -1,4 +1,4 @@
-::: {align="center"}
+
 
 ✦ DevStyle
 
@@ -10,7 +10,7 @@ Select an element. Change the CSS. See the result instantly.
 
 
 
-<br>{=html}
+
 
 Don't guess the CSS value. See it.
 
@@ -671,7 +671,7 @@ If DevStyle is useful to you:
 
 📣 Share it with other frontend developers
 
-::: {align="center"}
+
 
 Built for developers who think visually.
 
@@ -680,7 +680,7 @@ DevStyle --- See the CSS. Change the CSS.
 View DevStyle on
 GitHub
 
-<br>{=html}
+
 
 ✦ Developed by Yazz
 :::
