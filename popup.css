@@ -368,17 +368,555 @@ kbd {
 /* =====================================================
    FOOTER
 ===================================================== */
+/* =====================================================
+   FUTURISTIC DEVELOPER SIGNATURE
+   ===================================================== */
 
-.popup-footer {
+.developer-footer {
 
-    display: flex;
+    position: relative;
+
+    margin-top: 10px;
+
+    padding: 14px 0 16px;
+
+    text-align: center;
+
+    overflow: hidden;
+}
+
+
+/* subtle futuristic glow line */
+
+.developer-footer::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 50%;
+
+    width: 80px;
+    height: 1px;
+
+    transform: translateX(-50%);
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        #8b8dff,
+        transparent
+    );
+
+    opacity: 0.7;
+
+    animation: yazz-line-pulse 2.8s ease-in-out infinite;
+}
+
+
+/* moving light behind the signature */
+
+.developer-footer::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: -40%;
+
+    top: 50%;
+
+    width: 35%;
+    height: 35px;
+
+    transform: translateY(-50%) rotate(-8deg);
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(139, 141, 255, 0.08),
+        transparent
+    );
+
+    filter: blur(8px);
+
+    pointer-events: none;
+
+    animation: yazz-light-sweep 4s ease-in-out infinite;
+}
+
+
+/* actual link */
+
+.developer-footer a {
+
+    position: relative;
+
+    display: inline-flex;
 
     align-items: center;
 
-    justify-content: space-between;
+    gap: 7px;
 
-    color: #52525b;
+    padding: 8px 14px;
+
+    border-radius: 8px;
+
+    color: #e4e5ff;
+
+    font-size: 13px;
+
+    font-weight: 650;
+
+    letter-spacing: 0.2px;
+
+    text-decoration: none;
+
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.045),
+        rgba(139,141,255,0.055)
+    );
+
+    border: 1px solid rgba(139, 141, 255, 0.16);
+
+    box-shadow:
+        0 0 0 rgba(139, 141, 255, 0),
+        inset 0 0 12px rgba(255,255,255,0.015);
+
+    transition:
+        color 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+/* little glowing dot */
+
+.developer-footer a::before {
+
+    content: "";
+
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: #a8a9ff;
+
+    box-shadow:
+        0 0 5px #8b8dff,
+        0 0 10px rgba(139,141,255,0.6);
+
+    animation: yazz-dot-pulse 2s ease-in-out infinite;
+}
+
+
+/* arrow */
+
+.developer-footer a::after {
+
+    content: "↗";
+
+    font-size: 14px;
+
+    color: #9fa1ff;
+
+    transition:
+        transform 0.25s ease,
+        color 0.25s ease;
+}
+
+
+/* hover */
+
+.developer-footer a:hover {
+
+    color: #ffffff;
+
+    border-color: rgba(139, 141, 255, 0.45);
+
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.07),
+        rgba(139,141,255,0.12)
+    );
+
+    box-shadow:
+        0 0 16px rgba(139,141,255,0.12),
+        inset 0 0 15px rgba(139,141,255,0.035);
+
+    transform: translateY(-2px);
+}
+
+
+.developer-footer a:hover::after {
+
+    color: #c7c8ff;
+
+    transform: translate(3px, -3px);
+}
+
+
+/* =====================================================
+   ANIMATIONS
+   ===================================================== */
+
+@keyframes yazz-line-pulse {
+
+    0%,
+    100% {
+        opacity: 0.25;
+        width: 50px;
+    }
+
+    50% {
+        opacity: 0.9;
+        width: 100px;
+    }
+}
+
+
+@keyframes yazz-dot-pulse {
+
+    0%,
+    100% {
+        opacity: 0.55;
+
+        box-shadow:
+            0 0 4px #8b8dff,
+            0 0 8px rgba(139,141,255,0.35);
+    }
+
+    50% {
+        opacity: 1;
+
+        box-shadow:
+            0 0 7px #8b8dff,
+            0 0 15px rgba(139,141,255,0.7);
+    }
+}
+
+
+@keyframes yazz-light-sweep {
+
+    0% {
+        left: -40%;
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    70% {
+        left: 110%;
+        opacity: 0.7;
+    }
+
+    100% {
+        left: 110%;
+        opacity: 0;
+    }
+}
+
+/* =====================================================
+   DEVSTYLE VERSION
+   ===================================================== */
+
+.version {
+
+    display: inline-block;
+
+    margin-left: 5px;
+
+    padding: 2px 6px;
+
+    border-radius: 5px;
 
     font-size: 9px;
 
+    font-weight: 700;
+
+    letter-spacing: 0.4px;
+
+    color: #b8b9ff;
+
+    background: rgba(139, 141, 255, 0.08);
+
+    border: 1px solid rgba(139, 141, 255, 0.2);
+
+    vertical-align: middle;
+}
+
+
+/* =====================================================
+   FUTURISTIC DEVELOPER FOOTER
+   ===================================================== */
+
+.developer-footer {
+
+    position: relative;
+
+    margin-top: 14px;
+
+    padding: 17px 0 16px;
+
+    text-align: center;
+
+    overflow: hidden;
+}
+
+
+/* glowing line */
+
+.developer-footer::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 50%;
+
+    width: 70px;
+    height: 1px;
+
+    transform: translateX(-50%);
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        #8b8dff,
+        transparent
+    );
+
+    opacity: 0.7;
+
+    animation: yazz-line-pulse 2.8s ease-in-out infinite;
+}
+
+
+/* moving light */
+
+.developer-footer::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: -40%;
+
+    top: 50%;
+
+    width: 35%;
+    height: 30px;
+
+    transform: translateY(-50%) rotate(-8deg);
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(139, 141, 255, 0.1),
+        transparent
+    );
+
+    filter: blur(8px);
+
+    pointer-events: none;
+
+    animation: yazz-light-sweep 4s ease-in-out infinite;
+}
+
+
+/* developer button */
+
+.developer-footer a {
+
+    position: relative;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 9px 15px;
+
+    border-radius: 8px;
+
+    color: #e4e5ff;
+
+    font-size: 13px;
+
+    font-weight: 650;
+
+    letter-spacing: 0.2px;
+
+    text-decoration: none;
+
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.045),
+        rgba(139,141,255,0.055)
+    );
+
+    border: 1px solid rgba(139,141,255,0.16);
+
+    box-shadow:
+        0 0 0 rgba(139,141,255,0),
+        inset 0 0 12px rgba(255,255,255,0.015);
+
+    transition:
+        color 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+/* glowing dot */
+
+.developer-footer a::before {
+
+    content: "";
+
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: #a8a9ff;
+
+    box-shadow:
+        0 0 5px #8b8dff,
+        0 0 10px rgba(139,141,255,0.6);
+
+    animation: yazz-dot-pulse 2s ease-in-out infinite;
+}
+
+
+/* ONE arrow only */
+
+.developer-footer a::after {
+
+    content: "↗";
+
+    font-size: 14px;
+
+    color: #9fa1ff;
+
+    transition:
+        transform 0.25s ease,
+        color 0.25s ease;
+}
+
+
+/* hover */
+
+.developer-footer a:hover {
+
+    color: #ffffff;
+
+    border-color: rgba(139,141,255,0.45);
+
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.07),
+        rgba(139,141,255,0.12)
+    );
+
+    box-shadow:
+        0 0 16px rgba(139,141,255,0.12),
+        inset 0 0 15px rgba(139,141,255,0.035);
+
+    transform: translateY(-2px);
+}
+
+
+.developer-footer a:hover::after {
+
+    color: #c7c8ff;
+
+    transform: translate(3px, -3px);
+}
+
+
+/* =====================================================
+   ANIMATIONS
+   ===================================================== */
+
+@keyframes yazz-line-pulse {
+
+    0%,
+    100% {
+
+        opacity: 0.25;
+
+        width: 50px;
+    }
+
+    50% {
+
+        opacity: 0.9;
+
+        width: 100px;
+    }
+}
+
+
+@keyframes yazz-dot-pulse {
+
+    0%,
+    100% {
+
+        opacity: 0.55;
+
+        box-shadow:
+            0 0 4px #8b8dff,
+            0 0 8px rgba(139,141,255,0.35);
+    }
+
+    50% {
+
+        opacity: 1;
+
+        box-shadow:
+            0 0 7px #8b8dff,
+            0 0 15px rgba(139,141,255,0.7);
+    }
+}
+
+
+@keyframes yazz-light-sweep {
+
+    0% {
+
+        left: -40%;
+
+        opacity: 0;
+    }
+
+    20% {
+
+        opacity: 1;
+    }
+
+    70% {
+
+        left: 110%;
+
+        opacity: 0.7;
+    }
+
+    100% {
+
+        left: 110%;
+
+        opacity: 0;
+    }
 }
