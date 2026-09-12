@@ -1,90 +1,177 @@
-DevStyle
+::: {align="center"}
 
-A visual CSS editor for frontend developers.
+✦ DevStyle
 
-DevStyle is a Chrome extension that lets you select an element on any
-webpage, modify its CSS in real time, visually move and resize it, and
-copy the resulting CSS.
+Visual CSS editing for frontend developers.
 
-The goal is simple:
+Select an element. Change the CSS. See the result instantly.
+
+
+
+
+
+<br>{=html}
 
 Don't guess the CSS value. See it.
 
-🚀 Current Version
+DevStyle is a Chrome extension that brings a visual CSS editing workflow
+directly onto any webpage. Select an element, inspect its layout, modify
+styles in real time, move or resize it visually, and copy the resulting
+CSS.
+:::
 
-V2.0
+🎬 What is DevStyle?
 
-DevStyle is currently in active development.
+Frontend developers constantly switch between a webpage, DevTools and a
+code editor just to answer a simple question:
 
-Note: The Design System Generator and other planned advanced
-features are not implemented yet. They are listed below as future
-improvements.
+"What CSS value should I change?"
+
+DevStyle is designed to make that process visual.
+
+        WEBPAGE
+           │
+           ▼
+    ┌───────────────┐
+    │ Select Element│
+    └───────┬───────┘
+            │
+            ▼
+    ┌───────────────┐
+    │ Inspect Styles│
+    └───────┬───────┘
+            │
+            ▼
+    ┌───────────────┐
+    │ Edit Visually │
+    └───────┬───────┘
+            │
+            ▼
+    ┌───────────────┐
+    │ See Changes   │
+    │   Instantly    │
+    └───────┬───────┘
+            │
+            ▼
+       Copy CSS
 
 ✨ Current Features
 
+Feature                          Status              What it does
+
+🎯 Visual Inspector                ✅                Select and inspect
+webpage elements
+
+📐 Layout Editor                   ✅                Edit dimensions and
+positioning
+
+🔤 Typography                      ✅                Edit text-related
+CSS
+
+🎨 Appearance                      ✅                Edit background and
+opacity
+
+🧱 Border Editor                   ✅                Edit borders and
+radius
+
+📦 Spacing Editor                  ✅                Edit margin,
+padding and gap
+
+▣ Visual Box Model                 ✅                Visually edit
+margin, border and
+padding
+
+🖱️ Move Element                    ✅                Drag elements
+directly on the
+page
+
+↔️ Resize Element                  ✅                Resize selected
+elements visually
+
+🧩 Flexbox                         ✅                Inspect and edit
+Inspector                                            Flexbox layouts
+
+▦ Grid Inspector                   ✅                Inspect and edit
+CSS Grid layouts
+
+🌐 Universal Layout                🚧                Visual hierarchy
+Inspector                                            for component
+structure
+
+🔍 CSS Property                    ✅                Quickly find CSS
+Search                                               properties
+
+📋 Copy CSS                        ✅                Copy your changes
+as CSS
+
+⌨️ Keyboard                        ✅                Fast
+Shortcuts                                            keyboard-driven
+workflow
+
+🎨 Design System                   🔜                Analyze and
+Generator                                            generate website
+design systems
+
+Legend: ✅ Available · 🚧 In development · 🔜 Planned
+
 🎯 Visual Element Inspector
 
-Select elements directly from a webpage.
+Select elements directly from the webpage instead of manually searching
+through the DOM.
+
+You can:
 
 Hover to highlight elements
 
-Click to select
+Click to select an element
 
-View the selected element
+Inspect the selected element
 
-Display tag, ID and class information
+See tag, ID and class information
 
-Select body and other root-level elements
+Select body and root-level elements
 
-📐 Layout
+Switch to another element quickly
 
-Change layout properties in real time:
+📐 Layout Editor
+
+Change the most common layout properties without leaving the webpage.
+
+Supported properties
 
 Width
-
 Height
-
 Position
-
 Top
-
 Right
-
 Bottom
-
 Left
-
 Z-index
 
-Supported position types:
+Position modes
 
 Static
-
 Relative
-
 Absolute
-
 Fixed
-
 Sticky
+
+Changes are applied to the selected element immediately.
 
 🔤 Typography
 
-Modify:
+Experiment with typography visually.
 
-Font family
+Font Family
+Font Size
+Font Weight
+Font Color
+Line Height
+Letter Spacing
+Text Alignment
 
-Font size
-
-Font weight
-
-Font color
-
-Line height
-
-Letter spacing
-
-Text alignment
+This makes it easy to find the right visual value before copying it into
+your project.
 
 🎨 Appearance
 
@@ -96,43 +183,48 @@ Opacity
 
 🧱 Border
 
-Modify:
+Edit border styling in real time.
 
-Border width
+Controls
 
-Border radius
+Border Width
+Border Radius
+Border Color
+Border Style
 
-Border color
-
-Border style
-
-Supported border styles:
+Border styles
 
 None
-
 Solid
-
 Dashed
-
 Dotted
-
 Double
 
 📦 Spacing
 
-Modify:
+Control the spacing around and inside an element.
 
 Margin
-
 Padding
-
 Gap
 
 ▣ Visual Box Model
 
-DevStyle includes a visual box-model editor for the selected element.
+DevStyle provides a visual representation of the selected element's box
+model.
 
-It provides controls for:
+┌─────────────────────────────────────┐
+│              MARGIN                 │
+│  ┌───────────────────────────────┐  │
+│  │            BORDER             │  │
+│  │  ┌─────────────────────────┐  │  │
+│  │  │        PADDING          │  │  │
+│  │  │  ┌───────────────────┐  │  │  │
+│  │  │  │     CONTENT       │  │  │  │
+│  │  │  └───────────────────┘  │  │  │
+│  │  └─────────────────────────┘  │  │
+│  └───────────────────────────────┘  │
+└─────────────────────────────────────┘
 
 Margin
 
@@ -164,7 +256,7 @@ Bottom
 
 Left
 
-It also displays:
+Also displays:
 
 Content width
 
@@ -172,88 +264,91 @@ Content height
 
 Box sizing
 
-All changes are applied immediately to the selected element.
-
 🖱️ Move Elements Visually
 
-Select an element and use:
+Select an element and activate Move Element.
 
-Move Element
+Then drag it directly on the webpage.
 
-Then drag the element directly on the webpage.
-
-The selected element is moved using its CSS positioning.
-
-Example:
+For example, DevStyle can turn a visual movement into:
 
 position: relative;
 left: 50px;
 top: 20px;
 
+This is useful when you know where an element should move but don't
+know the exact CSS value yet.
+
 ↔️ Resize Elements Visually
 
-DevStyle allows selected elements to be resized directly on the webpage.
+Resize selected elements directly on the webpage using visual resize
+handles.
 
-Resize handles make it possible to visually adjust:
+Instead of repeatedly changing:
 
-Width
+width: ...;
+height: ...;
 
-Height
-
-The corresponding CSS changes are applied in real time.
+you can visually find the size you want and let DevStyle apply the
+corresponding values.
 
 🧩 Flexbox Inspector
 
-DevStyle provides a dedicated Flexbox section when the selected element
-is a flex container.
+When the selected element is a Flexbox container, DevStyle exposes a
+dedicated Flexbox section.
 
-It helps inspect and modify common Flexbox properties such as:
+It helps inspect and modify values such as:
 
-Flex direction
-
-Justify content
-
-Align items
-
-Flex wrap
-
+Flex Direction
+Justify Content
+Align Items
+Flex Wrap
 Gap
 
-Other Flexbox layout values
+The goal is to make Flexbox experimentation visual instead of requiring
+constant manual CSS edits.
 
 ▦ Grid Inspector
 
-DevStyle also provides Grid controls when the selected element uses CSS
-Grid.
+When the selected element uses CSS Grid, DevStyle provides Grid
+controls.
 
-It helps inspect and modify grid layout properties such as:
+Current focus includes:
 
-Grid template columns
-
-Grid template rows
-
-Grid gap
-
-Column gap
-
-Row gap
-
-Alignment properties
+Grid Template Columns
+Grid Template Rows
+Grid Gap
+Column Gap
+Row Gap
+Alignment
 
 🌐 Universal Layout Inspector
 
-DevStyle includes a Universal Layout Inspector designed to inspect the
-structure of a selected component and its descendants.
+The Universal Layout Inspector is being developed to understand a
+selected component as a complete visual structure rather than looking at
+only one CSS property at a time.
 
-It is intended to work across different CSS layout systems, including:
+The intended hierarchy looks like:
+
+.page
+├── header
+│   └── nav
+│       ├── a
+│       └── a
+└── main
+    └── section
+        └── article
+
+The planned/current development direction is to make the structure
+useful across:
 
 Flexbox
 
-Grid
+CSS Grid
 
-Block
+Block layout
 
-Inline
+Inline layout
 
 Absolute positioning
 
@@ -265,31 +360,35 @@ Normal document flow
 
 Mixed layouts
 
-The inspector provides a hierarchical view of the selected component and
-its child elements.
-
-This feature is part of the current development direction and is still
-being improved.
+The inspector is still being improved.
 
 🔍 CSS Property Search
 
-Search CSS properties directly from the DevStyle panel.
+Don't open every category manually.
 
-This makes it easier to find a property without manually opening every
-category.
+Search directly:
 
-Example:
+padding
+font-size
+border-radius
+display
+width
 
-Search → padding
-Search → font-size
-Search → border-radius
+DevStyle filters the available CSS controls so you can reach the
+property faster.
 
 📋 Copy CSS
 
-Copy the CSS changes made to the selected element.
+Once you have finished experimenting, copy the CSS changes and move them
+into your project.
 
-This allows you to take the visual changes from DevStyle and use them
-directly in your project.
+Visual Experiment
+       ↓
+Find the correct value
+       ↓
+Copy CSS
+       ↓
+Use it in your project
 
 ⌨️ Keyboard Shortcuts
 
@@ -298,50 +397,98 @@ Shortcut             Action
 Ctrl + Shift + E   Start DevStyle inspector
 H                  Select another element
 M                  Move selected element
-Esc                Cancel active mode
+Esc                Cancel the active mode
 
-On macOS:
+macOS
 
 Command + Shift + E
 
-⚡ Live Editing
+The shortcuts are designed to keep the workflow inside the webpage
+rather than forcing repeated mouse interaction with the extension panel.
 
-CSS changes are applied immediately to the webpage.
+⚡ Why DevStyle?
 
-You can experiment with values visually without repeatedly switching
-between:
+Traditional workflow
 
-Browser DevTools
+Browser
+  ↓
+DevTools
+  ↓
+Find element
+  ↓
+Find CSS property
+  ↓
+Change value
+  ↓
+Look at result
+  ↓
+Repeat
 
-Code editor
+DevStyle workflow
 
-Browser preview
+Click element
+      ↓
+Change visually
+      ↓
+See result instantly
+      ↓
+Copy CSS
 
-🎯 Goal
+The focus is visual iteration.
 
-DevStyle is being built around a simple workflow:
+🧠 Design Philosophy
 
-Select
-   ↓
-Inspect
-   ↓
-Change
-   ↓
-See
-   ↓
-Copy
+DevStyle is built around a few principles:
 
-The goal is to make frontend styling faster and more visual.
+01 --- Visual first
+
+If a CSS value can be understood visually, make it visual.
+
+02 --- Instant feedback
+
+Changes should appear immediately.
+
+03 --- Less guessing
+
+Developers should be able to experiment with values instead of
+predicting them.
+
+04 --- Keep the developer in flow
+
+The fewer times you need to switch between tools, the faster you can
+iterate.
+
+05 --- CSS remains the source
+
+DevStyle helps you discover the values. The resulting CSS can then be
+copied into the actual project.
 
 🛣️ Roadmap
 
-DevStyle is still actively evolving. Planned improvements include:
+The next major phase of DevStyle is moving beyond individual element
+editing toward understanding an entire website's visual language.
 
-🎨 Design System Generator
+🎨 Design System Generator --- Planned
 
-A website-wide visual design system analyzer and generator.
+Not implemented yet.
 
-Planned capabilities:
+The goal is to scan a website and turn its existing visual patterns into
+a readable design-system dashboard.
+
+Planned analysis
+
+Website
+   │
+   ├── Colors
+   ├── Typography
+   ├── Spacing
+   ├── Radius
+   ├── Shadows
+   ├── Components
+   ├── Icons
+   └── Design Tokens
+
+Planned capabilities
 
 Website design-system overview
 
@@ -351,9 +498,9 @@ Color usage counts
 
 Typography analysis
 
-Font family detection
+Font-family detection
 
-Font size scale
+Font-size scale
 
 Spacing scale
 
@@ -371,30 +518,46 @@ Card styles
 
 Icon analysis
 
-CSS variable / design-token detection
+CSS variable detection
 
-Design token visualization
+Design-token visualization
 
 Generated CSS variables
 
 Exportable design-system CSS
 
-Highlight where a color or token is used on the page
+Highlight token/color usage on the page
 
-The goal is to turn an existing website into a visual representation of
-its design language.
+Edit common design values
 
-Status: Planned --- not implemented yet.
+The long-term idea
 
-🧩 Bootstrap Support
+Existing Website
+       ↓
+     Scan
+       ↓
+Analyze visual patterns
+       ↓
+Design System
+       ↓
+Tokens + Components + Styles
+       ↓
+Export / Improve
 
-Planned Bootstrap-oriented improvements include:
+🧩 Bootstrap Support --- Planned
+
+Not implemented yet.
+
+DevStyle is planned to become more useful on websites built with
+Bootstrap.
+
+Potential capabilities include:
 
 Detect Bootstrap components
 
 Recognize Bootstrap utility classes
 
-Inspect Bootstrap spacing utilities
+Understand Bootstrap spacing utilities
 
 Inspect Bootstrap typography utilities
 
@@ -404,11 +567,9 @@ Understand Bootstrap breakpoints
 
 Identify Bootstrap components
 
+Suggest Bootstrap-compatible changes
+
 Improve editing of Bootstrap-based layouts
-
-Generate or suggest Bootstrap-compatible changes
-
-Status: Planned --- not implemented yet.
 
 🚀 Future Improvements
 
@@ -416,41 +577,110 @@ Other areas being considered:
 
 Better responsive layout inspection
 
-Improved component hierarchy visualization
-
 More CSS properties
-
-Better responsive controls
 
 CSS variable editing
 
-More advanced layout debugging
+Advanced layout debugging
+
+Better component hierarchy visualization
+
+Improved responsive controls
 
 Design-token editing
 
-Improved export tools
-
 More framework support
 
-Better performance on large webpages
+Improved export tools
+
+Performance improvements on large webpages
+
+Better developer workflow integrations
+
+🏗️ Project Structure
+
+DevStyle is a Manifest V3 Chrome extension.
+
+The main pieces are:
+
+DevStyle/
+├── manifest.json
+├── background.js
+├── content.js
+├── content.css
+├── popup.html
+├── popup.css
+├── popup.js
+└── icons/
+    ├── icon16.png
+    ├── icon32.png
+    ├── icon48.png
+    └── icon128.png
+
+Main responsibilities
+
+File              Purpose
+
+manifest.json   Chrome extension configuration
+content.js      Inspector, editor and webpage interaction
+content.css     DevStyle interface styling
+popup.html      Extension popup structure
+popup.css       Popup styling
+popup.js        Popup interactions
+background.js   Extension background/service worker
+icons/          DevStyle extension icons
 
 🧪 Development Status
 
-DevStyle is an open-source project and is currently under active
-development.
+DevStyle is an open-source project under active development.
 
-Features may change as the extension evolves.
+Current development is focused on making the visual editing workflow
+more powerful while gradually expanding into website-wide layout and
+design-system analysis.
 
-Some features shown in the roadmap are concepts for future versions and
-should not be considered available in the current release.
+Features marked Planned are concepts for future releases and are
+not available in the current version.
 
 🤝 Contributing
 
-Contributions, ideas, bug reports and feedback are welcome.
+Ideas, feedback, bug reports and contributions are welcome.
 
-If you find a bug or have an idea for improving DevStyle, open an issue
-or contribute through the project repository.
+If you find something that can be improved:
 
-📄 License
+Open an issue
 
-License information will be added as the project develops.
+Describe the problem or idea
+
+Include steps to reproduce bugs when possible
+
+Suggest improvements
+
+Submit a pull request if you want to contribute code
+
+⭐ Support the Project
+
+If DevStyle is useful to you:
+
+⭐ Star the repository
+
+🐛 Report bugs
+
+💡 Suggest features
+
+🔧 Contribute code
+
+📣 Share it with other frontend developers
+
+::: {align="center"}
+
+Built for developers who think visually.
+
+DevStyle --- See the CSS. Change the CSS.
+
+View DevStyle on
+GitHub
+
+<br>{=html}
+
+✦ Developed by Yazz
+:::
